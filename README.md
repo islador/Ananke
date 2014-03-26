@@ -1,3 +1,15 @@
+# Ananke - "The goddess of inevitability, compulsion, and necessity."
+
+## Description
+Ananke is a web based SSO and management system for EVE Online Corporations and Alliances.
+
+### Planned Features
+1. EVE Online API Based Registration
+ - Blacklist Integration
+2. User Integration with TeamSpeak3
+3. User Integration with Vanilla Forums
+4. User Integration with Mumble
+
 == README
 
 This README would normally document whatever steps are necessary to get the
