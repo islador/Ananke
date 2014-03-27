@@ -1,7 +1,7 @@
 FactoryGirl.define do
 	factory :user do
 		ignore do
-			sequence(set_email) {|n| "user#{n}@example.com"}
+			sequence(:set_email) {|n| "user#{n}@example.com"}
 		end
 
 		email {set_email}
@@ -39,7 +39,7 @@ FactoryGirl.define do
 		sequence(:allianceName) {|n| "Alliance#{n}"}
 		sequence(:allianceID) {|n| n}
 		sequence(:factionName) {|n| "Faction#{n}"}
-		sequence(:facitonID) {|n| n}
+		sequence(:factionID) {|n| n}
 		api
 	end
 end

@@ -33,4 +33,8 @@ Ananke::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  #Config added for Devise
+  #In production, :host should be set to the actual host of your application.
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
 end
