@@ -32,6 +32,9 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+# EVE Gems
+gem 'eve',			:git => "https://github.com/islador/eve", :branch => "rails4"
+
 group :development do
 	gem 'annotate'
 	gem 'guard-rspec'
