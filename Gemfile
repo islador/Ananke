@@ -6,6 +6,9 @@ gem 'rails', '4.0.4'
 # Use postgresql as the database for Active Record
 gem 'pg'
 
+# Use devise for users
+gem 'devise'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'
 
@@ -33,6 +36,7 @@ group :doc do
 end
 
 # EVE Gems
+# This instance is used because it has been modified to support rails 4 and the new CCP domain.
 gem 'eve',			:git => "https://github.com/islador/eve", :branch => "rails4"
 
 group :development do
