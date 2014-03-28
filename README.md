@@ -10,6 +10,12 @@ Ananke is a web based SSO and management system for EVE Online Corporations and 
 3. User Integration with Vanilla Forums
 4. User Integration with Mumble
 
+### Startup Details
+1. redis-server
+2. sidekiq
+3. rails server
+4. guard
+
 == README
 
 This README would normally document whatever steps are necessary to get the

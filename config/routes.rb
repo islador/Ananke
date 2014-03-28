@@ -1,7 +1,17 @@
 Ananke::Application.routes.draw do
 
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   devise_for :users
-  root to: 'static_pages#home'
+  
+  #Set root to the sign_in page.
+  #http://stackoverflow.com/questions/4954876/setting-devise-login-to-be-root-page
+  devise_scope :user do
+    root to: "devise/sessions#new"
+  end
+
+  #root to: 'static_pages#home'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

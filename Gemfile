@@ -8,6 +8,10 @@ gem 'pg'
 
 # Use devise for users
 gem 'devise'
+gem 'devise-async'
+gem 'sidekiq'
+#For Sidekiq's web UI
+gem 'sinatra', '>= 1.3.0', :require => nil
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'

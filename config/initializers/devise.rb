@@ -10,10 +10,13 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  config.mailer_sender = 'boss@ananke-services.com'
 
   # Configure the class responsible to send e-mails.
-  # config.mailer = 'Devise::Mailer'
+  config.mailer = 'Devise::Mailer'
+
+  # Supported options: :resque, :sidekiq, :delayed_job
+  Devise::Async.backend = :sidekiq
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and
