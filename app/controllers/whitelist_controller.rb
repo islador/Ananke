@@ -17,5 +17,6 @@ class WhitelistController < ApplicationController
 	end
 
 	def white_list_log
+		@wll = WhitelistLog.all
 	end
 end

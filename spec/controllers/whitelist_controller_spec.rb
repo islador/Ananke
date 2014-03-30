@@ -9,12 +9,24 @@ describe WhitelistController do
       get 'white_list'
       response.should be_success
     end
+
+    let!(:whitelist) {FactoryGirl.create(:whitelist)}
+    it "should build an @wl object containing all whitelists" do
+      get 'white_list'
+      expect(assigns(:wl)).to include(whitelist)
+    end
   end
 
   describe "GET 'white_list_log'" do
     it "returns http success" do
       get 'white_list_log'
       response.should be_success
+    end
+
+    let!(:whitelistLog) {FactoryGirl.create(:whitelist_log)}
+    it "should build an @wll object containing all whitelists" do
+      get 'white_list_log'
+      expect(assigns(:wll)).to include(whitelistLog)
     end
   end
 

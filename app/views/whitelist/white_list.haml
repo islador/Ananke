@@ -19,7 +19,7 @@
 			%th
 	%tbody
 		- @wl.each do |w|
-			%tr
+			%tr{:id => "entity_#{w.id}"}
 				%td= w.name
 				%td= w.standing
 				%td= w.entity_type

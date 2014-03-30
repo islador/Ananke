@@ -4,4 +4,5 @@
 
 jQuery ->
 	$('#whitelist_table').dataTable();
+	$('#whitelist_log_table').dataTable();
 

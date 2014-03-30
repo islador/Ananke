@@ -16,3 +16,24 @@
 			%li the time of then change
 	%li Just a straight log displayed with data tables https://datatables.net/
 	%li Maybe make clicking a row in the table link to the user that done it?
+
+%table.table.table-condensed{:id => "whitelist_log_table"}
+	%thead
+		%tr
+			%th Entity Name
+			%th Entity Type
+			%th Source User
+			%th Source Type
+			%th Addition
+			%th Date
+			%th Time
+	%tbody
+		- @wll.each do |w|
+			%tr{:id => "entity_#{w.id}"}
+				%td= w.entity_name
+				%td= w.entity_type
+				%td= w.source_user
+				%td= w.source_type
+				%td= w.addition
+				%td= w.date
+				%td= w.time
