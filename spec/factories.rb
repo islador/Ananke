@@ -42,4 +42,22 @@ FactoryGirl.define do
 		sequence(:factionID) {|n| n}
 		api
 	end
+
+	factory :whitelist do
+		sequence(:name) {|n| "Name#{n}"}
+		standing 0
+		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
+		source_type 1 #1 for api, 2 for manual
+		source_user 1
+	end
+
+	factory :whitelist_log do
+		sequence(:entity_name) {|n| "Name#{n}"}
+		source_user 1
+		source_type 1 #1 for api, 2 for manual
+		addition true
+		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
+		date Date.today
+		time Time.new(2014)
+	end
 end
