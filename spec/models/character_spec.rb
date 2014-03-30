@@ -41,6 +41,69 @@ describe Character do
 		end
 	end
 
+	describe "Public API > " do
+		describe "is_approved > " do
+			describe " true" do
+				let!(:whitelistAlliance) {FactoryGirl.create(:whitelist, name: "Alliance")}
+				let!(:characterAlliance) {FactoryGirl.create(:character, allianceName: "Alliance")}
+				
+				it "should return true if the character is in a whitelisted alliance" do
+					characterAlliance.is_approved?.should be_true
+				end
+
+				let!(:whitelistCorporation) {FactoryGirl.create(:whitelist, name: "Corporation")}
+				let!(:characterCorporation) {FactoryGirl.create(:character, corporationName: "Corporation")}
+				
+				it "should return true if the character is in a whitelisted corporation" do
+					characterCorporation.is_approved?.should be_true
+				end
+
+				let!(:whitelistFaction) {FactoryGirl.create(:whitelist, name: "Faction")}
+				let!(:characterFaction) {FactoryGirl.create(:character, factionName: "Faction")}
+				
+				it "should return true if the character is in a whitelisted faction" do
+					characterFaction.is_approved?.should be_true
+				end
+
+				let!(:whitelistCharacter) {FactoryGirl.create(:whitelist, name: "Character")}
+				let!(:characterCharacter) {FactoryGirl.create(:character, name: "Character")}
+				
+				it "should return true if the character is in a whitelisted character" do
+					characterCharacter.is_approved?.should be_true
+				end
+			end
+			describe "false" do
+				let!(:whitelistAlliance) {FactoryGirl.create(:whitelist, name: "Alliance")}
+				let!(:characterAlliance) {FactoryGirl.create(:character, allianceName: "NotAlliance")}
+				
+				it "should return false if the character is in a whitelisted alliance" do
+					characterAlliance.is_approved?.should be_false
+				end
+
+				let!(:whitelistCorporation) {FactoryGirl.create(:whitelist, name: "Corporation")}
+				let!(:characterCorporation) {FactoryGirl.create(:character, corporationName: "NotCorporation")}
+				
+				it "should return false if the character is in a whitelisted corporation" do
+					characterCorporation.is_approved?.should be_false
+				end
+
+				let!(:whitelistFaction) {FactoryGirl.create(:whitelist, name: "Faction")}
+				let!(:characterFaction) {FactoryGirl.create(:character, factionName: "NotFaction")}
+				
+				it "should return false if the character is in a whitelisted faction" do
+					characterFaction.is_approved?.should be_false
+				end
+
+				let!(:whitelistCharacter) {FactoryGirl.create(:whitelist, name: "Character")}
+				let!(:characterCharacter) {FactoryGirl.create(:character, name: "NotCharacter")}
+				
+				it "should return false if the character is in a whitelisted character" do
+					characterCharacter.is_approved?.should be_false
+				end
+			end
+		end
+	end
+
 	describe "Validations > " do
 		describe "should validate presence of name" do
 			before {character.name = nil}
