@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "whitelist/white_list.haml >" do
+describe "whitelist/white_list.haml > " do
 	subject {page}
 	let!(:user) {FactoryGirl.create(:user)}
 
@@ -20,21 +20,33 @@ describe "whitelist/white_list.haml >" do
 			should have_selector('#whitelist_table_wrapper')
 		end
 
-		#May be order specific, unsure
-		let!(:whitelist) {FactoryGirl.create(:whitelist, name: "Jeff")}
+		let!(:whitelist1) {FactoryGirl.create(:whitelist, name: "Jeff")}
 		it "should contain items from the database" do
 			visit whitelist_white_list_path
 			within '#whitelist_table' do
-				should have_selector("tr#entity_1", text: whitelist.name)
+				should have_selector("tr#entity_#{whitelist1.id}", text: whitelist1.name)
 			end
 		end
 
-		let!(:whitelist) {FactoryGirl.create(:whitelist)}
+		let!(:whitelist2) {FactoryGirl.create(:whitelist)}
 		it "should contain a delete button for each entity" do
 			visit whitelist_white_list_path
-			within 'tr#entity_1' do
-				should have_selector("button#destroy_entity_#{whitelist.id}", text: "Delete")
-			end
+			should have_selector("button#destroy_entity_#{whitelist2.id}", text: "Delete")
+		end
+	end
+
+	describe "Delete > " do
+		let!(:whitelist3) {FactoryGirl.create(:whitelist, name: "Jeff")}
+		it "should remove the item from the datatable when clicked", js: true do
+			visit whitelist_white_list_path
+			
+			should have_selector("tr#entity_#{whitelist3.id}", text: whitelist3.name)
+			
+			#http://stackoverflow.com/a/2609244
+			page.evaluate_script('window.confirm = function() { return true; }')
+
+			click_button 'Delete'
+			should_not have_selector("tr#entity_#{whitelist3.id}", text: whitelist3.name)
 		end
 	end
 end

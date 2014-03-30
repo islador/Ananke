@@ -26,4 +26,4 @@
 				%td= entity.source_type
 				%td= entity.source_user
 				%td
-					%button{:id => "destroy_entity_#{entity.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "whitelist/#{entity.id}"}} Delete
+					%button{:id => "destroy_entity_#{entity.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/whitelist/#{entity.id}", :entity_id => "entity_#{entity.id}"}} Delete
