@@ -1,0 +1,28 @@
+%h1 Whitelist#white_list
+
+%h3 White List moderation panel
+%li Allows a user to select a valid API to pull and update the white list from -> add's the API's Main Char's Corp || Alliance to the white list
+%li Provides a form for a user to manually add an entity to the white list - manually adding an entity to the white list should be logged - Should be handled by the whitelist call back mechanics.
+%li Provides a button to cancel an API pull from any API being pulled from - Canceling an API pull is logged in the white list log
+
+%h3 White List Table
+%li Displays the current whitelist, using paginated data tables https://datatables.net/
+
+%table.table.table-condensed{:id => "whitelist_table"}
+	%thead
+		%tr
+			%th Name
+			%th Standing
+			%th Type
+			%th Source User
+			%th Source Type
+			%th
+	%tbody
+		- @wl.each do |w|
+			%tr
+				%td= w.name
+				%td= w.standing
+				%td= w.entity_type
+				%td= w.source_type
+				%td= w.source_user
+				%td delete button

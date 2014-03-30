@@ -42,7 +42,7 @@ describe Character do
 	end
 
 	describe "Public API > " do
-		describe "is_approved > " do
+		describe "is_approved? > " do
 			describe " true" do
 				let!(:whitelistAlliance) {FactoryGirl.create(:whitelist, name: "Alliance")}
 				let!(:characterAlliance) {FactoryGirl.create(:character, allianceName: "Alliance")}

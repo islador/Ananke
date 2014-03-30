@@ -5,3 +5,5 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+200.times{Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_user: 2)}

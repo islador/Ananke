@@ -34,7 +34,7 @@ describe Whitelist do
 			
 			expect{
 				Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_user: user.id)
-				}.to change(WhitelistLog, :count).by(1)
+				}.to change(WhitelistLog, :count).by(+1)
 		end
 
 		xit "on save, should create the correct log item" do
@@ -48,7 +48,7 @@ describe Whitelist do
 			Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_user: user.id)
 			expect{
 				Whitelist.last.destroy
-				}.to change(WhitelistLog, :count).by(1)
+				}.to change(WhitelistLog, :count).by(+1)
 		end
 
 		xit "on destroy it should create the correct whitelist log item" do

@@ -1,5 +1,10 @@
 Ananke::Application.routes.draw do
 
+  get "whitelist/white_list"
+  get "whitelist/white_list_log"
+
+  resources :whitelist,  only: [:create, :destroy]
+
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
