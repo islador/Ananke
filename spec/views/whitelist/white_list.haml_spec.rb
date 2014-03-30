@@ -2,9 +2,13 @@ require 'spec_helper'
 
 describe "whitelist/white_list.haml >" do
 	subject {page}
+	let!(:user) {FactoryGirl.create(:user)}
 
 	before(:each) do
 		visit whitelist_white_list_path
+		fill_in('user_email', :with => user.email)
+		fill_in('user_password', :with => user.password)
+		click_button 'Sign in'
 	end
 
 	describe "Table > " do
