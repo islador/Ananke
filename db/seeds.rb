@@ -7,3 +7,6 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 200.times{Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_user: 2)}
+
+#dev login
+User.create(email: "luke.isla@gmail.com", password: "goblin1swatuy", password_confirmation: "goblin1swatuy", confirmed_at: Time.now, confirmation_sent_at: Time.now-50)

@@ -8,6 +8,7 @@ FactoryGirl.define do
 		password "12345678"
 		password_confirmation "12345678"
 		confirmed_at Time.now
+		confirmation_sent_at Time.now-50
 	end
 
 	factory :api do

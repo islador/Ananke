@@ -34,7 +34,7 @@ Spork.prefork do
 
 		config.include Capybara::DSL
 		config.include FactoryGirl::Syntax::Methods
-		config.include Devise::TestHelpers
+		#config.include Devise::TestHelpers
 
 		# For selenium according to: https://groups.google.com/d/msg/ruby-capybara/2lFnQvMFGxs/YvOvebpctFcJ
 		config.use_transactional_fixtures = false

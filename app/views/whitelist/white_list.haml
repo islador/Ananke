@@ -18,11 +18,12 @@
 			%th Source Type
 			%th
 	%tbody
-		- @wl.each do |w|
-			%tr{:id => "entity_#{w.id}"}
-				%td= w.name
-				%td= w.standing
-				%td= w.entity_type
-				%td= w.source_type
-				%td= w.source_user
-				%td delete button
+		- @wl.each do |entity|
+			%tr{:id => "entity_#{entity.id}"}
+				%td= entity.name
+				%td= entity.standing
+				%td= entity.entity_type
+				%td= entity.source_type
+				%td= entity.source_user
+				%td
+					%button{:id => "destroy_entity_#{entity.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "whitelist/#{entity.id}"}} Delete
