@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/islador/eve
-  revision: f17474792596d48e2b37efc35904ec510f163e51
-  branch: rails4
+  revision: 6e340c255be1fbfc5a762ed5a3b20f99116c4a5e
+  branch: AddCorpContactList
   specs:
     eve (2.0.1)
       activesupport (~> 4)

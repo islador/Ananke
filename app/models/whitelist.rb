@@ -16,6 +16,8 @@ class Whitelist < ActiveRecord::Base
 
 	#Should migrate name to entity_name for consistency if the chance is found.
 	#ContactTypeIDs: 2=corporation, 16159=alliance, 1370-1390=character, ?=faction - presumed any other number
+	#entity_type: 1 Alliance, 2 Corporation, 3 Faction, 4 Character
+	#source_type: 1 API, 2 Manual
 	validates :name, presence: true
 	validates :standing, presence: true
 	validates :entity_type, presence: true

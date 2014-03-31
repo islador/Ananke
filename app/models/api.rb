@@ -14,6 +14,7 @@
 #
 
 class Api < ActiveRecord::Base
+	#entity: 1 corporation, 2 character
 	belongs_to :user
 	has_many :characters
 

@@ -4,7 +4,8 @@
 
 jQuery ->
 	window.wlt = $('#whitelist_table').dataTable()
-	$('#whitelist_log_table').dataTable()
+	$('#whitelist_log_table').dataTable
+		aaSorting: [[ 6, "desc" ]]
 
 	#Function to detect clicks on "Destroy" button.
 	$("[id^='destroy_entity_']").click ->
@@ -13,7 +14,7 @@ jQuery ->
 		authenticity_token = $('meta[name=csrf-token]').attr("content")
 
 		#Trigger confirm dialog before making AJAX call
-		if confirm('Are you sure you wish to delete this volunteer?') is true
+		if confirm('Deleting this entity will deauthorize all members of the group from your services. Are you sure you wish to delete this entity?') is true
 			#If the user clicks 'Ok' then send an AJAX call deleting the user
 			$.ajax({
 				#A post with a method data attribute is used to preserve cross browser compability.

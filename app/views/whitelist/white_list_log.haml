@@ -28,12 +28,29 @@
 			%th Date
 			%th Time
 	%tbody
-		- @wll.each do |w|
-			%tr{:id => "entity_#{w.id}"}
-				%td= w.entity_name
-				%td= w.entity_type
-				%td= w.source_user
-				%td= w.source_type
-				%td= w.addition
-				%td= w.date
-				%td= w.time
+		- @wll.each do |log|
+			%tr{:id => "entity_#{log.id}"}
+				%td= log.entity_name
+				- if log.entity_type == 1
+					%td Alliance
+				- elsif log.entity_type == 2
+					%td Corporation
+				- elsif log.entity_type == 3
+					%td Faction
+				- else
+					%td Character
+
+				%td= log.source_user
+
+				-if log.source_type == 1
+					%td API
+				-else
+					%td Manual
+
+				-if log.addition == true
+					%td Addition
+				-else
+					%td Removal
+
+				%td= log.date
+				%td= log.time
