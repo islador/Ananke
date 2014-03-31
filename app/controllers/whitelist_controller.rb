@@ -4,6 +4,8 @@ class WhitelistController < ApplicationController
 	#CRUD methods
 
 	def create
+		Whitelist.create(name: params[:entity_name], entity_type: params[:entity_type], source_type: 2, source_user: current_user.id)
+		render nothing: true
 	end
 
 	def destroy

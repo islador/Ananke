@@ -67,10 +67,10 @@ describe Whitelist do
 			it {should_not be_valid}
 		end
 
-		describe "should validate presence of standing" do
-			before {whitelist.standing = nil}
-			it {should_not be_valid}
-		end
+		#describe "should validate presence of standing" do
+		#	before {whitelist.standing = nil}
+		#	it {should_not be_valid}
+		#end
 
 		describe "should validate presence of entity_type" do
 			before {whitelist.entity_type = nil}

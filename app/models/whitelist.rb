@@ -19,7 +19,7 @@ class Whitelist < ActiveRecord::Base
 	#entity_type: 1 Alliance, 2 Corporation, 3 Faction, 4 Character
 	#source_type: 1 API, 2 Manual
 	validates :name, presence: true
-	validates :standing, presence: true
+	#validates :standing, presence: true
 	validates :entity_type, presence: true
 	validates :source_type, presence: true
 	validates :source_user, presence: true

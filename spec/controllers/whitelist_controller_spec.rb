@@ -40,4 +40,15 @@ describe WhitelistController do
         xhr :delete, :destroy, id: whitelist.id}.to change(Whitelist, :count).by(-1)
     end
   end
+
+  describe "CREATE 'create'" do
+    let!(:user) {FactoryGirl.create(:user)}
+
+    it "should create a new whitelist entity" do
+      sign_in user
+      expect{
+        xhr :post, :create, entity_name: "Fido", entity_type: 4
+      }.to change(Whitelist, :count).by(+1)
+    end
+  end
 end
