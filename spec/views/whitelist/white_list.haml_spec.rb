@@ -11,6 +11,17 @@ describe "whitelist/white_list.haml > " do
 		click_button 'Sign in'
 	end
 
+	describe "Moderation Panel > " do
+		it "should render a form to manually add an entity" do
+			should have_selector('input#entity_name')
+			should have_selector('input#entity_type_1')
+			should have_selector('input#entity_type_2')
+			should have_selector('input#entity_type_3')
+			should have_selector('input#entity_type_4')
+			should have_selector('button#submit_new_entity', text: 'Add Entity')
+		end
+	end
+
 	describe "Table > " do
 		it "should render the white_list table" do
 			should have_selector('#whitelist_table')
