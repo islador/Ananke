@@ -72,9 +72,9 @@ describe Api do
 			it {should_not be_valid}
 		end
 
-		describe "should validate presence of active" do
-			before {api.active = nil}
-			it {should_not be_valid}
-		end
+		#describe "should validate presence of active" do
+		#	before {api.active = nil}
+		#	it {should_not be_valid}
+		#end
 	end
 end

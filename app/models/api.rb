@@ -22,5 +22,13 @@ class Api < ActiveRecord::Base
 	validates :key_id, presence: true
 	validates :v_code, presence: true
 	validates :accessmask, presence: true
-	validates :active, presence: true
+	#validates :active, presence: true
+
+	def retrieve_contact_list
+		if(self.entity == 1)
+			ContactListWorker.perform_async(self.key_id, self.v_code)
+		else
+			raise "API is not a corporation API (entity:1)"
+		end
+	end
 end

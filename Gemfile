@@ -44,7 +44,7 @@ group :doc do
 end
 
 # EVE Gems
-# This instance is used because it has been modified to support rails 4 and the new CCP domain.
+# This instance is used because it has been modified to support rails 4, the new CCP domain and the corp contact list api.
 gem 'eve',			:git => "https://github.com/islador/eve", :branch => "AddCorpContactList"
 
 group :development do
