@@ -60,4 +60,50 @@ describe "whitelist/white_list.haml > " do
 			should_not have_selector("tr#entity_#{whitelist3.id}", text: whitelist3.name)
 		end
 	end
+
+	describe "Create > " do
+		it "should add the item to the database", js: true do
+			fill_in('entity_name', :with => "Jeff")
+			expect{
+				click_button 'Add Entity'
+			}.to change(Whitelist, :count).by(+1)
+		end
+
+		it "should add the correct item to the database (Alliance Entity)", js: true do
+			fill_in('entity_name', :with => "Jeff")
+			choose 'Alliance'
+			click_button 'Add Entity'
+			expect{
+				Whitelist.last.entity_type
+			}.to be 1
+		end
+
+		it "should add the correct item to the database (Corporation Entity)", js: true do
+			fill_in('entity_name', :with => "Jeff")
+			choose 'Corporation'
+			click_button 'Add Entity'
+			expect{
+				Whitelist.last.entity_type
+			}.to be 2
+		end
+		it "should add the correct item to the database (Faction Entity)", js: true do
+			fill_in('entity_name', :with => "Jeff")
+			choose 'Faction'
+			click_button 'Add Entity'
+			expect{
+				Whitelist.last.entity_type
+			}.to be 3
+		end
+		it "should add the correct item to the database (Character Entity)", js: true do
+			fill_in('entity_name', :with => "Jeff")
+			choose 'Character'
+			click_button 'Add Entity'
+			expect{
+				Whitelist.last.entity_type
+			}.to be 4
+		end
+
+		xit "should redraw the table with the new item", js: true do
+		end
+	end
 end
