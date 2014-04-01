@@ -10,7 +10,7 @@ class WhitelistController < ApplicationController
 
 	def destroy
 		Whitelist.where("id = ?", params[:id])[0].destroy
-		render nothing: true #Probably need to reload the table somehow instead of rendering nothing
+		render nothing: true
 	end
 
 	#Display methods

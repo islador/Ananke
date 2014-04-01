@@ -69,41 +69,65 @@ describe "whitelist/white_list.haml > " do
 			}.to change(Whitelist, :count).by(+1)
 		end
 
+		it "should clear the entity_name field after creating an entity", js: true do
+			fill_in('entity_name', :with => "Jeff")
+			click_button 'Add Entity'
+			find_field('entity[name]').value.should eq ''
+		end
+
+		it "should redraw the table with the new item", js: true do
+			fill_in('entity_name', :with => "Jeff")
+			choose 'Alliance'
+			click_button 'Add Entity'
+
+			#This test is sloppy, it should reference the table more specifically.
+			should have_selector("td", text: "Jeff")
+			should have_selector("td", text: "Alliance")
+			should have_selector("td", text: "You")
+			should have_selector("td", text: "Manual")
+			should have_selector("td", text: "Freshly Added")
+		end
+
 		it "should add the correct item to the database (Alliance Entity)", js: true do
 			fill_in('entity_name', :with => "Jeff")
 			choose 'Alliance'
 			click_button 'Add Entity'
-			expect{
-				Whitelist.last.entity_type
-			}.to be 1
+			#Table refresh uses a stubbing method. TR ID's are not possible in this iteration.
+			visit whitelist_white_list_path
+			within "tr#entity_#{Whitelist.last.id}" do
+				should have_selector("td", text: "Alliance")
+			end
 		end
 
 		it "should add the correct item to the database (Corporation Entity)", js: true do
 			fill_in('entity_name', :with => "Jeff")
 			choose 'Corporation'
 			click_button 'Add Entity'
-			expect{
-				Whitelist.last.entity_type
-			}.to be 2
+			#Table refresh uses a stubbing method. TR ID's are not possible in this iteration.
+			visit whitelist_white_list_path
+			within "tr#entity_#{Whitelist.last.id}" do
+				should have_selector("td", text: "Corporation")
+			end
 		end
 		it "should add the correct item to the database (Faction Entity)", js: true do
 			fill_in('entity_name', :with => "Jeff")
 			choose 'Faction'
 			click_button 'Add Entity'
-			expect{
-				Whitelist.last.entity_type
-			}.to be 3
+			#Table refresh uses a stubbing method. TR ID's are not possible in this iteration.
+			visit whitelist_white_list_path
+			within "tr#entity_#{Whitelist.last.id}" do
+				should have_selector("td", text: "Faction")
+			end
 		end
 		it "should add the correct item to the database (Character Entity)", js: true do
 			fill_in('entity_name', :with => "Jeff")
 			choose 'Character'
 			click_button 'Add Entity'
-			expect{
-				Whitelist.last.entity_type
-			}.to be 4
-		end
-
-		xit "should redraw the table with the new item", js: true do
+			#Table refresh uses a stubbing method. TR ID's are not possible in this iteration.
+			visit whitelist_white_list_path
+			within "tr#entity_#{Whitelist.last.id}" do
+				should have_selector("td", text: "Character")
+			end
 		end
 	end
 end

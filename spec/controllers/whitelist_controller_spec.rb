@@ -30,8 +30,6 @@ describe WhitelistController do
     end
   end
 
-  #describe "DELETE 'delete'"
-
   describe "DELETE 'destroy'" do
     let!(:whitelist) {FactoryGirl.create(:whitelist)}
 
