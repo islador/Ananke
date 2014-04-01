@@ -4,6 +4,7 @@ describe "whitelist/white_list_log.haml >" do
 	subject {page}
 	let!(:user) {FactoryGirl.create(:user)}
 
+
 	before(:each) do
 		visit whitelist_white_list_log_path
 		fill_in('user_email', :with => user.email)
@@ -12,6 +13,8 @@ describe "whitelist/white_list_log.haml >" do
 	end
 
 	describe " Table > " do
+		let!(:whitelistlog) {FactoryGirl.create(:whitelist_log, entity_name: "Jeff")}
+
 		it "should render the white_list table" do
 			should have_selector('#whitelist_log_table')
 		end
@@ -20,11 +23,10 @@ describe "whitelist/white_list_log.haml >" do
 			should have_selector('#whitelist_log_table_wrapper')
 		end
 
-		let!(:whitelistlog) {FactoryGirl.create(:whitelist_log, entity_name: "Jeff")}
-		it "should contain items from the database" do
+		it "should contain items from the database", js: true do
 			visit whitelist_white_list_log_path
 			within '#whitelist_log_table' do
-				should have_selector("tr#entity_1", text: whitelistlog.entity_name)
+				should have_selector("tr#entity_#{WhitelistLog.last.id}", text: whitelistlog.entity_name)
 			end
 		end
 	end
