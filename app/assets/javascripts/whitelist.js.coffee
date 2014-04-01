@@ -6,7 +6,7 @@ jQuery ->
 	window.wlt = $('#whitelist_table').dataTable()
 
 	$('#whitelist_log_table').dataTable
-		aaSorting: [[ 6, "asc" ]]
+		aaSorting: [[ 6, "desc" ]]
 
 	#Function to detect clicks on the in table whitelist entity "Delete" button.
 	$("[id^='destroy_entity_']").click ->
