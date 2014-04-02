@@ -18,6 +18,9 @@ class Api < ActiveRecord::Base
 	belongs_to :user
 	has_many :characters
 
+	#Add a main_entity column?
+	# Could be used to allow for main character functionality as well as allowing for corporation name's to be displayed for corporation APIs?
+
 	validates :entity, presence: true
 	validates :key_id, presence: true
 	validates :v_code, presence: true

@@ -26,6 +26,7 @@ describe Api do
 	it {should respond_to(:v_code)}
 	it {should respond_to(:accessmask)}
 	it {should respond_to(:active)}
+	it {should respond_to(:main_entity)}
 
 	it {should be_valid}
 
