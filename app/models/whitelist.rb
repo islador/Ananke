@@ -32,15 +32,12 @@ class Whitelist < ActiveRecord::Base
 	#Creates a new whitelist log record representing itself being created.
 	#This can be moved to sidekiq if necessary.
 	def generate_addition_log
-		#SOURCE USER IS STUBBED, IT NEEDS TO BE FIXED
-		WhitelistLog.create(entity_name: self.name, addition: true, entity_type: self.entity_type, source_type: self.source_type, source_user: 1, date: Date.today, time: Time.now)
+		WhitelistLog.create(entity_name: self.name, addition: true, entity_type: self.entity_type, source_type: self.source_type, source_user: self.source_user, date: Date.today, time: Time.now)
 	end
 
 	#Creates a new whitelist log record representing itself being destroyed.
 	#This can be moved to sidekiq if necessary.
 	def generate_removal_log
-		#SOURCE USER IS STUBBED, IT NEEDS TO BE FIXED
-		fuck = WhitelistLog.new(entity_name: self.name, addition: false, entity_type: self.entity_type, source_type: self.source_type, source_user: 1, date: Date.today, time: Time.now)
-		fuck.save!
+		WhitelistLog.create(entity_name: self.name, addition: false, entity_type: self.entity_type, source_type: self.source_type, source_user: self.source_user, date: Date.today, time: Time.now)
 	end
 end
