@@ -16,6 +16,41 @@
 
 %div{:id => "api_addition"}
 
+%div{:id => "active_api_display"}
+	%table.table.table-condensed{:id => "api_pulls_table"}
+	%thead
+		%tr
+			%th Name
+			%th Entity Type
+			%th Source User
+			%th Source Type
+			%th Standing
+			%th
+	%tbody
+		- @wl.each do |entity|
+			%tr{:id => "api_#{api.id}"}
+				%td= entity.name
+				
+				- if entity.entity_type == 1
+					%td Alliance
+				- elsif entity.entity_type == 2
+					%td Corporation
+				- elsif entity.entity_type == 3
+					%td Faction
+				- else
+					%td Character
+
+				%td= entity.source_user
+
+				-if entity.source_type == 1
+					%td API
+				-else
+					%td Manual
+				
+				%td= entity.standing
+				%td
+					%button{:id => "destroy_entity_#{entity.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/whitelist/#{entity.id}", :entity_id => "entity_#{entity.id}"}} Cancel
+
 
 %li Allows a user to select a valid API to pull and update the white list from -> add's the API's Main Char's Corp || Alliance to the white list
 %li
