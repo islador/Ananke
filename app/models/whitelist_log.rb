@@ -9,9 +9,9 @@
 #  addition    :boolean
 #  entity_type :integer
 #  date        :date
-#  time        :time
 #  created_at  :datetime
 #  updated_at  :datetime
+#  time        :datetime
 #
 
 class WhitelistLog < ActiveRecord::Base
