@@ -20,6 +20,45 @@ describe "whitelist/white_list.haml > " do
 			should have_selector('input#entity_type_4')
 			should have_selector('button#submit_new_entity', text: 'Add Entity')
 		end
+
+		describe "API Pull Table > " do
+			it "should render the white_list table" do
+				should have_selector('#api_pulls_table')
+			end
+
+			it "should render datatables", js: true do
+				should have_selector('#api_pulls_table_wrapper')
+			end
+
+			let!(:api1) {FactoryGirl.create(:api, main_entity: "Avah", entity: 1)}
+			it "should contain items from the database" do
+				visit whitelist_white_list_path
+				within '#api_pulls_table' do
+					should have_selector("tr#entity_#{api1.id}", text: api1.main_entity)
+				end
+			end
+
+			let!(:api2) {FactoryGirl.create(:api)}
+			it "should contain a cancel button for each API" do
+				visit whitelist_white_list_path
+				should have_selector("button#destroy_entity_#{api2.id}", text: "Cancel Pull")
+			end
+
+			describe "Cancel > " do
+				let!(:api3) {FactoryGirl.create(:api, main_entity: "Avah", entity: 1)}
+				it "should remove the item from the datatable when clicked", js: true do
+					visit whitelist_white_list_path
+					
+					should have_selector("tr#entity_#{api3.id}", text: api3.main_entity)
+					
+					#http://stackoverflow.com/a/2609244
+					page.evaluate_script('window.confirm = function() { return true; }')
+
+					click_button 'Cancel'
+					should_not have_selector("tr#entity_#{api3.id}", text: api3.main_entity)
+				end
+			end
+		end
 	end
 
 	describe "Table > " do

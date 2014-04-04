@@ -19,7 +19,7 @@ class Api < ActiveRecord::Base
 	belongs_to :user
 	has_many :characters
 
-	after_create :determine_type
+	#after_create :determine_type
 	#Add a main_entity column?
 	# Could be used to allow for main character functionality as well as allowing for corporation name's to be displayed for corporation APIs?
 

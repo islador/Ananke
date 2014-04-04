@@ -24,12 +24,14 @@ FactoryGirl.define do
 		#accessmask represents all options ticked
 		accessmask 268435455
 		active 1
+		main_entity "John"
 		user
 
 		factory :corp_api do
 			#accessmask represents all options ticked
 			accessmask 67108863
 			entity 1
+			main_entity "Alaskan Fish"
 		end
 	end
 
