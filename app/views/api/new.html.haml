@@ -1,6 +1,16 @@
 %h1 Api#new
 %p Find me in app/views/api/new.html.haml
 
+%div{:id => "prefab_keys"}
+	=link_to("Make a Key", "https://community.eveonline.com/support/api-key/CreatePredefined?accessMask=268435455", id: "user_prefab_key", class: "btn btn-xs btn-success") 
+
+%div{:id => "new_api_enroll"}
+	=text_field(:key, :id, :placeholder => "Key ID")
+	=text_field(:v, :code, :placeholder => "Verification Code")
+	=check_box_tag('main_api')
+	=label_tag(:main_api, "Main API?")
+	%button{:id => "enroll_new_api", :class => "btn btn-xs btn-success", :data => {:target_path => "/api"}} Enroll Key
+
 %h3 Basic Concept
 A page to enroll APIs at. 
 %ul
@@ -9,6 +19,7 @@ A page to enroll APIs at.
 	%li An option to set the API as your main API
 	%li Prefab key links for Corporations that only show up if you're the CEO
 	%li Prefab key links for players that show up regardless of who you are
+	%li https://community.eveonline.com/support/api-key/CreatePredefined?accessMask=268435455
 	%li An explanation of core concepts in the API system.
 	%ul
 		%li What a main API is
