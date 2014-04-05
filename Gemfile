@@ -9,6 +9,9 @@ gem 'pg'
 # Use devise for users
 gem 'devise'
 gem 'devise-async'
+# User cancancan for role based authorization
+gem 'cancancan', '~> 1.7'
+
 gem 'sidekiq'
 #For Sidekiq's web UI
 gem 'sinatra', '>= 1.3.0', :require => nil
