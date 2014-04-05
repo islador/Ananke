@@ -19,10 +19,15 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
+#  main_api               :integer
 #
 
 require 'spec_helper'
 
 describe User do
-  pending "add some examples to (or delete) #{__FILE__}"
+  user = User.create(email: "test@test.com", password: "test1234", password_confirmation: "test1234", confirmed_at: Time.new(2014), confirmation_sent_at: Time.new(2014)-50)
+  subject{user}
+
+  it {should respond_to :main_api}
+
 end

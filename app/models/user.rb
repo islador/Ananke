@@ -19,6 +19,7 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
+#  main_api               :integer
 #
 
 class User < ActiveRecord::Base
@@ -27,11 +28,5 @@ class User < ActiveRecord::Base
 	devise :database_authenticatable, :async, :registerable,
 			:recoverable, :rememberable, :trackable, :validatable, :confirmable
 	
-	#after_save :trigger
-
 	has_many :apis
-
-	#def trigger
-	#	HardWorker.perform_async('bob', 5)
-	#end
 end
