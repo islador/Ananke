@@ -9,6 +9,10 @@ Ananke::Application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   devise_for :users
+
+  resources :users do
+    resources :api
+  end
   
   #Set root to the sign_in page.
   #http://stackoverflow.com/questions/4954876/setting-devise-login-to-be-root-page

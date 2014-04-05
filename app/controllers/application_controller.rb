@@ -5,6 +5,6 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(user)
   	#This needs to be changed to link to the APIs pages once they're up.
-	  whitelist_white_list_path
+	  user_api_index_path(current_user)
 	end
 end
