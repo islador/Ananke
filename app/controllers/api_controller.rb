@@ -10,9 +10,6 @@ class ApiController < ApplicationController
   def destroy
   end
 
-  def apis
-  end
-
   def index
   end
 
