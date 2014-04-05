@@ -1,0 +1,22 @@
+%h1 Api#new
+%p Find me in app/views/api/new.html.haml
+
+%h3 Basic Concept
+A page to enroll APIs at. 
+%ul
+	%li A simple form for KeyID, and vCode
+	%li A lovely 'Enroll' button
+	%li An option to set the API as your main API
+	%li Prefab key links for Corporations that only show up if you're the CEO
+	%li Prefab key links for players that show up regardless of who you are
+	%li An explanation of core concepts in the API system.
+	%ul
+		%li What a main API is
+		%li What a corporation API is for
+		%li How many times a user may swap main APIs
+		%li What effect a main API has on the user
+		%li The main character concept
+		%li How the main character determines the user's display name in all auth connected services.
+		%li What roles are pulled automagically and how they affect the user.
+		%ul
+			%li Should CEO's be able to define new roles to pull automagically? The APIs seem to give the ability, does cancancan allow for roles to be defined willy nilly like that? Can I build a functional roles matrix to allow for a web matched mix-n-match? How does this integrate with TS? Forums? etc?
