@@ -14,10 +14,6 @@ describe "api/new.html.haml > " do
 		visit new_user_api_path(user)
 	end
 
-	#it "should be the proper page" do
-	#	should have_selector('h1', text: "Api#new")
-	#end
-
 	it "should contain a link to generate a prefab key from" do
 		should have_selector('a#user_prefab_key')
 	end
@@ -27,5 +23,24 @@ describe "api/new.html.haml > " do
 		should have_selector('input#v_code')
 		should have_selector('input#main_api')
 		should have_selector('button#enroll_new_api', text: 'Enroll Key')
+	end
+
+	describe "Create > " do
+		it "should add the API to the database", js: true do
+			fill_in('key_id', :with => "1234789")
+			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			expect{
+				click_button 'Enroll Key'
+			}.to change(Api, :count).by(+1)
+		end
+
+		it "should clear the v_code and key_id fields after creating an API", js: true do
+			fill_in('key_id', :with => "1234789")
+			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			click_button 'Enroll Key'
+
+			find_field('key[id]').value.should eq ''
+			find_field('v[code]').value.should eq ''
+		end
 	end
 end
