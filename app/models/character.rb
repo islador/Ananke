@@ -14,10 +14,12 @@
 #  factionID       :integer
 #  created_at      :datetime
 #  updated_at      :datetime
+#  main            :boolean
 #
 
 class Character < ActiveRecord::Base
 	belongs_to :api
+	#The main bool is intended to be used to identify the main character of an account's main API. There doesn't seem to be a way to enforce it being false in other situations inherent in rails.
 
 	validates :name, presence: true
 	validates :characterID, presence: true
