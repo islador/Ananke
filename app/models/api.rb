@@ -23,11 +23,14 @@ class Api < ActiveRecord::Base
 	#Add a main_entity column?
 	# Could be used to allow for main character functionality as well as allowing for corporation name's to be displayed for corporation APIs?
 
-	validates :entity, presence: true
+	
 	validates :key_id, presence: true
 	validates :v_code, presence: true
-	validates :accessmask, presence: true
+
+	#Below validations removed because they no longer work with the workflow. API's get this data from a sidekiq worker after creation.
+	#validates :accessmask, presence: true
 	#validates :active, presence: true
+	#validates :entity, presence: true
 
 	def retrieve_contact_list
 		if(self.entity == 1)

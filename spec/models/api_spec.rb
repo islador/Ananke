@@ -54,10 +54,10 @@ describe Api do
 	end
 
 	describe "Validations > " do
-		describe "should validate presence of entity" do
-			before {api.entity = nil}
-			it {should_not be_valid}
-		end
+		#describe "should validate presence of entity" do
+		#	before {api.entity = nil}
+		#	it {should_not be_valid}
+		#end
 
 		describe "should validate presence of key_id" do
 			before {api.key_id = nil}
@@ -69,10 +69,10 @@ describe Api do
 			it {should_not be_valid}
 		end
 
-		describe "should validate presence of accessmask" do
-			before {api.accessmask = nil}
-			it {should_not be_valid}
-		end
+		#describe "should validate presence of accessmask" do
+		#	before {api.accessmask = nil}
+		#	it {should_not be_valid}
+		#end
 
 		#describe "should validate presence of active" do
 		#	before {api.active = nil}

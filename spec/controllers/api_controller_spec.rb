@@ -6,12 +6,10 @@ describe ApiController do
   let!(:user) {FactoryGirl.create(:user)}
 
   describe "CREATE 'create'" do
-    #let!(:user) {FactoryGirl.create(:user)}
-
     it "should enroll a new API" do
       sign_in user
       expect{
-        xhr :post, :create, key_id: "1234789", v_code: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", main_api: false
+        xhr :post, :create, user_id: user.id, key_id: "1234789", v_code: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", main_api: false
       }.to change(Api, :count).by(+1)
     end
   end
@@ -21,7 +19,7 @@ describe ApiController do
 
     it "should destroy the api identified" do
       expect{
-        xhr :delete, :destroy, id: api.id}.to change(Api, :count).by(-1)
+        xhr :delete, :destroy, user_id: user.id, id: api.id}.to change(Api, :count).by(-1)
     end
   end
 
@@ -46,5 +44,4 @@ describe ApiController do
       response.should be_success
     end
   end
-
 end
