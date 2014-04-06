@@ -11,7 +11,9 @@ Ananke::Application.routes.draw do
   devise_for :users
 
   resources :users do
-    resources :api
+    resources :api do
+      get "/character_list", to: "api#character_list"
+    end
   end
   
   #Set root to the sign_in page.
