@@ -2,6 +2,7 @@ class ApiController < ApplicationController
   before_action :authenticate_user!
 
   def new
+    @count = current_user.apis.count
   end
 
   def create

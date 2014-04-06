@@ -37,7 +37,7 @@ describe "api/new.html.haml > " do
 		end
 
 		it "should uncheck the main api box after a successful enrollment", js: true do
-			ill_in('key_id', :with => "123456789")
+			fill_in('key_id', :with => "123456789")
 			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 			click_button 'Enroll Key'
 			find('input#main_api').should_not be_checked

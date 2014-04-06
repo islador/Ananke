@@ -28,6 +28,11 @@ describe ApiController do
       get 'new', :user_id => user.id
       response.should be_success
     end
+
+    it "should build an object containing the count of all the current user's enrolled APIs" do
+      get 'new', :user_id => user.id
+      expect(assigns(:count)).to be 0
+    end
   end
 
   describe "GET 'index'" do
