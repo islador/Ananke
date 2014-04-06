@@ -25,6 +25,25 @@ describe "api/new.html.haml > " do
 		should have_selector('button#enroll_new_api', text: 'Enroll Key')
 	end
 
+	describe "First API > " do
+		it "should have the main api box checked by default" do
+			find('input#main_api').should be_checked
+			fill_in('key_id', :with => "123456789")
+			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			click_button 'Enroll Key'
+
+			visit new_user_api_path(user)
+			find('input#main_api').should_not be_checked
+		end
+
+		it "should uncheck the main api box after a successful enrollment", js: true do
+			ill_in('key_id', :with => "123456789")
+			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			click_button 'Enroll Key'
+			find('input#main_api').should_not be_checked
+		end
+	end
+
 	describe "Create > " do
 		it "should add the API to the database", js: true do
 			fill_in('key_id', :with => "123456789")
