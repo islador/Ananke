@@ -26,9 +26,14 @@ describe "api/new.html.haml > " do
 	end
 
 	describe "Create > " do
+		#This spec is failing and I have no idea why. It tests manually just fine.
 		it "should add the API to the database", js: true do
-			fill_in('key_id', :with => "1234789")
+			fill_in('key_id', :with => "123456789")
 			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+			find_field('key[id]').value.should eq '123456789'
+			find_field('v[code]').value.should eq 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
 			expect{
 				click_button 'Enroll Key'
 			}.to change(Api, :count).by(+1)

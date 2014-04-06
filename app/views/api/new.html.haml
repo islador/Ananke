@@ -2,14 +2,15 @@
 %p Find me in app/views/api/new.html.haml
 
 %div{:id => "prefab_keys"}
-	=link_to("Make a Key", "https://community.eveonline.com/support/api-key/CreatePredefined?accessMask=268435455", id: "user_prefab_key", class: "btn btn-xs btn-success") 
+	=link_to("Make a Key", "https://community.eveonline.com/support/api-key/CreatePredefined?accessMask=268435455", id: "user_prefab_key", class: "btn btn-xs btn-success")
 
 %div{:id => "new_api_enroll"}
 	=text_field(:key, :id, :placeholder => "Key ID")
 	=text_field(:v, :code, :placeholder => "Verification Code")
 	=check_box_tag('main_api')
 	=label_tag(:main_api, "Main API?")
-	%button{:id => "enroll_new_api", :class => "btn btn-xs btn-success", :data => {:target_path => "/api"}} Enroll Key
+	%button{:id => "enroll_new_api", :class => "btn btn-xs btn-success", :data => {:target_path => "/users/#{current_user.id}/api"}} Enroll Key
+	The first API should have "main_api" checked by default. All subsequent should not.
 
 %h3 Basic Concept
 A page to enroll APIs at. 
