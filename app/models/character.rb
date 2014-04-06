@@ -25,10 +25,12 @@ class Character < ActiveRecord::Base
 	validates :characterID, presence: true
 	validates :corporationName, presence: true
 	validates :corporationID, presence: true
-	validates :allianceName, presence: true
-	validates :allianceID, presence: true
-	validates :factionName, presence: true
-	validates :factionID, presence: true
+
+	#The API can return null values, so validating these presences seems a bit off.
+	#validates :allianceName, presence: true
+	#validates :allianceID, presence: true
+	#validates :factionName, presence: true
+	#validates :factionID, presence: true
 
 	#Check the whitelist to see if the character is on the list in one capacity or another.
 	def is_approved?
