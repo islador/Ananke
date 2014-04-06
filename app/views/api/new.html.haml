@@ -14,7 +14,6 @@
 		=label_tag(:main_api, "Main API?")
 		=check_box_tag(:main_api, 0)
 	%button{:id => "enroll_new_api", :class => "btn btn-xs btn-success", :data => {:target_path => "/users/#{current_user.id}/api"}} Enroll Key
-	The first API should have "main_api" checked by default. All subsequent should not.
 
 %h3 Basic Concept
 A page to enroll APIs at. 

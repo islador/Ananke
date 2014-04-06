@@ -18,7 +18,9 @@ jQuery ->
 			data: {authenticity_token: authenticity_token, key_id: keyID, v_code: vCode},
 			#On success, return code 200, trigger the entity_name field
 			done: clear_text_field("#key_id"),
-			done: clear_text_field("#v_code")
+			done: clear_text_field("#v_code"),
+			done: if main_checked == true
+				uncheck_checkbox("#main_api")
 		})
 
 
@@ -26,3 +28,6 @@ jQuery ->
 	clear_text_field = (id) ->
 		#alert id
 		$(id).val("")
+
+	uncheck_checkbox = (id) ->
+		$(id).prop('checked', false)

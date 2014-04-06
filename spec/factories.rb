@@ -44,6 +44,7 @@ FactoryGirl.define do
 		sequence(:allianceID) {|n| n}
 		sequence(:factionName) {|n| "Faction#{n}"}
 		sequence(:factionID) {|n| n}
+		main false
 		api
 	end
 
