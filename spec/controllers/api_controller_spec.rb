@@ -25,11 +25,13 @@ describe ApiController do
 
   describe "GET 'new'" do
     it "returns http success" do
+      sign_in user
       get 'new', :user_id => user.id
       response.should be_success
     end
 
     it "should build an object containing the count of all the current user's enrolled APIs" do
+      sign_in user
       get 'new', :user_id => user.id
       expect(assigns(:count)).to be 0
     end
