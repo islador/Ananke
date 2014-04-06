@@ -20,4 +20,9 @@ class ApiController < ApplicationController
 
   def show
   end
+
+  def character_list
+    @cl = Api.where("id = ?", params[:api_id])[0].characters
+    render nothing: true
+  end
 end

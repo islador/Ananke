@@ -55,8 +55,8 @@ describe ApiController do
   describe "GET 'character_list'" do
     let!(:api1) {FactoryGirl.create(:api, user: user)}
     let!(:character1){FactoryGirl.create(:character, api: api1)}
-    let!(:character1){FactoryGirl.create(:character, api: api1)}
-    let!(:character1){FactoryGirl.create(:character, api: api1)}
+    let!(:character2){FactoryGirl.create(:character, api: api1)}
+    let!(:character3){FactoryGirl.create(:character, api: api1)}
 
     it "should return http success" do
       get 'character_list', :user_id => user.id, :api_id => api1.id
@@ -68,7 +68,7 @@ describe ApiController do
 
       xhr :get, :character_list, user_id: user.id, api_id: api1.id
       
-      expect(assigns(:cl)).to be 3
+      expect(assigns(:cl).count).to be 3
     end
   end
 end
