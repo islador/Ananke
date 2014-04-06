@@ -26,7 +26,6 @@ describe "api/new.html.haml > " do
 	end
 
 	describe "Create > " do
-		#This spec is failing and I have no idea why. It tests manually just fine.
 		it "should add the API to the database", js: true do
 			fill_in('key_id', :with => "123456789")
 			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
