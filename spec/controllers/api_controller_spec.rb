@@ -12,6 +12,15 @@ describe ApiController do
         xhr :post, :create, user_id: user.id, key_id: "1234789", v_code: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", main_api: false
       }.to change(Api, :count).by(+1)
     end
+
+    it "should return the API's ID" do
+      #This test could be better. Namely sort out how to access the API itself and compare it's ID against the response.
+      sign_in user
+      xhr :post, :create, user_id: user.id, key_id: "1234789", v_code: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", main_api: false
+      expect{
+        response
+      }.should_not be 0
+    end
   end
 
   describe "DELETE 'destroy'" do
@@ -59,7 +68,7 @@ describe ApiController do
     let!(:character3){FactoryGirl.create(:character, api: api1)}
 
     it "should return http success" do
-      get 'character_list', :user_id => user.id, :api_id => api1.id
+      xhr :get, :character_list, :user_id => user.id, :api_id => api1.id
       response.should be_success
     end
 
@@ -77,7 +86,11 @@ describe ApiController do
       xhr :get, :character_list, user_id: user.id, api_id: api1.id
 
       #Testing for rendering of partials: http://stackoverflow.com/a/9947815
-      response.should render_template(:partial => 'character_list')
+      #expect(response).to render_template(:partial => 'character_list')
+      #response.body.should have_selector("div#Fuck")
+
+      assert_template partial: 'character_list', count: 1
+      #response.should render_template(:partial => 'character_list.js')
     end
   end
 end

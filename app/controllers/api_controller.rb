@@ -6,8 +6,9 @@ class ApiController < ApplicationController
   end
 
   def create
-    current_user.apis.create(key_id: params[:key_id], v_code: params[:v_code])
-    render nothing: true
+    api = current_user.apis.build(key_id: params[:key_id], v_code: params[:v_code])
+    api.save!
+    render :json => api.id
   end
 
   def destroy
@@ -19,10 +20,23 @@ class ApiController < ApplicationController
   end
 
   def show
+    @api = Api.where("id = ?", params[:id])[0]
+    @cl = @api.characters
   end
 
   def character_list
-    @cl = Api.where("id = ?", params[:api_id])[0].characters
-    render nothing: true
+    @api = Api.where("id = ?", params[:api_id])[0]
+    @cl = @api.characters
+
+    #respond_to do |format|
+    #  format.json render(:partial => '/shared/character_list', locals:{cl: @cl})
+    #end
+    respond_to do |format|
+      format.js
+    end
+    
+    #render json:
+
+    #$('#team_1_display_table').empty().append("<%= escape_javascript(render(:partial => 'team_1_table', locals: {players: @players})) %>");
   end
 end

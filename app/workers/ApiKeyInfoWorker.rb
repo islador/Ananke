@@ -18,12 +18,21 @@ class ApiKeyInfoWorker
 			ananke_api.main_entity = corp_name
 			ananke_api.save!	
 		end
-
+		allianceName = ""
+		factionName = ""
 		if(result.key.type == "Account" || result.key.type == "Character")
 			#Iterate through the returned characters
 			result.key.characters.each do |c|
+				if(c.allianceName == false)
+					allianceName = nil
+				end
+				if(c.factionName == false)
+					factionName = nil
+				end
+				#puts "allianceName: #{c.allianceName}"
+				#puts "factionName: #{c.factionName}"
 				#Insert each into the database.
-				toon = ananke_api.characters.build(name: c.characterName, characterID: c.characterID, corporationName: c.corporationName, corporationID: c.corporationID, allianceName: c.allianceName, allianceID: c.allianceID, factionName: c.factionName, factionID: c.factionID)
+				toon = ananke_api.characters.build(name: c.characterName, characterID: c.characterID, corporationName: c.corporationName, corporationID: c.corporationID, allianceName: allianceName, allianceID: c.allianceID, factionName: factionName, factionID: c.factionID)
 				if toon.valid? == true
 					toon.save!
 				end

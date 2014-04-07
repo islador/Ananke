@@ -22,6 +22,12 @@ gem "jquery-datatables-rails"
 gem "haml-rails"
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+
+# use jquery-ui for the dialog pop up method
+#gem 'jquery-ui-rails'
+
+#Bootstrap for styling and modal windows
+gem 'bootstrap-sass'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'
 # Use Uglifier as compressor for JavaScript assets

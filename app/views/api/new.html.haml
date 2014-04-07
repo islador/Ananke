@@ -1,6 +1,13 @@
 %h1 Api#new
 %p Find me in app/views/api/new.html.haml
 
+%div{:id => "myModal", :class=>"modal custom fade", :tabindex=>"-1", :role=>"dialog", :aria_labelledby=>"myModalLabel", :aria_hidden=>"true"}
+	%div{:class=>"modal-header"}
+		%h3{:id=>"myModalLabel"}Please Wait
+	%div{:class=>"modal-body"}
+		%p This should be centered. Your API is being queried by Ananke's worshippers. This will disapear on its own in less then five seconds.
+	%div{:class=>"modal-footer"}
+
 %div{:id => "prefab_keys"}
 	=link_to("Make a Key", "https://community.eveonline.com/support/api-key/CreatePredefined?accessMask=268435455", id: "user_prefab_key", class: "btn btn-xs btn-success")
 
@@ -14,6 +21,8 @@
 		=label_tag(:main_api, "Main API?")
 		=check_box_tag(:main_api, 0)
 	%button{:id => "enroll_new_api", :class => "btn btn-xs btn-success", :data => {:target_path => "/users/#{current_user.id}/api"}} Enroll Key
+
+%div{:id => "characters_partial"}
 
 %h3 Basic Concept
 A page to enroll APIs at. 

@@ -4,21 +4,21 @@
 		%p For example, if you select a main character by the name of "Tom", "Tom" is the name you and others will see for you in TeamSpeak.
 
 	%table.table.table-condensed{:id => "character_list_table"}
-	%thead
-		%tr
-			%th Name
-			%th Corporation
-			%th Alliance
-			%th Main
-	%tbody
-		- @cl.each do |character|
-			%tr{:id => "character_id_#{character.id}"}
-				%td= character.name
-				%td= character.corporationName
-				%td= character.allianceName
+		%thead
+			%tr
+				%th Name
+				%th Corporation
+				%th Alliance
+				%th Main
+		%tbody
+			- @cl.each do |character|
+				%tr{:id => "character_id_#{character.id}"}
+					%td= character.name
+					%td= character.corporationName
+					%td= character.allianceName
 
-				-if character.main == true
-					%td Main Character
-				-else
-					%td
-						%button{:id => "set_main_#{character.id}", :class => "btn btn-xs btn-warning", :data => {:target_path => "/users/#{current_user.id}/api/#{@api.id}/character/#{character.id}", :character_id => "#{character.id}"}} Set as Main
+					-if character.main == true
+						%td Main Character
+					-else
+						%td
+							%button{:id => "set_main_#{character.id}", :class => "btn btn-xs btn-warning", :data => {:target_path => "/users/#{current_user.id}/api/#{@api.id}/character/#{character.id}", :character_id => "#{character.id}"}} Set as Main

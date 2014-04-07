@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe "api/new.html.haml > " do
 	let!(:user) {FactoryGirl.create(:user)}
+	Capybara.default_wait_time = 10
 
 	subject {page}
 	
@@ -26,20 +27,20 @@ describe "api/new.html.haml > " do
 	end
 
 	it "should contain a div for the characters partial to load into" do
-		should have_selector('div#character_partial')
+		should have_selector('div#characters_partial')
 	end
 
 	describe "First API > " do
 		it "should have the main api box checked by default" do
 			find('input#main_api').should be_checked
-			fill_in('key_id', :with => "123456789")
-			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			fill_in('key_id', :with => "3255235")
+			fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 			click_button 'Enroll Key'
 		end
 
 		it "should uncheck the main api box after a successful enrollment", js: true do
-			fill_in('key_id', :with => "123456789")
-			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			fill_in('key_id', :with => "3255235")
+			fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 			click_button 'Enroll Key'
 			find('input#main_api').should_not be_checked
 		end
@@ -53,16 +54,16 @@ describe "api/new.html.haml > " do
 
 	describe "Main API > " do
 		it "after a main api is submitted, it should lock the screen for five seconds", js: true do
-			fill_in('key_id', :with => "123456789")
-			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			fill_in('key_id', :with => "3255235")
+			fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 			find(:css, "#main_api").set(true)
 			click_button 'Enroll Key'
 
-			#This test is not complete
+			should have_selector("div.modal-backdrop")
 		end
 		it "after a main API is submitted, it should load in the character list partial", js: true do
-			fill_in('key_id', :with => "123456789")
-			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			fill_in('key_id', :with => "3255235")
+			fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 			find(:css, "#main_api").set(true)
 			click_button 'Enroll Key'
 
@@ -71,18 +72,18 @@ describe "api/new.html.haml > " do
 
 		describe "Character List Partial > " do
 			it "should contain an explanation of terms" do
-				fill_in('key_id', :with => "123456789")
-				fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+				fill_in('key_id', :with => "3255235")
+				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 				find(:css, "#main_api").set(true)
 				click_button 'Enroll Key'
 
-				should have_selector('.explanation')
+				should have_selector('div.explanation')
 			end
 
 			describe "Character List Table > " do
 				it "should render the character_list table" do
-					fill_in('key_id', :with => "123456789")
-					fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+					fill_in('key_id', :with => "3255235")
+					fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 					find(:css, "#main_api").set(true)
 					click_button 'Enroll Key'
 
@@ -90,8 +91,8 @@ describe "api/new.html.haml > " do
 				end
 
 				it "should render datatables", js: true do
-					fill_in('key_id', :with => "123456789")
-					fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+					fill_in('key_id', :with => "3255235")
+					fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 					find(:css, "#main_api").set(true)
 					click_button 'Enroll Key'
 
@@ -99,8 +100,8 @@ describe "api/new.html.haml > " do
 				end
 
 				it "should contain the api's characters" do
-					fill_in('key_id', :with => "123456789")
-					fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+					fill_in('key_id', :with => "3255235")
+					fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 					find(:css, "#main_api").set(true)
 					click_button 'Enroll Key'
 
@@ -112,8 +113,8 @@ describe "api/new.html.haml > " do
 				end
 
 				it "should not contain other api's characters" do
-					fill_in('key_id', :with => "123456789")
-					fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+					fill_in('key_id', :with => "3255235")
+					fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 					find(:css, "#main_api").set(true)
 					click_button 'Enroll Key'
 
@@ -123,8 +124,8 @@ describe "api/new.html.haml > " do
 				end
 
 				it "if no characters are set as the main, it should contain a button to set a character as the main", js: true do
-					fill_in('key_id', :with => "123456789")
-					fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+					fill_in('key_id', :with => "3255235")
+					fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 					find(:css, "#main_api").set(true)
 					click_button 'Enroll Key'
 
@@ -138,11 +139,11 @@ describe "api/new.html.haml > " do
 
 	describe "Create > " do
 		it "should add the API to the database", js: true do
-			fill_in('key_id', :with => "123456789")
-			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			fill_in('key_id', :with => "3255235")
+			fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 
-			find_field('key[id]').value.should eq '123456789'
-			find_field('v[code]').value.should eq 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+			find_field('key[id]').value.should eq '3255235'
+			find_field('v[code]').value.should eq 'P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x'
 
 			expect{
 				click_button 'Enroll Key'
@@ -150,8 +151,8 @@ describe "api/new.html.haml > " do
 		end
 
 		it "should clear the v_code and key_id fields after creating an API", js: true do
-			fill_in('key_id', :with => "1234789")
-			fill_in('v_code', :with => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			fill_in('key_id', :with => "3255235")
+			fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 			click_button 'Enroll Key'
 
 			find_field('key[id]').value.should eq ''
