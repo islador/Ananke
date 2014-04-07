@@ -70,5 +70,14 @@ describe ApiController do
       
       expect(assigns(:cl).count).to be 3
     end
+
+    it "should render the _character_list partial" do
+      sign_in user
+
+      xhr :get, :character_list, user_id: user.id, api_id: api1.id
+
+      #Testing for rendering of partials: http://stackoverflow.com/a/9947815
+      response.should render_template(:partial => 'character_list')
+    end
   end
 end
