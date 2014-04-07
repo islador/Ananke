@@ -17,7 +17,7 @@
 class Api < ActiveRecord::Base
 	#entity: 1 corporation, 2 character
 	belongs_to :user
-	has_many :characters
+	has_many :characters, dependent: :destroy
 
 	after_create :determine_type
 	#Add a main_entity column?

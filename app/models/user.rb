@@ -28,5 +28,5 @@ class User < ActiveRecord::Base
 	devise :database_authenticatable, :async, :registerable,
 			:recoverable, :rememberable, :trackable, :validatable, :confirmable
 	
-	has_many :apis
+	has_many :apis, dependent: :destroy
 end
