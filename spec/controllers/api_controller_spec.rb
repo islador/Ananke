@@ -9,14 +9,14 @@ describe ApiController do
     it "should enroll a new API" do
       sign_in user
       expect{
-        xhr :post, :create, user_id: user.id, key_id: "1234789", v_code: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", main_api: false
+        xhr :post, :create, user_id: user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
       }.to change(Api, :count).by(+1)
     end
 
     it "should return the API's ID" do
       #This test could be better. Namely sort out how to access the API itself and compare it's ID against the response.
       sign_in user
-      xhr :post, :create, user_id: user.id, key_id: "1234789", v_code: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", main_api: false
+      xhr :post, :create, user_id: user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
       expect{
         response
       }.should_not be 0
