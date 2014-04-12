@@ -24,12 +24,14 @@ describe Api do
 
 	subject {api}
 
-	it {should respond_to(:entity)}
+	it {should respond_to(:ccp_type)}
+	it {should respond_to(:ananke_type)}
 	it {should respond_to(:key_id)}
 	it {should respond_to(:v_code)}
 	it {should respond_to(:accessmask)}
 	it {should respond_to(:active)}
-	it {should respond_to(:main_entity)}
+	it {should respond_to(:main_entity_name)}
+	it {should respond_to(:main)}
 
 	it {should be_valid}
 

@@ -125,25 +125,5 @@ describe Character do
 			before {character.corporationID = nil}
 			it {should_not be_valid}
 		end
-
-		describe "should validate presence of allianceName" do
-			before {character.allianceName = nil}
-			it {should_not be_valid}
-		end
-
-		describe "should validate presence of allianceID" do
-			before {character.allianceID = nil}
-			it {should_not be_valid}
-		end
-
-		describe "should validate presence of factionName" do
-			before {character.factionName = nil}
-			it {should_not be_valid}
-		end
-
-		describe "should validate presence of factionID" do
-			before {character.factionID = nil}
-			it {should_not be_valid}
-		end
 	end
 end
