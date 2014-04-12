@@ -12,9 +12,10 @@ FactoryGirl.define do
 	end
 
 	factory :api do
-		entity 0
-		sequence(:key_id) {|n| "#{n}234789"}
-		v_code "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+		ccp_type 2
+		ananke_type 2
+		sequence(:key_id) {|n| "3255235"}
+		v_code "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x"
 		#Modified to create cassettes for testing.
 		#key_id "2638835"
 		#v_code "HGo53iK9v7nPHJ1rTMsNYBiQ4JISjP1vR2rM44KNNj4wAcVtNIJnWaWmeWheFuSo"
@@ -24,14 +25,16 @@ FactoryGirl.define do
 		#accessmask represents all options ticked
 		accessmask 268435455
 		active 1
-		main_entity "John"
+		main_entity_name "John"
+		main false
 		user
 
 		factory :corp_api do
 			#accessmask represents all options ticked
 			accessmask 67108863
-			entity 1
-			main_entity "Alaskan Fish"
+			ccp_type 1
+			ananke_type 1
+			main_entity_name "Alaskan Fish"
 		end
 	end
 
