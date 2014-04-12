@@ -2,16 +2,18 @@
 #
 # Table name: apis
 #
-#  id          :integer          not null, primary key
-#  user_id     :integer
-#  entity      :integer
-#  key_id      :string(255)
-#  v_code      :string(255)
-#  accessmask  :integer
-#  active      :boolean
-#  created_at  :datetime
-#  updated_at  :datetime
-#  main_entity :string(255)
+#  id               :integer          not null, primary key
+#  user_id          :integer
+#  ccp_type         :integer
+#  key_id           :string(255)
+#  v_code           :string(255)
+#  accessmask       :integer
+#  active           :boolean
+#  created_at       :datetime
+#  updated_at       :datetime
+#  main_entity_name :string(255)
+#  ananke_type      :integer
+#  main             :boolean
 #
 
 require 'spec_helper'

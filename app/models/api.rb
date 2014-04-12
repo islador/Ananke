@@ -2,20 +2,25 @@
 #
 # Table name: apis
 #
-#  id          :integer          not null, primary key
-#  user_id     :integer
-#  entity      :integer
-#  key_id      :string(255)
-#  v_code      :string(255)
-#  accessmask  :integer
-#  active      :boolean
-#  created_at  :datetime
-#  updated_at  :datetime
-#  main_entity :string(255)
+#  id               :integer          not null, primary key
+#  user_id          :integer
+#  ccp_type         :integer
+#  key_id           :string(255)
+#  v_code           :string(255)
+#  accessmask       :integer
+#  active           :boolean
+#  created_at       :datetime
+#  updated_at       :datetime
+#  main_entity_name :string(255)
+#  ananke_type      :integer
+#  main             :boolean
 #
 
 class Api < ActiveRecord::Base
-	#entity: 1 corporation, 2 character
+	#ccp_type: 1 corporation, 2 account, 3 character
+	#ananke_type: 1 corporation, 2 general
+	#main_entity_name: the name of the corporation if a corporation API, the name of the main character if this is a main API
+	#main: is the main API true/false
 	belongs_to :user
 	has_many :characters, dependent: :destroy
 
