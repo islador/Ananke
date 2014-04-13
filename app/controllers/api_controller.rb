@@ -17,6 +17,7 @@ class ApiController < ApplicationController
   end
 
   def index
+    @apis = current_user.apis
   end
 
   def show
