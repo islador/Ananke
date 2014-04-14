@@ -24,15 +24,6 @@ describe "api/show.html.haml" do
 		should have_selector('table#character_list_table')
 	end
 
-	it "should have a delete button" do
-		should have_selector("button#destroy_api_#{api.id}")
-	end
-
-	it "should not have a delete button if it is a main api" do
-		visit user_api_path(user, main_api)
-		should_not have_selector("button#destroy_api_#{main_api.id}")
-	end
-
 	describe " Set as Main > " do
 		let!(:character1) {FactoryGirl.create(:character, api: api)}
 		let!(:main_character) {FactoryGirl.create(:character, api: main_api, main: true)}
@@ -52,9 +43,26 @@ describe "api/show.html.haml" do
 
 		it "the main character should be marked as such" do
 			visit user_api_path(user, main_api)
-			#within "tr#character_id_#{main_character.id}" do
-				should have_selector("tr#character_id_#{main_character.id}", text: "Main Character")
-			#end
+			should have_selector("tr#character_id_#{main_character.id}", text: "Main Character")
+		end
+	end
+
+	describe " Delete API > " do
+		it "should have a delete button" do
+			should have_selector("#show_destroy_api_#{api.id}", text: "Delete API")
+		end
+
+		it "should not have a delete button if it is a main api" do
+			visit user_api_path(user, main_api)
+			should_not have_selector("#show_destroy_api_#{main_api.id}")
+		end
+
+		it "should redirect the user to the index page after deleting an API", js: true do
+			#http://stackoverflow.com/a/2609244
+			page.evaluate_script('window.confirm = function() { return true; }')
+			
+			click_link "Delete API"
+			should have_selector("table#api_list_table")
 		end
 	end
 end

@@ -3,6 +3,21 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 jQuery ->
+	#API Show
+	$("[id^='show_destroy_api_']").click ->
+		#Extract necessary data from the page.
+		target = $("#" + this.id).attr("data-target-path")
+		authenticity_token = $('meta[name=csrf-token]').attr("content")
+
+		#Trigger confirm dialog before making AJAX call
+		if confirm('Deleting this API will remove all characters associated with it from Ananke, and thus all access and privileges derived from them. Are you sure you wish to do this?') is true
+			#If the user clicks 'Ok' then send an AJAX call deleting the user
+			$.ajax({
+				#A post with a method data attribute is used to preserve cross browser compability.
+				url: target, type: "POST",
+				data: {"_method":"delete", authenticity_token: authenticity_token}
+			})
+
 	#API Index
 	window.alt = $('#api_list_table').dataTable()
 
