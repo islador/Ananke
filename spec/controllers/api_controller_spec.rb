@@ -21,17 +21,23 @@ describe ApiController do
       xhr :post, :create, user_id: user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
       expect{
         response
-      }.should_not be 0
+      }.not_to be 0
     end
   end
 
   describe "DELETE 'destroy'" do
     let!(:api) {FactoryGirl.create(:api)}
+    let!(:main_api) {FactoryGirl.create(:api, main: true)}
 
     it "should destroy the api identified" do
       expect{
         xhr :delete, :destroy, user_id: user.id, id: api.id}.to change(Api, :count).by(-1)
     end
+
+    it "should not destroy the api if it is a main API" do
+      expect{
+        xhr :delete, :destroy, user_id: user.id, id: main_api.id}.not_to change(Api, :count).by(-1)
+      end
   end
 
   describe "GET 'new'" do

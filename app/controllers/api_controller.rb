@@ -12,7 +12,12 @@ class ApiController < ApplicationController
   end
 
   def destroy
-    Api.where("id = ?", params[:id])[0].destroy
+    api = Api.where("id = ?", params[:id])[0]
+    if api.nil? == false
+      if api.main == false
+        api.destroy
+      end
+    end
     render nothing: true
   end
 
