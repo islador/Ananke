@@ -34,33 +34,43 @@ describe "api/index.html.haml > " do
 	end
 
 	describe "Api List Table > " do
-		let!(:api) {FactoryGirl.create(:api, user: user, main_entity_name: "Jeff")}
+		let!(:main) {FactoryGirl.create(:api, user: user, main_entity_name: "Jeff", main: true)}
+		let!(:character) {FactoryGirl.create(:character, api: main, main: true)}
+		let!(:general) {FactoryGirl.create(:api, user: user)}
+
 		it "should contain items from the database" do
 			visit user_api_index_path(user)
 			within '#api_list_table' do
-				should have_selector("tr#api_#{api.id}", text: api.main_entity_name)
+				should have_selector("tr#api_#{main.id}", text: main.main_entity_name)
 			end
 		end
-
-		let!(:api1) {FactoryGirl.create(:api, user: user)}
-		let!(:api2) {FactoryGirl.create(:api, user: user)}
+		
 		it "should contain a delete button for each non main api" do
 			visit user_api_index_path(user)
-			should have_selector("button#destroy_api_#{api1.id}", text: "Delete")
+			should have_selector("button#destroy_api_#{general.id}", text: "Delete")
 		end
-
-		let!(:api) {FactoryGirl.create(:api, user: user, main: true)}
-		let!(:character) {FactoryGirl.create(:character, api: api)}
+		
 		it "should not have a delete button for the main API" do
 			visit user_api_index_path(user)
-			should_not have_selector("button#destroy_api_#{api.id}", text: "Delete")
+			should_not have_selector("button#destroy_api_#{main.id}", text: "Delete")
 		end
 
-		let!(:api) {FactoryGirl.create(:api, user: user, main: true)}
-		let!(:api1) {FactoryGirl.create(:api, user: user, main: false)}
 		it "should have a 'Set as Main API' button for non-main APIs" do
 			visit user_api_index_path(user)
-			should have_selector("button#set_main_api_#{api1.id}", text: "Set as Main API")
+			should have_selector("a#set_main_api_#{general.id}", text: "Set as Main API")
+		end
+
+		it "should not have a 'Set as Main API' button for main APIs" do
+			visit user_api_index_path(user)
+			should_not have_selector("a#set_main_api_#{main.id}", text: "Set as Main API")
+		end
+
+		it "the 'Set as Main API' button should link to that API's show page" do
+			visit user_api_index_path(user)
+			should have_selector("#api_list_table")
+			click_link 'Set as Main API'
+			should_not have_selector("#api_list_table")
+			should have_selector("#character_list[data-api-id='#{general.id}']")
 		end
 	end
 
