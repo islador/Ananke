@@ -76,7 +76,8 @@ describe ApiController do
     let!(:api1) {FactoryGirl.create(:api, user: user)}
     let!(:character1){FactoryGirl.create(:character, api: api1)}
     let!(:character2){FactoryGirl.create(:character, api: api1)}
-    let!(:character3){FactoryGirl.create(:character, api: api1)}
+    #The current API used in the factory is returning a single character. Thus to get the three max characters we need only build one.
+    #let!(:character3){FactoryGirl.create(:character, api: api1)}
 
     it "should return http success" do
       xhr :get, :character_list, :user_id => user.id, :api_id => api1.id
@@ -107,30 +108,54 @@ describe ApiController do
   end
 
   describe "PUT 'set_main'" do
-    let!(:api1) {FactoryGirl.create(:api, user: user)}
-    let!(:character1){FactoryGirl.create(:character, api: api1)}
-    let!(:character2){FactoryGirl.create(:character, api: api1)}
-    let!(:character3){FactoryGirl.create(:character, api: api1)}
+    let!(:api2) {FactoryGirl.create(:api, user: user)}
+    let!(:character1){FactoryGirl.create(:character, api: api2)}
+    let!(:character2){FactoryGirl.create(:character, api: api2)}
+    let!(:character3){FactoryGirl.create(:character, api: api2)}
     
     it "should return http success" do
-      xhr :put, :set_main, :user_id => user.id, :api_id => api1.id, :character_id => character1.id
+      sign_in user
+      xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
       response.should be_success
     end
 
+    let!(:api3) {FactoryGirl.create(:api, user: user, main: true)}
+    let!(:character4){FactoryGirl.create(:character, api: api3, main: true)}
+    it "should set the previous main API to not be the main api" do
+      sign_in user
+      expect(Api.where("id = ?", api3.id)[0].main).to be_true
+      expect(Character.where("id = ?", character4.id)[0].main).to be_true
+
+      xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
+      
+      expect(Api.where("id = ?", api3.id)[0].main).not_to be_true
+      expect(Character.where("id = ?", character4.id)[0].main).not_to be_true
+    end
+
     it "should retrieve the API from the database as 'api'" do
-      xhr :put, :set_main, :user_id => user.id, :api_id => api1.id, :character_id => character1.id
+      sign_in user
+      xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
       
       expect(assigns(:api)).not_to be_nil
     end
 
+    it "should retrieve the character from the database as 'api'" do
+      sign_in user
+      xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
+      
+      expect(assigns(:character)).not_to be_nil
+    end
+
     it "should set an API as the main API" do
-      xhr :put, :set_main, :user_id => user.id, :api_id => api1.id, :character_id => character1.id
+      sign_in user
+      xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
 
       expect(assigns(:api).main).to be true
     end
 
     it "should set the character on the API to be the main" do
-      xhr :put, :set_main, :user_id => user.id, :api_id => api1.id, :character_id => character1.id
+      sign_in user
+      xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
 
       expect(assigns(:character).main).to be true
     end
