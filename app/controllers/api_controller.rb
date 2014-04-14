@@ -14,8 +14,8 @@ class ApiController < ApplicationController
   def destroy
     api = Api.where("id = ?", params[:id])[0]
     if api.nil? == false
-      if api.main == false
-        api.destroy
+      if api.main.nil? == true || api.main == false
+        api.destroy!
       end
     end
     render nothing: true

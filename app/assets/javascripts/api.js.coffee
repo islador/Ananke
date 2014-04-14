@@ -4,7 +4,34 @@
 
 jQuery ->
 	#API Index
-	$('#api_list_table').dataTable()
+	window.alt = $('#api_list_table').dataTable()
+
+	$("[id^='destroy_api_']").click ->
+		#Extract necessary data from the page.
+		target = $("#" + this.id).attr("data-target-path")
+		authenticity_token = $('meta[name=csrf-token]').attr("content")
+
+		#Trigger confirm dialog before making AJAX call
+		if confirm('Deleting this API will remove all characters associated with it from Ananke, and thus all access and privileges derived from them. Are you sure you wish to do this?') is true
+			#If the user clicks 'Ok' then send an AJAX call deleting the user
+			$.ajax({
+				#A post with a method data attribute is used to preserve cross browser compability.
+				url: target, type: "POST",
+				data: {"_method":"delete", authenticity_token: authenticity_token},
+				#On success, return code 200, trigger the remove_from_table function
+				success: remove_from_table(this.id)
+			})
+
+	#Function to remove an entire row from the volunteer index table.
+	remove_from_table = (id) ->
+		#Extract necessary variables from the page.
+		api_id = $("#" + id).attr("data-api-id")
+		nRow =  $('#api_list_table tbody tr[id='+api_id+']')[0];
+		#Remove the row with id = entity.id
+		alt.fnDeleteRow( nRow )
+		#wlt.fnClearTable()
+		#$("#" + entity_id).remove()
+
 	#API Enrollment
 	$('#character_list_table').dataTable()
 	

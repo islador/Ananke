@@ -75,17 +75,17 @@ describe "api/index.html.haml > " do
 	end
 
 	describe "Delete > " do
-		let!(:api) {FactoryGirl.create(:api, main_entity_name: "Jeff")}
-		it "should remove the item from the datatable when clicked", js: true do
+		let!(:api) {FactoryGirl.create(:api, user: user)}
+		it "should remove the api from the datatable when clicked", js: true do
 			visit user_api_index_path(user)
 			
-			should have_selector("tr#api_#{api.id}", text: api.main_entity_name)
+			should have_selector("tr#api_#{api.id}")
 			
 			#http://stackoverflow.com/a/2609244
 			page.evaluate_script('window.confirm = function() { return true; }')
 
 			click_button 'Delete'
-			should_not have_selector("tr#api_#{api.id}", text: api.main_entity_name)
+			should_not have_selector("tr#api_#{api.id}")
 		end
 	end
 end

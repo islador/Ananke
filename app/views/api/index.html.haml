@@ -46,7 +46,7 @@
 					%td 
 				-else
 					%td
-						%button{:id => "destroy_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "user/#{current_user.id}/api/#{api.id}", :api_id => "api_#{api.id}"}} Delete
+						%button{:id => "destroy_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/users/#{current_user.id}/api/#{api.id}", :api_id => "api_#{api.id}"}} Delete
 
 %div{:class => "btn-group"}
 	%button{:id => "enroll_new_api_2", :class => "btn btn-l btn-primary"} Enroll New API
