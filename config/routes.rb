@@ -13,6 +13,7 @@ Ananke::Application.routes.draw do
   resources :users do
     resources :api do
       get "/character_list", to: "api#character_list"
+      put "/set_main", to: "api#set_main"
     end
   end
   
