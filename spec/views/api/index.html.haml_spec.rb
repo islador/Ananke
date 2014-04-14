@@ -33,6 +33,16 @@ describe "api/index.html.haml > " do
 		should have_selector('#enroll_new_api_2')
 	end
 
+	it "should have two 'Enroll new API' buttons that link you to the new api page" do
+		find("#enroll_new_api_1").click
+		should have_selector("#new_api_enroll")
+	end
+
+	it "should have two 'Enroll New API' buttons that link you to the new api page" do
+		find("#enroll_new_api_2").click
+		should have_selector("#new_api_enroll")
+	end
+
 	describe "Api List Table > " do
 		let!(:main) {FactoryGirl.create(:api, user: user, main_entity_name: "Jeff", main: true)}
 		let!(:character) {FactoryGirl.create(:character, api: main, main: true)}

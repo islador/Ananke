@@ -6,7 +6,7 @@
 	%p "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 %div{:class => "btn-group"}
-	%button{:id => "enroll_new_api_1", :class => "btn btn-l btn-primary"} Enroll New API
+	%a{:href => "/users/#{current_user.id}/api/new", :id => "enroll_new_api_1", :class => "btn btn-l btn-primary"} Enroll New API
 
 %table.table.table-condensed{:id => "api_list_table"}
 	%thead
@@ -49,7 +49,7 @@
 						%button{:id => "destroy_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/users/#{current_user.id}/api/#{api.id}", :api_id => "api_#{api.id}"}} Delete
 
 %div{:class => "btn-group"}
-	%button{:id => "enroll_new_api_2", :class => "btn btn-l btn-primary"} Enroll New API
+	%a{:href => "/users/#{current_user.id}/api/new", :id => "enroll_new_api_2", :class => "btn btn-l btn-primary"} Enroll New API
 
 %h3 Basic Concept
 An index page comprised of a datatable displaying all the APIs currently owned by this user.
