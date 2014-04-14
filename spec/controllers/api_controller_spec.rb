@@ -151,6 +151,7 @@ describe ApiController do
       xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
 
       expect(assigns(:api).main).to be true
+      expect(Api.where("id = ?", api2.id)[0].main).to be_true
     end
 
     it "should set the character on the API to be the main" do
@@ -158,6 +159,7 @@ describe ApiController do
       xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
 
       expect(assigns(:character).main).to be true
+      expect(Character.where("id = ?", character1.id)[0].main).to be_true
     end
   end
 end
