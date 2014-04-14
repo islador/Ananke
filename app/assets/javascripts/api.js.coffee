@@ -3,6 +3,9 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 jQuery ->
+	#API Index
+	$('#api_list_table').dataTable()
+	#API Enrollment
 	$('#character_list_table').dataTable()
 	
 	#Function to detect clicks on the in table whitelist entity "Delete" button.
