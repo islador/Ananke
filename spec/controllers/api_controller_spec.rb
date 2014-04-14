@@ -60,9 +60,6 @@ describe ApiController do
       expect(assigns(:apis)).not_to be_nil
       expect(assigns(:apis)).to include api1
     end
-
-    
-
   end
 
   describe "GET 'show'" do
@@ -106,4 +103,10 @@ describe ApiController do
       #response.should render_template(:partial => 'character_list.js')
     end
   end
+
+  describe "PUT 'set_main'" do
+    xit "should set an API as the main API" do
+    end
+  end
+
 end

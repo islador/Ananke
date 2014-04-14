@@ -1,6 +1,56 @@
 %h1 Api#index
 %p Find me in app/views/api/index.html.haml
 
+%h3 Your APIs
+%div{:class => "explanation"}
+	%p "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+%div{:class => "btn-group"}
+	%button{:id => "enroll_new_api_1", :class => "btn btn-l btn-primary"} Enroll New API
+
+%table.table.table-condensed{:id => "api_list_table"}
+	%thead
+		%tr
+			%th Name
+			%th Type
+			%th Main
+			%th Main Entity
+			%th Key ID
+			%th Verification Code
+			%th
+	%tbody
+		- @apis.each do |api|
+			%tr{:id => "api_#{api.id}"}
+				%td= api.name
+				
+				- if api.ananke_type == 1
+					%td Corporation
+				- else
+					%td General
+
+				-if api.main == true
+					%td Main API
+				-else
+					%td
+						%button{:id => "set_main_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "user/#{current_user.id}/api/#{api.id}/set_main", :api_id => "api_#{api.id}"}} Set as Main API
+
+				-if api.main == true
+					%td= api.main_entity_name
+				-else
+					%td
+
+				%td= api.key_id
+				%td= api.v_code
+				
+				-if api.main == true
+					%td 
+				-else
+					%td
+						%button{:id => "destroy_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "user/#{current_user.id}/api/#{api.id}", :api_id => "api_#{api.id}"}} Delete
+
+%div{:class => "btn-group"}
+	%button{:id => "enroll_new_api_2", :class => "btn btn-l btn-primary"} Enroll New API
+
 %h3 Basic Concept
 An index page comprised of a datatable displaying all the APIs currently owned by this user.
 %ul
