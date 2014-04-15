@@ -19,7 +19,7 @@ describe ApiKeyInfoWorker do
 		work.perform(api.key_id, api.v_code)
 
 		apiDB = Api.where("key_id = ?", api.key_id)[0]
-		apiDB.main_entity.should match "Frontier Explorer's League"
+		apiDB.main_entity_name.should match "Frontier Explorer's League"
 	end
 
 	it "Should populate an API's characters if it is a character API." do

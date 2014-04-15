@@ -3,7 +3,7 @@ class ApiKeyInfoWorker
 
 	def perform(keyID, vCode)
 		#We want this to hit the API and then hit the database directly. That means it will likely need to be controller fired, not API model fired.
-		#retrieve the current API record from the database
+		#retrieve the current API record from the database, this assumes key_id is unique.
 		ananke_api = Api.where("key_id = ?", keyID)[0]
 		#Build the API object
 		eve_api = Eve::API.new(:key_id => keyID, :v_code => vCode)
@@ -15,7 +15,7 @@ class ApiKeyInfoWorker
 			#If found, extract the corporation name from the only character in the list.
 			corp_name = result.key.characters[0].corporationName
 
-			ananke_api.main_entity = corp_name
+			ananke_api.main_entity_name = corp_name
 			ananke_api.save!	
 		end
 		allianceName = ""
