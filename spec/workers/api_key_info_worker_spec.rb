@@ -15,11 +15,32 @@ describe ApiKeyInfoWorker do
 	work = ApiKeyInfoWorker.new
 
 	
-	it "Should set the API's main entity to the corporation of the character if the API is a corp API" do
+	it "Should set the API's main entity name to the corporation of the character if the API is a corp API" do
 		work.perform(api.key_id, api.v_code)
 
 		apiDB = Api.where("key_id = ?", api.key_id)[0]
 		apiDB.main_entity_name.should match "Frontier Explorer's League"
+	end
+
+	it "Should set the API's ananke_type to 'corporation' if the api is a corporation type api" do
+		work.perform(api.key_id, api.v_code)
+
+		apiDB = Api.where("key_id = ?", api.key_id)[0]
+		apiDB.ananke_type.should be 1
+	end
+
+	it "Should set the API's ananke_type to 'general' if the api is an account type api" do
+		work.perform(api_character.key_id, api_character.v_code)
+
+		apiDB = Api.where("key_id = ?", api_character.key_id)[0]
+		apiDB.ananke_type.should be 2
+	end
+
+	it "Should set the API's ananke_type to 'general' if the api is a character type api" do
+		work.perform(api_account.key_id, api_account.v_code)
+
+		apiDB = Api.where("key_id = ?", api_account.key_id)[0]
+		apiDB.ananke_type.should be 2
 	end
 
 	it "Should populate an API's characters if it is a character API." do
