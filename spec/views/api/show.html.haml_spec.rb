@@ -45,6 +45,15 @@ describe "api/show.html.haml" do
 			visit user_api_path(user, main_api)
 			should have_selector("tr#character_id_#{main_character.id}", text: "Main Character")
 		end
+
+		it "clicking the main character button should set that character as main", js: true do
+			visit user_api_path(user, api)
+			#http://stackoverflow.com/a/2609244
+			page.evaluate_script('window.confirm = function() { return true; }')
+
+			find("#set_main_#{character1.id}").click
+			should have_selector("tr#character_id_#{character1.id}", text: "Main Character")
+		end
 	end
 
 	describe " Delete API > " do
@@ -60,7 +69,7 @@ describe "api/show.html.haml" do
 		it "should redirect the user to the index page after deleting an API", js: true do
 			#http://stackoverflow.com/a/2609244
 			page.evaluate_script('window.confirm = function() { return true; }')
-			
+
 			click_link "Delete API"
 			should have_selector("table#api_list_table")
 		end
