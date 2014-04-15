@@ -18,6 +18,26 @@ jQuery ->
 				data: {"_method":"delete", authenticity_token: authenticity_token}
 			})
 
+	#Shared/_character_list
+	$("[id^='set_main_']").click ->
+		#Extract necessary data from the page.
+		target = $("#" + this.id).attr("data-target-path")
+		character_id = $("#" + this.id).attr("data-character-id")
+		authenticity_token = $('meta[name=csrf-token]').attr("content")
+
+		#Trigger confirm dialog before making AJAX call
+		if confirm('Deleting this API will remove all characters associated with it from Ananke, and thus all access and privileges derived from them. Are you sure you wish to do this?') is true
+			#If the user clicks 'Ok' then send an AJAX call deleting the user
+			$.ajax({
+				url: target, type: "PUT",
+				data: {character_id: character_id, authenticity_token: authenticity_token},
+				success: remove_main_button(character_id)
+			})
+
+	#Function to remove an entire row from the volunteer index table.
+	remove_main_button = (character_id) ->
+		$("#column_set_main_" + character_id).empty().append("Main Character")
+
 	#API Index
 	window.alt = $('#api_list_table').dataTable()
 

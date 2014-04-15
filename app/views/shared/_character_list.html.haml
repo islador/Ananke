@@ -20,5 +20,5 @@
 					-if character.main == true
 						%td Main Character
 					-else
-						%td
-							%button{:id => "set_main_#{character.id}", :class => "btn btn-xs btn-warning", :data => {:target_path => "/users/#{current_user.id}/api/#{@api.id}/character/#{character.id}", :character_id => "#{character.id}"}} Set as Main
+						%td{:id => "column_set_main_#{character.id}"}
+							%button{:id => "set_main_#{character.id}", :class => "btn btn-xs btn-warning", :data => {:target_path => "/users/#{current_user.id}/api/#{@api.id}/set_main", :character_id => "#{character.id}"}} Set as Main

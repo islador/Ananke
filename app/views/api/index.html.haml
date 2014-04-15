@@ -32,7 +32,7 @@
 					%td Main API
 				-else
 					%td
-						%a{:href => "/users/#{current_user.id}/api/#{api.id}", :id => "set_main_api_#{api.id}", :class => "btn btn-xs btn-warning"} Set as Main API
+						%a{:href => "/users/#{current_user.id}/api/#{api.id}", :id => "link_set_main_api_#{api.id}", :class => "btn btn-xs btn-warning"} Set as Main API
 
 				-if api.main == true
 					%td= api.main_entity_name

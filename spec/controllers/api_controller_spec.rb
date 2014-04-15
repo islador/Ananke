@@ -98,7 +98,7 @@ describe ApiController do
       expect(assigns(:cl).count).to be 3
     end
 
-    it "should render the _character_list partial" do
+    xit "should render the _character_list partial" do
       sign_in user
 
       xhr :get, :character_list, user_id: user.id, api_id: api1.id

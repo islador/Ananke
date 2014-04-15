@@ -1,6 +1,7 @@
 %h1 Api#show
 %p Find me in app/views/api/show.html.haml
 
+%h1=@api.name
 = render :partial => 'shared/character_list', :locals => { :api => @api, :cl => @cl}
 
 %div{:class => "btn-group"}

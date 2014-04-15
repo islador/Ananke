@@ -67,7 +67,7 @@ describe "api/index.html.haml > " do
 
 		it "should have a 'Set as Main API' button for non-main APIs" do
 			visit user_api_index_path(user)
-			should have_selector("a#set_main_api_#{general.id}", text: "Set as Main API")
+			should have_selector("a#link_set_main_api_#{general.id}", text: "Set as Main API")
 		end
 
 		it "should not have a 'Set as Main API' button for main APIs" do
