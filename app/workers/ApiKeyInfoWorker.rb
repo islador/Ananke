@@ -44,13 +44,6 @@ class ApiKeyInfoWorker
 		end
 
 		#Save the API after all changes have been made
-		ananke_api.save!
-
-		#if(result.key.type == "Character")
-			#Key with a single character.
-		#end
-
-		
-		
+		ananke_api.save!		
 	end
 end
