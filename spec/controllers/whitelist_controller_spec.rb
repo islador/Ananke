@@ -5,15 +5,19 @@ describe WhitelistController do
   before { controller.stub(:authenticate_user!).and_return true }
 
   describe "GET 'white_list'" do
+    let!(:whitelist) {FactoryGirl.create(:whitelist)}
+
     it "returns http success" do
       get 'white_list'
       response.should be_success
     end
 
-    let!(:whitelist) {FactoryGirl.create(:whitelist)}
     it "should build an @wl object containing all whitelists" do
       get 'white_list'
       expect(assigns(:wl)).to include(whitelist)
+    end
+
+    xit "should build an @corp_apis object containing all " do
     end
   end
 

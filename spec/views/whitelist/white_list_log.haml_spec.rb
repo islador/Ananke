@@ -10,6 +10,7 @@ describe "whitelist/white_list_log.haml >" do
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
+		visit whitelist_white_list_log_path
 	end
 
 	describe " Table > " do
