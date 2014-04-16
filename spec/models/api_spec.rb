@@ -18,6 +18,8 @@
 #
 
 require 'spec_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe Api do
 	let(:user) {FactoryGirl.create(:user, :email => "user@example.com")}
