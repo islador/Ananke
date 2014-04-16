@@ -21,7 +21,8 @@ require 'spec_helper'
 
 describe Api do
 	let(:user) {FactoryGirl.create(:user, :email => "user@example.com")}
-	let(:api) {FactoryGirl.create(:api, user: user)}
+	let!(:api) {FactoryGirl.create(:api, user: user, main: true)}
+	let!(:api_character) {FactoryGirl.create(:character, api: api, main: true)}
 
 	subject {api}
 
@@ -83,5 +84,34 @@ describe Api do
 		#	before {api.active = nil}
 		#	it {should_not be_valid}
 		#end
+	end
+
+	describe "set_main_entity_name" do
+		it {should respond_to(:set_main_entity_name)}
+
+		let!(:corporation_api) {FactoryGirl.create(:corp_api, user: user, main: true)}
+		let!(:corp_character) {FactoryGirl.create(:character, api: corporation_api, main: true)}
+
+		let!(:general_api) {FactoryGirl.create(:api, user: user)}
+		let!(:general_character) {FactoryGirl.create(:character, api: api)}
+
+		it "should add the main character's name to a corporation API's main_entity_name" do
+			corporation_api.set_main_entity_name()
+
+			apiDB = Api.where("id = ?", corporation_api.id)[0]
+			apiDB.main_entity_name.should match "#{corp_character.name} - Alaskan Fish"
+		end
+
+		it "should set the main character's name as the api's main entity name" do
+			api.set_main_entity_name()
+
+			apiDB = Api.where("id = ?", api.id)[0]
+			apiDB.main_entity_name.should match "#{api_character.name}"
+		end
+
+		it "should not work on a non-main API" do
+			expect{
+				general_api.set_main_entity_name()}.to raise_error ArgumentError
+		end
 	end
 end

@@ -30,7 +30,7 @@ class Api < ActiveRecord::Base
 	# Could be used to allow for main character functionality as well as allowing for corporation name's to be displayed for corporation APIs?
 
 	
-	validates :key_id, presence: true
+	validates :key_id, presence: true#, uniqueness: true
 	validates :v_code, presence: true
 
 	#Below validations removed because they no longer work with the workflow. API's get this data from a sidekiq worker after creation.
@@ -48,5 +48,19 @@ class Api < ActiveRecord::Base
 
 	def determine_type
 		ApiKeyInfoWorker.perform_async(self.key_id, self.v_code)
+	end
+
+	def set_main_entity_name
+		#Throw an error if the API is not a main API
+		raise ArgumentError, "Api must be a main API to have a main entity name." if self.main != true
+		#If the API is a corporation API, append the main character's name infront of the corporation name
+		if self.ananke_type == 1
+			self.main_entity_name = self.characters.where("main = true")[0].name + " - " + self.main_entity_name
+		elsif self.ananke_type == 2
+			self.main_entity_name = self.characters.where("main = true")[0].name
+		end
+		self.save
+
+
 	end
 end
