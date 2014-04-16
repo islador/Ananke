@@ -151,9 +151,11 @@ describe "api/new.html.haml > " do
 			find_field('key[id]').value.should eq '3255235'
 			find_field('v[code]').value.should eq 'P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x'
 
-			expect{
-				click_button 'Enroll Key'
-			}.to change(Api, :count).by(+1)
+			count = Api.count
+
+			click_button 'Enroll Key'
+			sleep(6)
+			Api.count.should be > count
 		end
 
 		it "should clear the v_code and key_id fields after creating an API", js: true do
