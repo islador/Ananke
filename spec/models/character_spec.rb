@@ -18,10 +18,12 @@
 #
 
 require 'spec_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe Character do
-	let(:api) {FactoryGirl.create(:api, :key_id => 7654321)}
-	let(:character) {FactoryGirl.create(:character, :api => api, :name => "Zeke")}
+	let!(:api) {FactoryGirl.create(:api)}
+	let!(:character) {FactoryGirl.create(:character, api: api, name: "Zeke")}
 
 	subject {character}
 
@@ -37,8 +39,8 @@ describe Character do
 	it {should be_valid}
 
 	describe "Associations > " do
-		it "should belong to an API with key_id='7654321'" do
-			character.api.key_id.should be 7654321
+		it "should belong to an API with key_id='api.key_id'" do
+			character.api.key_id.should be api.key_id
 		end
 	end
 
