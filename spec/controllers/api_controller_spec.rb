@@ -167,5 +167,21 @@ describe ApiController do
       expect(assigns(:character).main).to be true
       expect(Character.where("id = ?", character1.id)[0].main).to be_true
     end
+
+    it "should set the main_entity_name of a general API to the main character's name" do
+      sign_in user
+      xhr :put, :set_main, :user_id => user.id, :api_id => api2.id, :character_id => character1.id
+
+      expect(Api.where("id = ?", api2.id)[0].main_entity_name).to match character1.name
+    end
+
+    let!(:corporation_api) {FactoryGirl.create(:corp_api, user: user)}
+    let!(:corporation_character) {FactoryGirl.create(:character, api: corporation_api)}
+    it "should set the main_entity_name of a corporation API to the main character's name + the corporation's name" do
+      sign_in user
+      xhr :put, :set_main, :user_id => user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
+
+      expect(Api.where("id = ?", corporation_api.id)[0].main_entity_name).to match "#{corporation_character.name} - Alaskan Fish"
+    end
   end
 end

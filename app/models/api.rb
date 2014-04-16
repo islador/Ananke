@@ -50,17 +50,17 @@ class Api < ActiveRecord::Base
 		ApiKeyInfoWorker.perform_async(self.key_id, self.v_code)
 	end
 
+	#Point of optimization. This method could take the Api model as an arguemtn, do its thing, then save it. Thus avoiding a DB access in certain situations.
 	def set_main_entity_name
 		#Throw an error if the API is not a main API
 		raise ArgumentError, "Api must be a main API to have a main entity name." if self.main != true
 		#If the API is a corporation API, append the main character's name infront of the corporation name
 		if self.ananke_type == 1
 			self.main_entity_name = self.characters.where("main = true")[0].name + " - " + self.main_entity_name
+		#If the api is a general API, set the main_entity_name value to the API's main character.
 		elsif self.ananke_type == 2
 			self.main_entity_name = self.characters.where("main = true")[0].name
 		end
 		self.save
-
-
 	end
 end
