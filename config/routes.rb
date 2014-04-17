@@ -2,6 +2,7 @@ Ananke::Application.routes.draw do
 
   get "whitelist/white_list"
   get "whitelist/white_list_log"
+  put "whitelist/begin_api_pull", to: "whitelist#begin_api_pull"
 
   resources :whitelist,  only: [:create, :destroy]
 

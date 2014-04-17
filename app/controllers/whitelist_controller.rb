@@ -13,6 +13,16 @@ class WhitelistController < ApplicationController
 		render nothing: true
 	end
 
+	def begin_api_pull
+		api = Api.where("id = ?", params[:api_id])[0]
+		if api.nil? == false
+			ApiCorpContactPullWorker.perform_async(api.id)
+			render :json => "API queued for contact processing"
+		else
+			render :json => "Invalid API"
+		end
+	end
+
 	#Display methods
 	def white_list
 		@wl = Whitelist.all
