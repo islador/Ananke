@@ -14,6 +14,7 @@ FactoryGirl.define do
 	factory :api do
 		ccp_type 2
 		ananke_type 2
+		#Tany's character API
 		sequence(:key_id) {|n| "3255235"}
 		v_code "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x"
 		#Modified to create cassettes for testing.
@@ -30,6 +31,7 @@ FactoryGirl.define do
 		user
 
 		factory :corp_api do
+			#Islador's corp API
 			key_id "3229801"
 			v_code "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1"
 			#accessmask represents all options ticked
