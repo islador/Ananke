@@ -36,6 +36,7 @@ describe Api do
 	it {should respond_to(:active)}
 	it {should respond_to(:main_entity_name)}
 	it {should respond_to(:main)}
+	it {should respond_to(:characters)}
 
 	it {should be_valid}
 
@@ -58,6 +59,20 @@ describe Api do
 
 		it "should have a character named Jeff" do
 			api.characters.should include(characterJeff)
+		end
+
+		describe "Corp API >" do
+			let!(:corp_api) {FactoryGirl.create(:corp_api, user: user)}
+			let!(:whitelist) {FactoryGirl.create(:whitelist)}
+			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist.id)}
+
+			subject{corp_api}
+
+			it {should respond_to(:whitelists)}
+
+			it "corp_api.whitelists should yield whitelist" do
+				corp_api.whitelists[0].id.should be whitelist.id
+			end
 		end
 	end
 

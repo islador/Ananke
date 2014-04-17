@@ -11,6 +11,9 @@
 
 class WhitelistApiConnection < ActiveRecord::Base
 
+	belongs_to :api
+	belongs_to :whitelist
+
 	validates :api_id, presence: true
 	validates :whitelist_id, presence: true
 end

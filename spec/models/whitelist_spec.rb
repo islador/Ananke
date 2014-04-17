@@ -27,6 +27,19 @@ describe Whitelist do
 
 	it {should be_valid}
 
+	describe "Associations > " do
+		let!(:api_whitelist) {FactoryGirl.create(:whitelist)}
+		let!(:whitelist_api) {FactoryGirl.create(:api)}
+		let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: whitelist_api.id, whitelist_id: api_whitelist.id)}
+		subject{api_whitelist}
+
+		it {should respond_to(:apis)}
+
+		it "api_whitelist.apis should yield whitelist_api" do
+			api_whitelist.apis[0].id.should be whitelist_api.id
+		end
+	end
+
 	describe "Callbacks > " do
 		let!(:user) {FactoryGirl.create(:user)}
 		

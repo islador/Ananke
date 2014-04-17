@@ -14,6 +14,9 @@
 
 class Whitelist < ActiveRecord::Base
 
+	has_many :whitelist_api_connections
+	has_many :apis, through: :whitelist_api_connections
+
 	#Should migrate name to entity_name for consistency if the chance is found.
 	#ContactTypeIDs: 2=corporation, 16159=alliance, 1370-1390=character, ?=faction - presumed any other number
 	#entity_type: 1 Alliance, 2 Corporation, 3 Faction, 4 Character
