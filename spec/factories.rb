@@ -68,4 +68,14 @@ FactoryGirl.define do
 		date Date.today
 		time Time.new(2014)
 	end
+
+	factory :whitelist_api_connection do
+		ignore do
+			set_api_id {FactoryGirl.create(:api).id}
+			set_whitelist_id {FactoryGirl.create(:whitelist).id}
+		end
+		
+		api_id {set_api_id}
+		whitelist_id {set_whitelist_id}
+	end
 end
