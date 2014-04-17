@@ -3,12 +3,12 @@ require 'sidekiq/testing'
 Sidekiq::Testing.inline!
 
 describe ApiCorpContactPullWorker do
-	describe "Perform > "
+	describe "Perform > " do
 		let!(:user) {FactoryGirl.create(:user)}
 		let!(:corp_api) {FactoryGirl.create(:corp_api, user: user)}
 
 		#This whole block is likely going to need to be duplicated in the whitelist controller and its spec.
-		describe "Error Handling > "
+		describe "Error Handling > " do
 			xit "should throw an argument error if the API is not active." do
 			end
 
