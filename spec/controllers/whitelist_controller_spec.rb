@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe WhitelistController do
   # http://stackoverflow.com/questions/8819343/rails-rspec-devise-undefined-method-authenticate-user
@@ -51,6 +53,21 @@ describe WhitelistController do
       expect{
         xhr :post, :create, entity_name: "Fido", entity_type: 4
       }.to change(Whitelist, :count).by(+1)
+    end
+  end
+
+  describe "PUT 'begin_api_pull'" do
+    let!(:user) {FactoryGirl.create(:user)}
+    let!(:corp_api) {FactoryGirl.create(:corp_api, user: user)}
+
+    it "should return http success" do
+      xhr :put, :begin_api_pull, api_id: corp_api.id
+      response.should be_success
+    end
+
+    it "should call ApiCorpContactPullWorker with corp_api.id" do
+      xhr :put, :begin_api_pull, api_id: corp_api.id
+      ApiCorpContactPullWorker.should_receive(:perform).with(corp_api.id)
     end
   end
 end
