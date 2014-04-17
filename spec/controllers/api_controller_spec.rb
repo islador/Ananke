@@ -181,7 +181,8 @@ describe ApiController do
       sign_in user
       xhr :put, :set_main, :user_id => user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
 
-      expect(Api.where("id = ?", corporation_api.id)[0].main_entity_name).to match "#{corporation_character.name} - Alaskan Fish"
+      #This test is fragile since the corporation name is hard coded, perhaps this can be fixed by stubbing the sidekiq API calls?
+      expect(Api.where("id = ?", corporation_api.id)[0].main_entity_name).to match "#{corporation_character.name} - Frontier Explorer's League"
     end
   end
 end

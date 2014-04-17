@@ -30,6 +30,8 @@ FactoryGirl.define do
 		user
 
 		factory :corp_api do
+			key_id "3229801"
+			v_code "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1"
 			#accessmask represents all options ticked
 			accessmask 67108863
 			ccp_type 1
