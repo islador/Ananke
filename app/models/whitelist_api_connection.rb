@@ -10,4 +10,7 @@
 #
 
 class WhitelistApiConnection < ActiveRecord::Base
+
+	validates :api_id, presence: true
+	validates :whitelist_id, presence: true
 end
