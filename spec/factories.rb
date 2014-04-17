@@ -24,7 +24,7 @@ FactoryGirl.define do
 		#v_code "rFhvKwpQnuVkIj0BmB8vgyYssR760i7a1pcTxxr4TPIlEiTwj8xXMRyAWpQsJ6Zi"
 		#accessmask represents all options ticked
 		accessmask 268435455
-		active 1
+		active true
 		main_entity_name "John"
 		main false
 		user

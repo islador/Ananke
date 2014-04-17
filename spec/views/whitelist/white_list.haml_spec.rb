@@ -22,10 +22,30 @@ describe "whitelist/white_list.haml > " do
 			should have_selector('button#submit_new_entity', text: 'Add Entity')
 		end
 
+		describe "API based whitelist entity population > " do
+			let!(:valid_api) {FactoryGirl.create(:corp_api, user: user)}
+			it "should contain a link 'Setup new API Pull'" do
+				should have_selector('a#setup_new_api_pull')
+			end
+
+			it "when 'Begin new API Pull' is clicked, it should render the 'new_whitelist_api_pull' partial", js: true do
+				click_link 'Begin New API Pull'
+				should have_selector('table#valid_api_table')
+				should have_selector("tr#add_api_#{valid_api.id}")
+				should have_selector("button#query_api_#{valid_api.id}")
+			end
+
+			it "when 'Query this API' is clicked it should let the user know the query has begun", js: true do
+				click_button 'Query API'
+				should have_selector("div.modal-backdrop")
+			end
+
+		end
+
 		describe "API Pull Table > " do
 			let!(:api1) {FactoryGirl.create(:api, main_entity_name: "Avah", ananke_type: 1)}
 			let!(:api2) {FactoryGirl.create(:api)}
-			it "should render the white_list table" do
+			it "should render the api pulls table" do
 				should have_selector('#api_pulls_table')
 			end
 
@@ -36,14 +56,14 @@ describe "whitelist/white_list.haml > " do
 			it "should contain items from the database" do
 				visit whitelist_white_list_path
 				within '#api_pulls_table' do
-					should have_selector("tr#entity_#{api1.id}", text: api1.main_entity_name)
+					should have_selector("tr#api_#{api1.id}", text: api1.main_entity_name)
 				end
 			end
 
 			
 			it "should contain a cancel button for each API" do
 				visit whitelist_white_list_path
-				should have_selector("button#destroy_entity_#{api2.id}", text: "Cancel Pull")
+				should have_selector("button#destroy_api_#{api2.id}", text: "Cancel Pull")
 			end
 
 			describe "Cancel > " do
@@ -51,13 +71,13 @@ describe "whitelist/white_list.haml > " do
 				it "should remove the item from the datatable when clicked", js: true do
 					visit whitelist_white_list_path
 					
-					should have_selector("tr#entity_#{api3.id}", text: api3.main_entity_name)
+					should have_selector("tr#api_#{api3.id}", text: api3.main_entity_name)
 					
 					#http://stackoverflow.com/a/2609244
 					page.evaluate_script('window.confirm = function() { return true; }')
 
 					click_button 'Cancel'
-					should_not have_selector("tr#entity_#{api3.id}", text: api3.main_entity_name)
+					should_not have_selector("tr#api_#{api3.id}", text: api3.main_entity_name)
 				end
 			end
 		end
