@@ -24,7 +24,11 @@ Sidekiq::Testing.inline!
 
 describe Api do
 	let(:user) {FactoryGirl.create(:user, :email => "user@example.com")}
-	let!(:api) {FactoryGirl.create(:api, user: user, main: true)}
+	let!(:api) {
+		VCR.use_cassette('workers/api_key_info/accountAPI') do
+			FactoryGirl.create(:api, user: user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689", main: true)
+		end
+	}
 	let!(:api_character) {FactoryGirl.create(:character, api: api, main: true)}
 
 	subject {api}
@@ -38,6 +42,7 @@ describe Api do
 	it {should respond_to(:main_entity_name)}
 	it {should respond_to(:main)}
 	it {should respond_to(:characters)}
+	it {should respond_to(:whitelist_standings)}
 
 	it {should be_valid}
 
@@ -63,7 +68,11 @@ describe Api do
 		end
 
 		describe "Corp API >" do
-			let!(:corp_api) {FactoryGirl.create(:corp_api, user: user)}
+			let!(:corp_api) {
+				VCR.use_cassette('workers/api_key_info/corpAPI') do
+					FactoryGirl.create(:corp_api, user: user)
+				end
+			}
 			let!(:whitelist) {FactoryGirl.create(:whitelist)}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist.id)}
 
@@ -107,10 +116,18 @@ describe Api do
 	describe "set_main_entity_name" do
 		it {should respond_to(:set_main_entity_name)}
 
-		let!(:corporation_api) {FactoryGirl.create(:corp_api, user: user, main: true)}
+		let!(:corporation_api) {
+			VCR.use_cassette('workers/api_key_info/corpAPI') do
+				FactoryGirl.create(:corp_api, user: user, main: true)
+			end
+		}
 		let!(:corp_character) {FactoryGirl.create(:character, api: corporation_api, main: true)}
 
-		let!(:general_api) {FactoryGirl.create(:api, user: user)}
+		let!(:general_api) {
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				FactoryGirl.create(:api, user: user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")
+			end
+		}
 		let!(:general_character) {FactoryGirl.create(:character, api: api)}
 
 		it "should add the main character's name to a corporation API's main_entity_name" do
