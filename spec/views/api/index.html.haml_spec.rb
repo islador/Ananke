@@ -44,9 +44,17 @@ describe "api/index.html.haml > " do
 	end
 
 	describe "Api List Table > " do
-		let!(:main) {FactoryGirl.create(:api, user: user, main_entity_name: "Jeff", main: true)}
+		let!(:main) {
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				FactoryGirl.create(:api, user: user, main_entity_name: "Jeff", main: true)
+			end
+		}
 		let!(:character) {FactoryGirl.create(:character, api: main, main: true)}
-		let!(:general) {FactoryGirl.create(:api, user: user)}
+		let!(:general) {
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				FactoryGirl.create(:api, user: user)
+			end
+		}
 
 		it "should contain items from the database" do
 			visit user_api_index_path(user)
@@ -85,7 +93,11 @@ describe "api/index.html.haml > " do
 	end
 
 	describe "Delete > " do
-		let!(:api) {FactoryGirl.create(:api, user: user)}
+		let!(:api) {
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				FactoryGirl.create(:api, user: user)
+			end
+		}
 		it "should remove the api from the datatable when clicked", js: true do
 			visit user_api_index_path(user)
 			
