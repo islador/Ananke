@@ -5,7 +5,6 @@ Sidekiq::Testing.inline!
 describe ApiCorpContactPullWorker do
 	describe "Perform > " do
 		let!(:user) {FactoryGirl.create(:user)}
-		#Add a whitelist standings column to the API
 		let!(:corp_api) {FactoryGirl.create(:corp_api, user: user, whitelist_standings: 5, main_entity_name: "Frontier Explorer's League")}
 		let!(:whitelist_entity_api) {FactoryGirl.create(:whitelist, source_user: user.id, standing: 10, name: "Alexander Fits")}
 		let!(:whitelist_entity_manual) {FactoryGirl.create(:whitelist, source_user: user.id, source_type: 2, standing: -10, name: "Jacob Dallen")}
@@ -26,8 +25,11 @@ describe ApiCorpContactPullWorker do
 			let!(:inactive_api) {FactoryGirl.create(:corp_api, user: user, active: false)}
 			let!(:general_api) {FactoryGirl.create(:api, user: user)}
 			it "should throw an argument error if the API is not active." do
+
 				expect{
-					work.perform(inactive_api.id)
+					#VCR.use_cassette('workers/corpContactList_standingsSpread') do
+						work.perform(inactive_api.id)
+					#end
 				}.to raise_error ArgumentError
 			end
 

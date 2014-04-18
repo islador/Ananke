@@ -7,7 +7,9 @@ Sidekiq::Testing.inline!
 describe ApiKeyInfoWorker do
 	let!(:user) {FactoryGirl.create(:user)}
 	#islador -corp API
-	let!(:api) {FactoryGirl.create(:api, user: user, v_code: "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1", key_id: "3229801")}
+	#VCR.use_cassette('workers/api_key_info/corpAPI') do
+		let!(:api) {FactoryGirl.create(:api, user: user, v_code: "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1", key_id: "3229801")}
+	#end
 	#tany - Character API
 	let!(:api_character) {FactoryGirl.create(:api, user: user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")}
 	#Tera - Account API
@@ -16,8 +18,10 @@ describe ApiKeyInfoWorker do
 
 	
 	it "Should set the API's main entity name to the corporation of the character if the API is a corp API" do
-		work.perform(api.key_id, api.v_code)
-
+		VCR.use_cassette('workers/api_key_info/corpAPI') do
+			work.perform(api.key_id, api.v_code)
+		end
+		
 		apiDB = Api.where("key_id = ?", api.key_id)[0]
 		apiDB.main_entity_name.should match "Frontier Explorer's League"
 	end
