@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe "whitelist/white_list.haml > " do
 	subject {page}
@@ -23,7 +25,11 @@ describe "whitelist/white_list.haml > " do
 		end
 
 		describe "API based whitelist entity population > " do
-			let!(:valid_api) {FactoryGirl.create(:corp_api, user: user)}
+			let!(:valid_api) {
+				VCR.use_cassette('workers/api_key_info/corpAPI') do
+					FactoryGirl.create(:corp_api, user: user)
+				end
+			}
 			it "should contain a link 'Setup new API Pull'" do
 				should have_selector('a#setup_new_api_pull')
 			end
@@ -43,8 +49,16 @@ describe "whitelist/white_list.haml > " do
 		end
 
 		describe "API Pull Table > " do
-			let!(:api1) {FactoryGirl.create(:api, main_entity_name: "Avah", ananke_type: 1)}
-			let!(:api2) {FactoryGirl.create(:api)}
+			let!(:api1) {
+				VCR.use_cassette('workers/api_key_info/characterAPI') do
+					FactoryGirl.create(:api, main_entity_name: "Avah", ananke_type: 1)
+				end
+			}
+			let!(:api2) {
+				VCR.use_cassette('workers/api_key_info/characterAPI') do
+					FactoryGirl.create(:api)
+				end
+			}
 			it "should render the api pulls table" do
 				should have_selector('#api_pulls_table')
 			end
@@ -67,7 +81,11 @@ describe "whitelist/white_list.haml > " do
 			end
 
 			describe "Cancel > " do
-				let!(:api3) {FactoryGirl.create(:api, main_entity_name: "Avah", ananke_type: 1)}
+				let!(:api3) {
+					VCR.use_cassette('workers/api_key_info/characterAPI') do
+						FactoryGirl.create(:api, main_entity_name: "Avah", ananke_type: 1)
+					end
+				}
 				it "should remove the item from the datatable when clicked", js: true do
 					visit whitelist_white_list_path
 					
