@@ -43,10 +43,12 @@ describe ApiCorpContactPullWorker do
 
 		#Possibly need a 'whitelist standings' column on the api model for this.
 		it "Should remove existing entities that no longer match standings requirements." do
+			VCR.use_cassette('workers/corpContactList_lowStandings') do
 			#This spec tests for situations where the standings requirement has changed or the IG standing of the entity has changed
-			work.perform(corp_api.id)
-			whitelistDB = Whitelist.where("standing = ?", whitelist_api_standings_invalid.standing)[0]
-			whitelistDB.should be_nil
+				work.perform(corp_api.id)
+			end
+				whitelistDB = Whitelist.where("standing = ?", whitelist_api_standings_invalid.standing)[0]
+				whitelistDB.should be_nil
 		end
 
 		#This spec requires stubbing input data. That needs to be done, but is a separate project.

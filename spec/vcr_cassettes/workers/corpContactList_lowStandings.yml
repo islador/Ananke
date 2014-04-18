@@ -1,0 +1,224 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.eveonline.com/corp/Contactlist.xml.aspx
+    body:
+      encoding: US-ASCII
+      string: Submodules&KeyId=3229801&VCode=UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1&Includes=corporation
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/xml; charset=utf-8
+      Vary:
+      - Accept-Encoding
+      Date:
+      - Fri, 18 Apr 2014 01:52:03 GMT
+    body:
+      encoding: UTF-8
+      string: "<?xml version='1.0' encoding='UTF-8'?>\r\n<eveapi version=\"2\">\r\n
+        \ <currentTime>2014-04-18 01:52:03</currentTime>\r\n  <result>\r\n    <rowset
+        name=\"corporateContactList\" key=\"contactID\" columns=\"contactID,contactName,standing,contactTypeID\">\r\n
+        \     <row contactID=\"1000181\" contactName=\"Federal Defense Union\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"90060489\" contactName=\"Lucian
+        Caine\" standing=\"-5\" contactTypeID=\"1375\" />\r\n      <row contactID=\"90257485\"
+        contactName=\"Szandicka\" standing=\"-5\" contactTypeID=\"1379\" />\r\n      <row
+        contactID=\"90268350\" contactName=\"Flapjack Shortpants\" standing=\"5\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90639845\" contactName=\"Selledin\"
+        standing=\"-5\" contactTypeID=\"1385\" />\r\n      <row contactID=\"90856438\"
+        contactName=\"ISS Holdings\" standing=\"-5\" contactTypeID=\"1385\" />\r\n
+        \     <row contactID=\"90865415\" contactName=\"tynika\" standing=\"-10\"
+        contactTypeID=\"1386\" />\r\n      <row contactID=\"90952471\" contactName=\"kiwi-fly-gal\"
+        standing=\"5\" contactTypeID=\"1377\" />\r\n      <row contactID=\"91595797\"
+        contactName=\"bigmantank\" standing=\"-10\" contactTypeID=\"1373\" />\r\n
+        \     <row contactID=\"91647049\" contactName=\"loutte louell\" standing=\"-10\"
+        contactTypeID=\"1384\" />\r\n      <row contactID=\"91712307\" contactName=\"Emily
+        Hellscream floydalent\" standing=\"-10\" contactTypeID=\"1377\" />\r\n      <row
+        contactID=\"92439346\" contactName=\"Clockwork Neutral\" standing=\"5\" contactTypeID=\"1377\"
+        />\r\n      <row contactID=\"98006427\" contactName=\"The Corporation of Noble
+        Sentiments\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"98026357\"
+        contactName=\"Consolidated Holdings\" standing=\"-5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"98027494\" contactName=\"Rebel Fever\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"98031939\" contactName=\"DUST
+        421\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"98032089\"
+        contactName=\"Almost Tech II\" standing=\"-5\" contactTypeID=\"2\" />\r\n
+        \     <row contactID=\"98032498\" contactName=\"Galactic Alta Imperata\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"98033337\" contactName=\"excuse
+        me while i light my spliff\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"98033896\" contactName=\"Firm Handed Logistics\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"98034528\" contactName=\"Nice
+        n Sleazy\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"98036793\"
+        contactName=\"EntroPraetorian Academy\" standing=\"-10\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"98037170\" contactName=\"Dogmatic Citizens\"
+        standing=\"10\" contactTypeID=\"2\" />\r\n      <row contactID=\"98037771\"
+        contactName=\"Targeted Aggression\" standing=\"-5\" contactTypeID=\"2\" />\r\n
+        \     <row contactID=\"98046176\" contactName=\"The Corporation Incorporated\"
+        standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"98046267\"
+        contactName=\"Hell's Revenge\" standing=\"-5\" contactTypeID=\"2\" />\r\n
+        \     <row contactID=\"98047640\" contactName=\"Helghast Industries\" standing=\"-10\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"98054126\" contactName=\"Vitaphone
+        Team\" standing=\"-10\" contactTypeID=\"2\" />\r\n      <row contactID=\"98063114\"
+        contactName=\"Illegitimi Non Carborundum\" standing=\"-5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"98082789\" contactName=\"Mordo's Legion\" standing=\"-10\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"98107045\" contactName=\"Thou
+        shalt not kill\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"99000106\"
+        contactName=\"Ninja Unicorns with Huge Horns\" standing=\"-5\" contactTypeID=\"16159\"
+        />\r\n      <row contactID=\"99000163\" contactName=\"Northern Associates.\"
+        standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"99000200\"
+        contactName=\"The Devil's Warrior Alliance\" standing=\"-5\" contactTypeID=\"16159\"
+        />\r\n      <row contactID=\"99000355\" contactName=\"Laika.\" standing=\"-5\"
+        contactTypeID=\"16159\" />\r\n      <row contactID=\"99000408\" contactName=\"Transstellar
+        Operations\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"99000682\"
+        contactName=\"COSA NOSTRA.\" standing=\"-10\" contactTypeID=\"16159\" />\r\n
+        \     <row contactID=\"99000767\" contactName=\"Sleeper Social Club\" standing=\"-5\"
+        contactTypeID=\"16159\" />\r\n      <row contactID=\"99001005\" contactName=\"Dunka
+        Dunka\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"99001157\"
+        contactName=\"Double Tap.\" standing=\"-10\" contactTypeID=\"16159\" />\r\n
+        \     <row contactID=\"99001240\" contactName=\"Team Liquid\" standing=\"-10\"
+        contactTypeID=\"16159\" />\r\n      <row contactID=\"99001331\" contactName=\"Project
+        Wildfire\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"99001383\"
+        contactName=\"GaNg BaNg TeAm\" standing=\"-5\" contactTypeID=\"16159\" />\r\n
+        \     <row contactID=\"99001999\" contactName=\"Hashashin Cartel\" standing=\"-5\"
+        contactTypeID=\"16159\" />\r\n      <row contactID=\"99002122\" contactName=\"D3vil's
+        Childr3n\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"99002154\"
+        contactName=\"Pizza of the hut\" standing=\"-5\" contactTypeID=\"16159\" />\r\n
+        \     <row contactID=\"155698845\" contactName=\"Evianie\" standing=\"5\"
+        contactTypeID=\"1384\" />\r\n      <row contactID=\"204545620\" contactName=\"Nahjar
+        Qu'in\" standing=\"-5\" contactTypeID=\"1373\" />\r\n      <row contactID=\"216685268\"
+        contactName=\"Broken Lightning\" standing=\"-5\" contactTypeID=\"2\" />\r\n
+        \     <row contactID=\"225616427\" contactName=\"Teabaggers\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"237160032\" contactName=\"Voorlock\"
+        standing=\"-10\" contactTypeID=\"1385\" />\r\n      <row contactID=\"245092561\"
+        contactName=\"chris944\" standing=\"-10\" contactTypeID=\"1385\" />\r\n      <row
+        contactID=\"251168761\" contactName=\"APOCALYPSE LEGION\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"288648402\" contactName=\"killer
+        chick\" standing=\"-5\" contactTypeID=\"1380\" />\r\n      <row contactID=\"297801789\"
+        contactName=\"Flyirian\" standing=\"-5\" contactTypeID=\"1383\" />\r\n      <row
+        contactID=\"306830202\" contactName=\"The Tuskers\" standing=\"-5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"328537120\" contactName=\"Professor Snuggles\"
+        standing=\"-10\" contactTypeID=\"1379\" />\r\n      <row contactID=\"329309068\"
+        contactName=\"M.I.F.\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"365679010\" contactName=\"Unknown and Beyond\" standing=\"-5\"
+        contactTypeID=\"16159\" />\r\n      <row contactID=\"386292982\" contactName=\"Pandemic
+        Legion\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"386657143\"
+        contactName=\"Dutch United Mercenaries\" standing=\"-5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"418417443\" contactName=\"Adm Mentalis\" standing=\"-10\"
+        contactTypeID=\"1379\" />\r\n      <row contactID=\"421038446\" contactName=\"General
+        Tso's Alliance\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row
+        contactID=\"454871494\" contactName=\"Le Souffle D'Erevos\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"486991089\" contactName=\"YukkA\"
+        standing=\"-10\" contactTypeID=\"1378\" />\r\n      <row contactID=\"495729389\"
+        contactName=\"Shadow Cartel\" standing=\"-5\" contactTypeID=\"16159\" />\r\n
+        \     <row contactID=\"515057482\" contactName=\"Novus Ordo Seclorum\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"528917420\" contactName=\"Eleutherian
+        Guard\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"566469928\"
+        contactName=\"Sabon Rockefeller\" standing=\"-10\" contactTypeID=\"1375\"
+        />\r\n      <row contactID=\"589441107\" contactName=\"Bundschuh\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"653416686\" contactName=\"ArekinXI\"
+        standing=\"-5\" contactTypeID=\"1384\" />\r\n      <row contactID=\"672789347\"
+        contactName=\"RED SQUAD\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"689933690\" contactName=\"Dexterous Spider\" standing=\"-10\"
+        contactTypeID=\"1383\" />\r\n      <row contactID=\"697965605\" contactName=\"Hyper-Nova\"
+        standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"703098053\"
+        contactName=\"Pax Romana Alliance\" standing=\"-5\" contactTypeID=\"16159\"
+        />\r\n      <row contactID=\"796218979\" contactName=\"Colonial Marines EVE
+        Division\" standing=\"5\" contactTypeID=\"2\" />\r\n      <row contactID=\"822746991\"
+        contactName=\"Veto Corp\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row
+        contactID=\"851039688\" contactName=\"Percussive Diplomacy\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"866000369\" contactName=\"Spiritus
+        Draconis\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"901319835\"
+        contactName=\"Mecha Enterprises Fleet\" standing=\"-5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"904007739\" contactName=\"Pishnak\" standing=\"-10\"
+        contactTypeID=\"1376\" />\r\n      <row contactID=\"912927245\" contactName=\"Onic
+        Madres\" standing=\"5\" contactTypeID=\"1376\" />\r\n      <row contactID=\"927292903\"
+        contactName=\"Rote Kapelle\" standing=\"-5\" contactTypeID=\"16159\" />\r\n
+        \     <row contactID=\"970210493\" contactName=\"Hydroponic Zone\" standing=\"-10\"
+        contactTypeID=\"16159\" />\r\n      <row contactID=\"975528208\" contactName=\"The
+        Fendahlian Collective\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row
+        contactID=\"994700397\" contactName=\"Rep-X\" standing=\"-5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"1002902117\" contactName=\"FEDERATION SOLARIS\"
+        standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"1015198609\"
+        contactName=\"K162\" standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row
+        contactID=\"1019906116\" contactName=\"Invicta.\" standing=\"-5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"1025370622\" contactName=\"Evi nii\" standing=\"5\"
+        contactTypeID=\"1378\" />\r\n      <row contactID=\"1025922971\" contactName=\"partner1982\"
+        standing=\"-5\" contactTypeID=\"1383\" />\r\n      <row contactID=\"1077415909\"
+        contactName=\"Royal NASA\" standing=\"-5\" contactTypeID=\"1377\" />\r\n      <row
+        contactID=\"1101993459\" contactName=\"Aleksandr Cirtus\" standing=\"10\"
+        contactTypeID=\"1376\" />\r\n      <row contactID=\"1125088545\" contactName=\"Wrecking
+        Shots\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"1126669495\"
+        contactName=\"Quantum Cats Syndicate\" standing=\"-5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"1134608343\" contactName=\"Indigentia\" standing=\"-5\"
+        contactTypeID=\"1377\" />\r\n      <row contactID=\"1136157539\" contactName=\"C0VEN\"
+        standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"1169814428\"
+        contactName=\"Ash Alliance\" standing=\"-5\" contactTypeID=\"16159\" />\r\n
+        \     <row contactID=\"1240247057\" contactName=\"AngelicDaydream\" standing=\"5\"
+        contactTypeID=\"1379\" />\r\n      <row contactID=\"1240969328\" contactName=\"Zen
+        Tech\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"1261847707\"
+        contactName=\"Genstar Inc\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"1267072316\" contactName=\"Adhocracy Incorporated\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"1295025263\" contactName=\"Two
+        Brothers Mining Corp.\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"1327270923\" contactName=\"Excuses.\" standing=\"-5\" contactTypeID=\"16159\"
+        />\r\n      <row contactID=\"1334571618\" contactName=\"thoraxius demioses\"
+        standing=\"-10\" contactTypeID=\"1384\" />\r\n      <row contactID=\"1381054438\"
+        contactName=\"Jupiter Force\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"1390893341\" contactName=\"The Shadow Phoenix Fleet\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"1405267247\" contactName=\"99
+        red balloons\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"1412020622\"
+        contactName=\"Galaxy Punks\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"1423289486\" contactName=\"Spacetime Enterprises\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"1452910096\" contactName=\"Estrale
+        Frontiers\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"1476376388\"
+        contactName=\"Mikiael\" standing=\"5\" contactTypeID=\"1377\" />\r\n      <row
+        contactID=\"1484388688\" contactName=\"winberg v\" standing=\"5\" contactTypeID=\"1377\"
+        />\r\n      <row contactID=\"1486022755\" contactName=\"Soldiers of Thunderstorm\"
+        standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"1530983307\"
+        contactName=\"Desman Alliance\" standing=\"-5\" contactTypeID=\"16159\" />\r\n
+        \     <row contactID=\"1614416688\" contactName=\"Hidden Souls\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"1620496699\" contactName=\"NME1\"
+        standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"1675661691\"
+        contactName=\"Quebec United Legions\" standing=\"-5\" contactTypeID=\"16159\"
+        />\r\n      <row contactID=\"1700517403\" contactName=\"S I L E N T.\" standing=\"-5\"
+        contactTypeID=\"16159\" />\r\n      <row contactID=\"1724888507\" contactName=\"Old
+        Farts Rest Home\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"1744448379\"
+        contactName=\"Inner Shadow\" standing=\"5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"1753809105\" contactName=\"steinberg v\" standing=\"5\" contactTypeID=\"1377\"
+        />\r\n      <row contactID=\"1793374183\" contactName=\"B A N E\" standing=\"-5\"
+        contactTypeID=\"16159\" />\r\n      <row contactID=\"1809982279\" contactName=\"The
+        Free Haven Group\" standing=\"5\" contactTypeID=\"2\" />\r\n      <row contactID=\"1815093376\"
+        contactName=\"k'dai\" standing=\"5\" contactTypeID=\"1377\" />\r\n      <row
+        contactID=\"1840150637\" contactName=\"xXCorruptedKingXx\" standing=\"-10\"
+        contactTypeID=\"1377\" />\r\n      <row contactID=\"1857454335\" contactName=\"The
+        Babylon Consortium\" standing=\"-10\" contactTypeID=\"16159\" />\r\n      <row
+        contactID=\"1871921227\" contactName=\"Black Marsh X\" standing=\"5\" contactTypeID=\"2\"
+        />\r\n      <row contactID=\"1929690323\" contactName=\"URSALIS LOGISTICS
+        GROUP\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row contactID=\"2009640682\"
+        contactName=\"Aeyona\" standing=\"-10\" contactTypeID=\"1376\" />\r\n      <row
+        contactID=\"2017409919\" contactName=\"Capsule Corporation\" standing=\"-5\"
+        contactTypeID=\"2\" />\r\n      <row contactID=\"2019784436\" contactName=\"Error's
+        Corperation of Error\" standing=\"-5\" contactTypeID=\"2\" />\r\n      <row
+        contactID=\"2043593450\" contactName=\"slave chick\" standing=\"-5\" contactTypeID=\"1379\"
+        />\r\n      <row contactID=\"2053796889\" contactName=\"Gorski Car\" standing=\"-10\"
+        contactTypeID=\"1379\" />\r\n      <row contactID=\"2057458625\" contactName=\"JIHADASQUAD\"
+        standing=\"-5\" contactTypeID=\"16159\" />\r\n      <row contactID=\"2062354243\"
+        contactName=\"FFKefka\" standing=\"5\" contactTypeID=\"1378\" />\r\n    </rowset>\r\n
+        \   <rowset name=\"allianceContactList\" key=\"contactID\" columns=\"contactID,contactName,standing,contactTypeID\"
+        />\r\n  </result>\r\n  <cachedUntil>2014-04-18 02:07:03</cachedUntil>\r\n</eveapi>"
+    http_version: 
+  recorded_at: Fri, 18 Apr 2014 01:52:03 GMT
+recorded_with: VCR 2.9.0
