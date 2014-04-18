@@ -40,10 +40,8 @@ describe ApiCorpContactPullWorker do
 					FactoryGirl.create(:api, user: user)
 				end
 			}
-			#let!(:inactive_api) {FactoryGirl.create(:corp_api, user: user, active: false)}
-			#let!(:general_api) {FactoryGirl.create(:api, user: user)}
-			it "should throw an argument error if the API is not active." do
 
+			it "should throw an argument error if the API is not active." do
 				expect{
 					VCR.use_cassette('workers/corpContactList_standingsSpread') do
 						work.perform(inactive_api.id)
@@ -150,7 +148,6 @@ describe ApiCorpContactPullWorker do
 			VCR.use_cassette('workers/corpContactList_exceedStandings') do
 				work.perform(corp_api.id)
 			end
-			#WhitelistLog.last.entity_name.should match corp_api.main_entity_name
 			WhitelistLog.where('entity_name = ?', corp_api.main_entity_name).count.should be 1
 		end
 	end
