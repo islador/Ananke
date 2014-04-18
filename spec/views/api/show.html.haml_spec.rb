@@ -8,8 +8,16 @@ describe "api/show.html.haml" do
 
 	subject {page}
 
-	let!(:api) {FactoryGirl.create(:api, user: user)}
-	let!(:main_api) {FactoryGirl.create(:api, user: user, main: true)}
+	let!(:api) {
+		VCR.use_cassette('workers/api_key_info/characterAPI') do
+			FactoryGirl.create(:api, user: user)
+		end
+	}
+	let!(:main_api) {
+		VCR.use_cassette('workers/api_key_info/characterAPI') do
+			FactoryGirl.create(:api, user: user, main: true)
+		end
+	}
 	before(:each) do
 		visit new_user_api_path(user)
 		fill_in('user_email', :with => user.email)
