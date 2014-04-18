@@ -17,8 +17,7 @@ class ApiKeyInfoWorker
 			#Set the main_entity_name to the corporation name.
 			ananke_api.main_entity_name = corp_name
 			#Set the ananke_type to corporation
-			ananke_api.ananke_type = 1;
-				
+			ananke_api.ananke_type = 1;	
 		end
 		allianceName = ""
 		factionName = ""

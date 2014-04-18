@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140417020551) do
+ActiveRecord::Schema.define(version: 20140417211920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20140417020551) do
     t.integer  "ananke_type"
     t.boolean  "main"
     t.string   "name"
+    t.integer  "whitelist_standings"
   end
 
   create_table "characters", force: true do |t|

@@ -39,6 +39,7 @@ FactoryGirl.define do
 			ccp_type 1
 			ananke_type 1
 			main_entity_name "Alaskan Fish"
+			whitelist_standings 0
 		end
 	end
 

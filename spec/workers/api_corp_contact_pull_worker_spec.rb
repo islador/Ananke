@@ -6,12 +6,12 @@ describe ApiCorpContactPullWorker do
 	describe "Perform > " do
 		let!(:user) {FactoryGirl.create(:user)}
 		#Add a whitelist standings column to the API
-		let!(:corp_api) {FactoryGirl.create(:corp_api, user: user)}
+		let!(:corp_api) {FactoryGirl.create(:corp_api, user: user, whitelist_standings: 10, main_entity_name: "Frontier Explorer's League")}
 		let!(:whitelist_entity_api) {FactoryGirl.create(:whitelist, source_user: user.id, standing: 10)}
 		let!(:whitelist_entity_manual) {FactoryGirl.create(:whitelist, source_user: user.id, source_type: 2)}
 		let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist_entity_api.id)}
-		let!(:whitelist_api_standings_invalid) {FactoryGirl.create(:whitelist, source_user: user.id, standing: 5)}
-		let!(:whitelist_api_connection__standings_invalid) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist_api_standings_invalid.id)}
+		let!(:whitelist_api_standings_invalid) {FactoryGirl.create(:whitelist, source_user: user.id, standing: 5, name: "Flapjack Shortpants")}
+		let!(:whitelist_api_connection_standings_invalid) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist_api_standings_invalid.id)}
 		work = ApiCorpContactPullWorker.new
 
 		#This whole block is likely going to need to be duplicated in the whitelist controller and its spec.
@@ -70,8 +70,9 @@ describe ApiCorpContactPullWorker do
 		end
 
 		it "should generate a whitelist_log entry for itself" do
-			expect{
-				work.perform(corp_api.id)}.to change(WhitelistLog, :count).by(+1)
+			work.perform(corp_api.id)
+			#WhitelistLog.last.entity_name.should match corp_api.main_entity_name
+			WhitelistLog.where('entity_name = ?', corp_api.main_entity_name).count.should be 1
 		end
 	end
 end
