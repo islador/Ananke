@@ -33,7 +33,7 @@ http_interactions:
       string: "<?xml version='1.0' encoding='UTF-8'?>\r\n<eveapi version=\"2\">\r\n
         \ <currentTime>2014-04-18 01:52:03</currentTime>\r\n  <result>\r\n    <rowset
         name=\"corporateContactList\" key=\"contactID\" columns=\"contactID,contactName,standing,contactTypeID\">\r\n
-        \      <row contactID=\"90268350\" contactName=\"Flapjack Shortpants\" standing=\"4\"
+        \      <row contactID=\"90268350\" contactName=\"Alexander Fits\" standing=\"10\"
         contactTypeID=\"1385\" />\r\n    </rowset>\r\n
         \   <rowset name=\"allianceContactList\" key=\"contactID\" columns=\"contactID,contactName,standing,contactTypeID\"
         />\r\n  </result>\r\n  <cachedUntil>2014-04-18 02:07:03</cachedUntil>\r\n</eveapi>"
