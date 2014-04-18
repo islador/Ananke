@@ -59,15 +59,23 @@ describe WhitelistController do
   describe "PUT 'begin_api_pull'" do
     work = ApiCorpContactPullWorker.new
     let!(:user) {FactoryGirl.create(:user)}
-    let!(:corp_api) {FactoryGirl.create(:corp_api, user: user)}
+    let!(:corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
 
     it "should return http success" do
-      xhr :put, :begin_api_pull, api_id: corp_api.id
+      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :begin_api_pull, api_id: corp_api.id
+      end
       response.should be_success
     end
 
     it "should call ApiCorpContactPullWorker with corp_api.id" do
-      xhr :put, :begin_api_pull, api_id: corp_api.id
+      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :begin_api_pull, api_id: corp_api.id
+      end
       response.body.should match "API queued for contact processing"
     end
   end
