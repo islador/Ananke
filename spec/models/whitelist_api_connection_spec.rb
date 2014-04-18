@@ -10,12 +10,18 @@
 #
 
 require 'spec_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe WhitelistApiConnection do
-	#let!(:user) {FactoryGirl.create(:user)}
-	#let!(:api) {FactoryGirl.create(:api, user: user)}
-	#let!(:whitelist_entity) {FactoryGirl.create(:whitelist, source_type: 1, source_user: user.id)}
-	let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection)}
+	let!(:user) {FactoryGirl.create(:user)}
+	let!(:api) {
+		VCR.use_cassette('workers/api_key_info/characterAPI') do
+			FactoryGirl.create(:api, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", user: user)
+		end
+	}
+	let!(:whitelist_entity) {FactoryGirl.create(:whitelist, source_type: 1, source_user: user.id)}
+	let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: api.id, whitelist_id: whitelist_entity.id)}
 
 	subject {whitelist_api_connection}
 
