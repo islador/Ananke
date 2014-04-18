@@ -11,14 +11,18 @@ describe ApiController do
     it "should enroll a new API" do
       sign_in user
       expect{
-        xhr :post, :create, user_id: user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
+        VCR.use_cassette('workers/api_key_info/characterAPI') do
+          xhr :post, :create, user_id: user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
+        end
       }.to change(Api, :count).by(+1)
     end
 
     it "should return the API's ID" do
       #This test could be better. Namely sort out how to access the API itself and compare it's ID against the response.
       sign_in user
-      xhr :post, :create, user_id: user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        xhr :post, :create, user_id: user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
+      end
       expect{
         response
       }.not_to be 0
@@ -26,8 +30,16 @@ describe ApiController do
   end
 
   describe "DELETE 'destroy'" do
-    let!(:api) {FactoryGirl.create(:api)}
-    let!(:main_api) {FactoryGirl.create(:api, main: true)}
+    let!(:api) {
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        FactoryGirl.create(:api)
+      end
+    }
+    let!(:main_api) {
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        FactoryGirl.create(:api, main: true)
+      end
+    }
 
     it "should destroy the api identified" do
       expect{
@@ -61,7 +73,11 @@ describe ApiController do
       response.should be_success
     end
 
-    let!(:api1) {FactoryGirl.create(:api, user: user)}
+    let!(:api1) {
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        FactoryGirl.create(:api, user: user)
+      end
+    }
     it "should build an object containing all of the current user's enrolled APIs" do
       sign_in user
       get 'index', :user_id => user.id
@@ -71,7 +87,11 @@ describe ApiController do
   end
 
   describe "GET 'show'" do
-    let!(:api1) {FactoryGirl.create(:api)}
+    let!(:api1) {
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        FactoryGirl.create(:api)
+      end
+    }
     it "returns http success" do
       get 'show', :user_id => user.id, :id => api1.id
       response.should be_success
@@ -79,7 +99,11 @@ describe ApiController do
   end
 
   describe "GET 'character_list'" do
-    let!(:api1) {FactoryGirl.create(:api, user: user)}
+    let!(:api1) {
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        FactoryGirl.create(:api, user: user)
+      end
+    }
     let!(:character1){FactoryGirl.create(:character, api: api1)}
     let!(:character2){FactoryGirl.create(:character, api: api1)}
     #The current API used in the factory is returning a single character. Thus to get the three max characters we need only build one.
@@ -114,7 +138,11 @@ describe ApiController do
   end
 
   describe "PUT 'set_main'" do
-    let!(:api2) {FactoryGirl.create(:api, user: user)}
+    let!(:api2) {
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        FactoryGirl.create(:api, user: user)
+      end
+    }
     let!(:character1){FactoryGirl.create(:character, api: api2)}
     let!(:character2){FactoryGirl.create(:character, api: api2)}
     let!(:character3){FactoryGirl.create(:character, api: api2)}
@@ -125,7 +153,11 @@ describe ApiController do
       response.should be_success
     end
 
-    let!(:api3) {FactoryGirl.create(:api, user: user, main: true)}
+    let!(:api3) {
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        FactoryGirl.create(:api, user: user, main: true)
+      end
+    }
     let!(:character4){FactoryGirl.create(:character, api: api3, main: true)}
     it "should set the previous main API to not be the main api" do
       sign_in user
@@ -175,14 +207,17 @@ describe ApiController do
       expect(Api.where("id = ?", api2.id)[0].main_entity_name).to match character1.name
     end
 
-    let!(:corporation_api) {FactoryGirl.create(:corp_api, user: user)}
+    let!(:corporation_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
     let!(:corporation_character) {FactoryGirl.create(:character, api: corporation_api)}
     it "should set the main_entity_name of a corporation API to the main character's name + the corporation's name" do
       sign_in user
       xhr :put, :set_main, :user_id => user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
 
-      #This test is fragile since the corporation name is hard coded, perhaps this can be fixed by stubbing the sidekiq API calls?
-      expect(Api.where("id = ?", corporation_api.id)[0].main_entity_name).to match "#{corporation_character.name} - Frontier Explorer's League"
+      expect(Api.where("id = ?", corporation_api.id)[0].main_entity_name).to match "#{corporation_character.name} - Alaskan Fish"
     end
   end
 end
