@@ -13,6 +13,8 @@
 #
 
 require 'spec_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe Whitelist do
 	let(:whitelist) {FactoryGirl.create(:whitelist)}
@@ -28,15 +30,21 @@ describe Whitelist do
 	it {should be_valid}
 
 	describe "Associations > " do
-		let!(:api_whitelist) {FactoryGirl.create(:whitelist)}
-		let!(:whitelist_api) {FactoryGirl.create(:api)}
+		let!(:user) {FactoryGirl.create(:user)}
+		let!(:api_whitelist) {FactoryGirl.create(:whitelist, source_user: user.id, source_type: 1)}
+		let!(:whitelist_api) {
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				FactoryGirl.create(:api, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", user: user)
+			end
+		}
 		let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: whitelist_api.id, whitelist_id: api_whitelist.id)}
 		subject{api_whitelist}
 
 		it {should respond_to(:apis)}
 
 		it "api_whitelist.apis should yield whitelist_api" do
-			api_whitelist.apis[0].id.should be whitelist_api.id
+			whitelistDB = Whitelist.last
+			whitelistDB.apis[0].id.should be whitelist_api.id
 		end
 	end
 
