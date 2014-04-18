@@ -1,0 +1,43 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.eveonline.com/account/Apikeyinfo.xml.aspx
+    body:
+      encoding: US-ASCII
+      string: Submodules&KeyId=3255235&VCode=P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x&Includes=account
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/xml; charset=utf-8
+      Vary:
+      - Accept-Encoding
+      Date:
+      - Fri, 18 Apr 2014 16:20:39 GMT
+    body:
+      encoding: UTF-8
+      string: "<?xml version='1.0' encoding='UTF-8'?>\r\n<eveapi version=\"2\">\r\n
+        \ <currentTime>2014-04-18 16:20:39</currentTime>\r\n  <result>\r\n    <key
+        accessMask=\"268435455\" type=\"Character\" expires=\"\">\r\n      <rowset
+        name=\"characters\" key=\"characterID\" columns=\"characterID,characterName,corporationID,corporationName,allianceID,allianceName,factionID,factionName\">\r\n
+        \       <row characterID=\"1254032218\" characterName=\"Tany Ishsar\" corporationID=\"1416434476\"
+        corporationName=\"Frontier Explorer's League\" allianceID=\"0\" allianceName=\"\"
+        factionID=\"0\" factionName=\"\" />\r\n      </rowset>\r\n    </key>\r\n  </result>\r\n
+        \ <cachedUntil>2014-04-18 16:25:39</cachedUntil>\r\n</eveapi>"
+    http_version: 
+  recorded_at: Fri, 18 Apr 2014 16:20:39 GMT
+recorded_with: VCR 2.9.0
