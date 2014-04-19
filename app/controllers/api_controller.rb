@@ -79,6 +79,8 @@ class ApiController < ApplicationController
 
     #Point of optimization. This method could take the Api model already had, do its thing, then save it. Thus avoiding a DB access.
     @api.set_main_entity_name
+
+    current_user.set_main_char_name(@character)
     render nothing: true
   end
 end

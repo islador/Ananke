@@ -219,5 +219,13 @@ describe ApiController do
 
       expect(Api.where("id = ?", corporation_api.id)[0].main_entity_name).to match "#{corporation_character.name} - Alaskan Fish"
     end
+
+    it "should set the user's main_char_name to the new main character's name" do
+      sign_in user
+      xhr :put, :set_main, :user_id => user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
+
+      userDB = User.where("id = ?", user.id)[0]
+      userDB.main_char_name.should match "#{corporation_character.name}"
+    end
   end
 end
