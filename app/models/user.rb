@@ -19,7 +19,7 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
-#  main_api               :integer
+#  main_char_name         :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -29,4 +29,9 @@ class User < ActiveRecord::Base
 			:recoverable, :rememberable, :trackable, :validatable, :confirmable
 	
 	has_many :apis, dependent: :destroy
+
+	def set_main_char_name(character)
+		self.main_char_name = character.name
+		self.save!
+	end
 end

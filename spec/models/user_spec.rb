@@ -19,15 +19,35 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
-#  main_api               :integer
+#  main_char_name         :string(255)
 #
 
 require 'spec_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe User do
-  user = User.create(email: "test@test.com", password: "test1234", password_confirmation: "test1234", confirmed_at: Time.new(2014), confirmation_sent_at: Time.new(2014)-50)
-  subject{user}
+	let!(:user) {FactoryGirl.create(:user)}
 
-  it {should respond_to :main_api}
+	subject{user}
 
+	it {should respond_to :main_char_name}
+
+	describe "set_main_char_name" do
+		
+		let!(:corp_api) {
+			VCR.use_cassette('workers/api_key_info/corpAPI') do
+				FactoryGirl.create(:corp_api, user: user, main: true)
+			end
+		}
+		let!(:corp_character) {FactoryGirl.create(:character, api: corp_api, main: true, corporationName: "Alaskan Fish")}
+
+		it "should set the user's main_char_name to the main character of the API's name" do
+			user.set_main_char_name(corp_character)
+
+			userDB = User.where("id = ?", user.id)[0]
+			userDB.should_not be_nil
+			userDB.main_char_name.should match "#{corp_character.name}"
+		end
+	end
 end
