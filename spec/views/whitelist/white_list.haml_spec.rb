@@ -5,6 +5,7 @@ Sidekiq::Testing.inline!
 describe "whitelist/white_list.haml > " do
 	subject {page}
 	let!(:user) {FactoryGirl.create(:user)}
+	let!(:whitelist) {FactoryGirl.create(:whitelist, source_user: user.id)}
 
 	before(:each) do
 		visit whitelist_white_list_path
@@ -50,13 +51,14 @@ describe "whitelist/white_list.haml > " do
 
 		describe "API Pull Table > " do
 			let!(:api1) {
-				VCR.use_cassette('workers/api_key_info/characterAPI') do
-					FactoryGirl.create(:api, main_entity_name: "Avah", ananke_type: 1)
+				VCR.use_cassette('workers/api_key_info/corpAPI') do
+					FactoryGirl.create(:corp_api, user: user)
 				end
 			}
+			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: api1.id, whitelist_id: whitelist.id)}
 			let!(:api2) {
 				VCR.use_cassette('workers/api_key_info/characterAPI') do
-					FactoryGirl.create(:api)
+					FactoryGirl.create(:api, user: user)
 				end
 			}
 			it "should render the api pulls table" do
@@ -70,14 +72,14 @@ describe "whitelist/white_list.haml > " do
 			it "should contain items from the database" do
 				visit whitelist_white_list_path
 				within '#api_pulls_table' do
-					should have_selector("tr#api_#{api1.id}", text: api1.main_entity_name)
+					should have_selector("tr#api_#{api1.id}", text: api1.user.main_char_name)
 				end
 			end
 
 			
 			it "should contain a cancel button for each API" do
 				visit whitelist_white_list_path
-				should have_selector("button#destroy_api_#{api2.id}", text: "Cancel Pull")
+				should have_selector("button#cancel_pull_api_#{api1.id}", text: "Cancel Pull")
 			end
 
 			describe "Cancel > " do
