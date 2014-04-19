@@ -5,21 +5,37 @@ Sidekiq::Testing.inline!
 describe WhitelistController do
   # http://stackoverflow.com/questions/8819343/rails-rspec-devise-undefined-method-authenticate-user
   before { controller.stub(:authenticate_user!).and_return true }
+  let!(:user) {FactoryGirl.create(:user)}
 
   describe "GET 'white_list'" do
+    let!(:valid_corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
+    let!(:invalid_corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user, active: false)
+      end
+    }
     let!(:whitelist) {FactoryGirl.create(:whitelist)}
 
     it "returns http success" do
+      sign_in user
       get 'white_list'
       response.should be_success
     end
 
     it "should build an @wl object containing all whitelists" do
+      sign_in user
       get 'white_list'
       expect(assigns(:wl)).to include(whitelist)
     end
 
-    xit "should build an @corp_apis object containing all " do
+    it "should build an @corp_apis object containing all of the user's valid corp APIs" do
+      sign_in user
+      get 'white_list'
+      expect(assigns(:corp_apis)).to include(valid_corp_api)
     end
   end
 
@@ -46,8 +62,6 @@ describe WhitelistController do
   end
 
   describe "CREATE 'create'" do
-    let!(:user) {FactoryGirl.create(:user)}
-
     it "should create a new whitelist entity" do
       sign_in user
       expect{
@@ -57,8 +71,6 @@ describe WhitelistController do
   end
 
   describe "PUT 'begin_api_pull'" do
-    work = ApiCorpContactPullWorker.new
-    let!(:user) {FactoryGirl.create(:user)}
     let!(:corp_api) {
       VCR.use_cassette('workers/api_key_info/corpAPI') do
         FactoryGirl.create(:corp_api, user: user)

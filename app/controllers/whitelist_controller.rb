@@ -26,6 +26,7 @@ class WhitelistController < ApplicationController
 	#Display methods
 	def white_list
 		@wl = Whitelist.all
+		@corp_apis = current_user.apis.where("ananke_type = 1 AND active = true")
 	end
 
 	def white_list_log
