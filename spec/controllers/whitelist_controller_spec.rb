@@ -8,17 +8,24 @@ describe WhitelistController do
   let!(:user) {FactoryGirl.create(:user)}
 
   describe "GET 'white_list'" do
+    let!(:pulled_corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
     let!(:valid_corp_api) {
       VCR.use_cassette('workers/api_key_info/corpAPI') do
         FactoryGirl.create(:corp_api, user: user)
       end
     }
-    let!(:invalid_corp_api) {
+    let!(:inactive_corp_api) {
       VCR.use_cassette('workers/api_key_info/corpAPI') do
         FactoryGirl.create(:corp_api, user: user, active: false)
       end
     }
     let!(:whitelist) {FactoryGirl.create(:whitelist)}
+    let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_corp_api.id, whitelist_id: whitelist.id)}
+    
 
     it "returns http success" do
       sign_in user
@@ -36,6 +43,14 @@ describe WhitelistController do
       sign_in user
       get 'white_list'
       expect(assigns(:corp_apis)).to include(valid_corp_api)
+    end
+
+    it "should build an @active_pulls object containing all of the APIs currently being pulled from" do
+      sign_in user
+      get 'white_list'
+      expect(assigns(:active_pulls)).to include(pulled_corp_api.id)
+      expect(assigns(:active_pulls)).to_not include(invalid_corp_api.id)
+      expect(assigns(:active_pulls)).to_not include(inactive_corp_api.id)
     end
   end
 
