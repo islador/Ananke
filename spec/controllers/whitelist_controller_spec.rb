@@ -45,12 +45,12 @@ describe WhitelistController do
       expect(assigns(:corp_apis)).to include(valid_corp_api)
     end
 
-    it "should build an @active_pulls object containing all of the APIs currently being pulled from" do
+    it "should build an @active_pull_apis object containing all of the APIs currently being pulled from" do
       sign_in user
       get 'white_list'
-      expect(assigns(:active_pulls)).to include(pulled_corp_api.id)
-      expect(assigns(:active_pulls)).to_not include(invalid_corp_api.id)
-      expect(assigns(:active_pulls)).to_not include(inactive_corp_api.id)
+      expect(assigns(:active_pull_apis)).to include(pulled_corp_api)
+      expect(assigns(:active_pull_apis)).to_not include(valid_corp_api)
+      expect(assigns(:active_pull_apis)).to_not include(inactive_corp_api)
     end
   end
 

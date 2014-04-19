@@ -27,6 +27,7 @@ class WhitelistController < ApplicationController
 	def white_list
 		@wl = Whitelist.all
 		@corp_apis = current_user.apis.where("ananke_type = 1 AND active = true")
+		@active_pull_apis = Api.joins(:whitelist_api_connections).uniq
 	end
 
 	def white_list_log
