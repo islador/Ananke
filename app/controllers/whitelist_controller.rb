@@ -28,6 +28,10 @@ class WhitelistController < ApplicationController
 		@wl = Whitelist.all
 		@corp_apis = current_user.apis.where("ananke_type = 1 AND active = true")
 		@active_pull_apis = Api.joins(:whitelist_api_connections).uniq
+		@user_char_names = []
+		@active_pull_apis.each do |api|
+			@user_char_names.push(api.user.main_char_name)
+		end
 	end
 
 	def white_list_log

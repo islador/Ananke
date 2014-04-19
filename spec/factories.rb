@@ -9,6 +9,7 @@ FactoryGirl.define do
 		password_confirmation "12345678"
 		confirmed_at Time.now
 		confirmation_sent_at Time.now-50
+		main_char_name "Jeff"
 	end
 
 	factory :api do

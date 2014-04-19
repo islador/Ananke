@@ -52,6 +52,12 @@ describe WhitelistController do
       expect(assigns(:active_pull_apis)).to_not include(valid_corp_api)
       expect(assigns(:active_pull_apis)).to_not include(inactive_corp_api)
     end
+
+    it "should build an @user_char_names object containing all of the API's currently being pulled from user's main_char_names" do
+      sign_in user
+      get 'white_list'
+      expect(assigns(:user_char_names)[0]).to match "#{user.main_char_name}"
+    end
   end
 
   describe "GET 'white_list_log'" do
