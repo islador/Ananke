@@ -72,7 +72,7 @@ describe "whitelist/white_list.haml > " do
 			it "should contain items from the database" do
 				visit whitelist_white_list_path
 				within '#api_pulls_table' do
-					should have_selector("tr#api_#{api1.id}", text: api1.user.main_char_name)
+					should have_selector("tr#pull_api_#{api1.id}", text: api1.user.main_char_name)
 				end
 			end
 
@@ -91,13 +91,13 @@ describe "whitelist/white_list.haml > " do
 				it "should remove the item from the datatable when clicked", js: true do
 					visit whitelist_white_list_path
 					
-					should have_selector("tr#api_#{api3.id}", text: api3.main_entity_name)
+					should have_selector("tr#pull_api_#{api1.id}", text: api1.main_entity_name)
 					
 					#http://stackoverflow.com/a/2609244
 					page.evaluate_script('window.confirm = function() { return true; }')
 
 					click_button 'Cancel'
-					should_not have_selector("tr#api_#{api3.id}", text: api3.main_entity_name)
+					should_not have_selector("tr#pull_api_#{api1.id}", text: api1.main_entity_name)
 				end
 			end
 		end
@@ -128,17 +128,17 @@ describe "whitelist/white_list.haml > " do
 	end
 
 	describe "Delete > " do
-		let!(:whitelist3) {FactoryGirl.create(:whitelist, name: "Jeff")}
+		#let!(:whitelist3) {FactoryGirl.create(:whitelist, name: "Jeff")}
 		it "should remove the item from the datatable when clicked", js: true do
 			visit whitelist_white_list_path
 			
-			should have_selector("tr#entity_#{whitelist3.id}", text: whitelist3.name)
+			should have_selector("tr#entity_#{whitelist.id}", text: whitelist.name)
 			
 			#http://stackoverflow.com/a/2609244
 			page.evaluate_script('window.confirm = function() { return true; }')
 
 			click_button 'Delete'
-			should_not have_selector("tr#entity_#{whitelist3.id}", text: whitelist3.name)
+			should_not have_selector("tr#entity_#{whitelist.id}", text: whitelist.name)
 		end
 	end
 

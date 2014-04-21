@@ -15,6 +15,7 @@ Ananke::Application.routes.draw do
     resources :api do
       get "/character_list", to: "api#character_list"
       put "/set_main", to: "api#set_main"
+      put "/cancel_whitelist_api_pull", to: "api#cancel_whitelist_api_pull"
     end
   end
   

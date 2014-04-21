@@ -228,4 +228,40 @@ describe ApiController do
       userDB.main_char_name.should match "#{corporation_character.name}"
     end
   end
+
+  describe "PUT 'cancel_whitelist_api_pull'" do
+    let!(:corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
+    let!(:whitelist) {FactoryGirl.create(:whitelist)}
+    let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist.id)}
+
+    it "should return http success" do
+      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :cancel_whitelist_api_pull, user_id: user.id, api_id: corp_api.id
+      end
+      response.should be_success
+    end
+
+    it "should return json 'API removed from contact processing' for a successful request" do
+      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :cancel_whitelist_api_pull, user_id: user.id, api_id: corp_api.id
+      end
+      response.should be_success
+      response.body.should match "API removed from contact processing"
+    end
+
+    it "should return json 'Invalid API or API is not a pulling API'" do
+      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :cancel_whitelist_api_pull, user_id: user.id, api_id: 3000
+      end
+      response.body.should match "Invalid API or API is not a pulling API"
+    end
+
+    it "should remove the api from the pull schedule" do
+      pending "I have no pull schedule method. Heroku scheduler to trigger like whenever, then query DB like in market monitor?"
+    end
+  end
 end

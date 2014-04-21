@@ -34,16 +34,9 @@ class ApiController < ApplicationController
     @api = Api.where("id = ?", params[:api_id])[0]
     @cl = @api.characters
 
-    #respond_to do |format|
-    #  format.json render(:partial => '/shared/character_list', locals:{cl: @cl})
-    #end
     respond_to do |format|
       format.js
     end
-    
-    #render json:
-
-    #$('#team_1_display_table').empty().append("<%= escape_javascript(render(:partial => 'team_1_table', locals: {players: @players})) %>");
   end
 
   def set_main
@@ -82,5 +75,17 @@ class ApiController < ApplicationController
 
     current_user.set_main_char_name(@character)
     render nothing: true
+  end
+
+  def cancel_whitelist_api_pull
+    api = Api.where("id = ?", params[:api_id])
+    whitelist_connections = WhitelistApiConnection.where("api_id = ?", params[:api_id])[0]
+    #Determine if the API is valid and has an active pull
+    if api.nil? == false && whitelist_connections.nil? == false
+      #Cancel the pull & destroy it's whitelist_api_connections and whitelists (if necessary)
+      render :json => "API removed from contact processing"
+    else
+      render :json => "Invalid API or API is not a pulling API"
+    end
   end
 end

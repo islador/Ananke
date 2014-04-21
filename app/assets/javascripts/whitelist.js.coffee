@@ -3,15 +3,42 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 jQuery ->
-	window.wlt = $('#whitelist_table').dataTable()
-
+	#Whitelist Log
 	$('#whitelist_log_table').dataTable
 		aaSorting: [[ 6, "desc" ]]
+
+	#Whitelist.haml Pull API Tables
+	window.apt = $('#api_pulls_table').dataTable()
+
+	$("[id^='cancel_pull_api_']").click ->
+		#Extract necessary data from the page.
+		target = $("#" + this.id).attr("data-target-path")
+		target_id = $("#" + this.id).attr("data-pull-api-id")
+		target_table = apt
+		target_table_id = "#api_pulls_table"
+		authenticity_token = $('meta[name=csrf-token]').attr("content")
+
+		#Trigger confirm dialog before making AJAX call
+		if confirm("Canceling this API's pull will immediately remove it from this table and delete any whitelist entities it is soley responsible. Do you want to do this?") is true
+			#If the user clicks 'Ok' then send an AJAX call deleting the user
+			$.ajax({
+				#A post with a method data attribute is used to preserve cross browser compability.
+				url: target, type: "PUT",
+				data: { authenticity_token: authenticity_token},
+				#On success, return code 200, trigger the remove_from_table function
+				success: remove_from_table(this.id, target_id, target_table, target_table_id)
+			})
+
+	#Whitelist.haml Whitelist Table
+	window.wlt = $('#whitelist_table').dataTable()
 
 	#Function to detect clicks on the in table whitelist entity "Delete" button.
 	$("[id^='destroy_entity_']").click ->
 		#Extract necessary data from the page.
 		target = $("#" + this.id).attr("data-target-path")
+		target_id = $("#" + this.id).attr("data-entity-id")
+		target_table = wlt
+		target_table_id = "#whitelist_table"
 		authenticity_token = $('meta[name=csrf-token]').attr("content")
 
 		#Trigger confirm dialog before making AJAX call
@@ -22,7 +49,7 @@ jQuery ->
 				url: target, type: "POST",
 				data: {"_method":"delete", authenticity_token: authenticity_token},
 				#On success, return code 200, trigger the remove_from_table function
-				success: remove_from_table(this.id)
+				success: remove_from_table(this.id, target_id, target_table, target_table_id)
 			})
 
 	#Function to detect clicks on the in table whitelist entity "Delete" button.
@@ -47,12 +74,13 @@ jQuery ->
 		wlt.fnAddData [entity_name, entity_label, "You", "Manual", "", "Freshly Added"]
 
 	#Function to remove an entire row from the volunteer index table.
-	remove_from_table = (id) ->
+	remove_from_table = (id, target_id, target_table, target_table_id) ->
 		#Extract necessary variables from the page.
-		entity_id = $("#" + id).attr("data-entity-id")
-		nRow =  $('#whitelist_table tbody tr[id='+entity_id+']')[0];
+		#entity_id = $("#" + id).attr("data-entity-id")
+		nRow =  $(target_table_id + ' tbody tr[id='+target_id+']')[0];
 		#Remove the row with id = entity.id
-		wlt.fnDeleteRow( nRow )
+		target_table.fnDeleteRow( nRow )
+		#wlt.fnDeleteRow( nRow )
 		#wlt.fnClearTable()
 		#$("#" + entity_id).remove()
 
