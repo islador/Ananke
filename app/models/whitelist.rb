@@ -14,7 +14,7 @@
 
 class Whitelist < ActiveRecord::Base
 
-	has_many :whitelist_api_connections
+	has_many :whitelist_api_connections, dependent: :destroy
 	has_many :apis, through: :whitelist_api_connections
 
 	#Should migrate name to entity_name for consistency if the chance is found.

@@ -46,6 +46,11 @@ describe Whitelist do
 			whitelistDB = Whitelist.last
 			whitelistDB.apis[0].id.should be whitelist_api.id
 		end
+
+		it "should destroy its whitelist_api_connections when destroyed" do
+			api_whitelist.destroy
+			WhitelistApiConnection.count.should be 0
+		end	
 	end
 
 	describe "Callbacks > " do
