@@ -83,6 +83,11 @@ describe Api do
 			it "corp_api.whitelists should yield whitelist" do
 				corp_api.whitelists[0].id.should be whitelist.id
 			end
+
+			it "should destroy its whitelist_api_connections when destroyed" do
+				corp_api.destroy
+				WhitelistApiConnection.count.should be 0
+			end
 		end
 	end
 
