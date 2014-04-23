@@ -16,12 +16,18 @@ class WhitelistController < ApplicationController
 	#Display methods
 	def white_list
 		@wl = Whitelist.all
-		@corp_apis = current_user.apis.where("ananke_type = 1 AND active = true")
 		@active_pull_apis = Api.joins(:whitelist_api_connections).uniq
 		@user_char_names = []
 		@active_pull_apis.each do |api|
 			@user_char_names.push(api.user.main_char_name)
 		end
+	end
+
+	def retrieve_pullable_apis
+		invalid_ids = Api.joins(:whitelist_api_connections).uniq
+		#http://stackoverflow.com/a/19984066
+		@corp_apis = current_user.apis.where.not(id: invalid_ids).where("ananke_type = 1 AND active = true")
+		render nothing: true
 	end
 
 	def white_list_log

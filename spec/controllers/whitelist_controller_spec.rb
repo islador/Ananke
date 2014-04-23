@@ -39,12 +39,6 @@ describe WhitelistController do
       expect(assigns(:wl)).to include(whitelist)
     end
 
-    it "should build an @corp_apis object containing all of the user's valid corp APIs" do
-      sign_in user
-      get 'white_list'
-      expect(assigns(:corp_apis)).to include(valid_corp_api)
-    end
-
     it "should build an @active_pull_apis object containing all of the APIs currently being pulled from" do
       sign_in user
       get 'white_list'
@@ -88,6 +82,38 @@ describe WhitelistController do
       expect{
         xhr :post, :create, entity_name: "Fido", entity_type: 4
       }.to change(Whitelist, :count).by(+1)
+    end
+  end
+
+  describe "GET 'retrieve_pullable_apis'" do
+    let!(:pulled_corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
+    let!(:valid_corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
+    let!(:inactive_corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user, active: false)
+      end
+    }
+    let!(:whitelist) {FactoryGirl.create(:whitelist)}
+    let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_corp_api.id, whitelist_id: whitelist.id)}
+    
+    it "should build an @corp_apis object containing all of the user's valid corp APIs" do
+      sign_in user
+      xhr :get, :retrieve_pullable_apis
+      expect(assigns(:corp_apis)).to include(valid_corp_api)
+    end
+
+    it "should build an @corp_apis object that does not contain APIs currently being pulled from" do
+      sign_in user
+      xhr :get, :retrieve_pullable_apis
+      expect(assigns(:corp_apis)).to_not include(pulled_corp_api)
     end
   end
 end
