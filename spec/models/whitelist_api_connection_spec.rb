@@ -30,6 +30,26 @@ describe WhitelistApiConnection do
 	it {should respond_to(:api_id)}
 	it {should respond_to(:whitelist_id)}
 
+	describe "Associations > " do
+		it "should have an API" do
+			whitelist_api_connection.api.id.should be api.id
+		end
+
+		it "should have a whitelist" do
+			whitelist_api_connection.whitelist.id.should be whitelist_entity.id
+		end
+
+		it "should get deleted when the API it is associated with gets deleted" do
+			api.destroy
+			WhitelistApiConnection.count.should be 0
+		end
+
+		it "should get deleted when the Whitelist it is associated with gets deleted" do
+			whitelist_entity.destroy
+			WhitelistApiConnection.count.should be 0
+		end
+	end
+
 	describe "Validations > " do
 		describe "should validate presence of whitelist_id" do
 			before{whitelist_api_connection.whitelist_id = nil}
