@@ -30,6 +30,12 @@ class Whitelist < ActiveRecord::Base
 	after_destroy :generate_removal_log
 	after_save :generate_addition_log
 	
+	#Destroy itself if it no longer has any whitelist_api_connections and it is an API sourced whitelist entity
+	def check_for_active_api_connections
+		if self.source_type == 1 && self.whitelist_api_connections.count == 0
+			self.destroy
+		end
+	end
 
 	private
 	#Creates a new whitelist log record representing itself being created.
