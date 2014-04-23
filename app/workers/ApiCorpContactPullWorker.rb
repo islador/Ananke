@@ -51,18 +51,10 @@ class ApiCorpContactPullWorker
 					#If this contact does not have a connection with this api
 					if connection_api_ids.include?(ananke_api.id) == false
 						#Do nothing
-					#If this contact has a whitelist_api_connection with this api and other apis
-					elsif connection_api_ids.include?(ananke_api.id) == true && connection_api_ids.length > 1
+					#If this contact has a whitelist_api_connection with this api
+					else
 						#Destroy the connection between this API and the whitelist entity
 						whitelist_entity.whitelist_api_connections.where("api_id = ?", ananke_api.id)[0].destroy
-					#If this contact has a connection with this api, but no other apis
-					elsif connection_api_ids.include?(ananke_api.id) == true && connection_api_ids.length == 1
-
-						#Remove the connection
-						whitelist_entity.whitelist_api_connections.where("api_id = ?", ananke_api.id)[0].destroy
-
-						#Remove the entity from the whitelist
-						whitelist_entity.destroy
 					end
 				end
 			end
