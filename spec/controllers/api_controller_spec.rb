@@ -229,6 +229,28 @@ describe ApiController do
     end
   end
 
+  describe "PUT 'begin_whitelist_api_pull'" do
+    let!(:corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
+
+    it "should return http success" do
+      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :begin_whitelist_api_pull, user_id: user.id, api_id: corp_api.id
+      end
+      response.should be_success
+    end
+
+    it "should call ApiCorpContactPullWorker with corp_api.id" do
+      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :begin_whitelist_api_pull, user_id: user.id, api_id: corp_api.id
+      end
+      response.body.should match "API queued for contact processing"
+    end
+  end
+
   describe "PUT 'cancel_whitelist_api_pull'" do
     let!(:corp_api) {
       VCR.use_cassette('workers/api_key_info/corpAPI') do

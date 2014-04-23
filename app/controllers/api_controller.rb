@@ -48,9 +48,9 @@ class ApiController < ApplicationController
       old_character = old_api.characters.where("main = true")[0]
       if old_character.nil? == false
         old_character.main = false
+        old_character.save!
       end
       old_api.main = false
-      old_character.save!
       old_api.save!
     end
     
@@ -75,6 +75,16 @@ class ApiController < ApplicationController
 
     current_user.set_main_char_name(@character)
     render nothing: true
+  end
+
+  def begin_whitelist_api_pull
+    api = Api.where("id = ?", params[:api_id])[0]
+    if api.nil? == false
+      ApiCorpContactPullWorker.perform_async(api.id)
+      render :json => "API queued for contact processing"
+    else
+      render :json => "Invalid API"
+    end
   end
 
   def cancel_whitelist_api_pull
