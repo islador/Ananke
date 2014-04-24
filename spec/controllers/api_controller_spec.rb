@@ -283,7 +283,10 @@ describe ApiController do
     end
 
     it "should remove the api from the pull schedule" do
-      pending "I have no pull schedule method. Heroku scheduler to trigger like whenever, then query DB like in market monitor?"
+      #The pull schedule is defined in scheduling.rake as any API that has a whitelist api connection.
+      #So delete the connection to remove it from the pull schedule.
+      xhr :put, :cancel_whitelist_api_pull, user_id: user.id, api_id: corp_api.id
+      WhitelistApiConnection.where("id = ?", whitelist_api_connection.id).count.should be 0
     end
   end
 

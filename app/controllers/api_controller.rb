@@ -88,11 +88,15 @@ class ApiController < ApplicationController
   end
 
   def cancel_whitelist_api_pull
-    api = Api.where("id = ?", params[:api_id])
-    whitelist_connections = WhitelistApiConnection.where("api_id = ?", params[:api_id])[0]
+    api = Api.where("id = ?", params[:api_id])[0]
+    whitelist_connections = WhitelistApiConnection.where("api_id = ?", params[:api_id])
     #Determine if the API is valid and has an active pull
-    if api.nil? == false && whitelist_connections.nil? == false
-      #Cancel the pull & destroy it's whitelist_api_connections and whitelists (if necessary)
+    if api.nil? == false && whitelist_connections.count > 0
+      #Destroy all whitelist connections associated with the given api. 
+      #Point of optimization - This can easily move to 100+ms and should likely be pushed to a sidekiq worker.
+      whitelist_connections.each do |wc|
+        wc.destroy
+      end
       render :json => "API removed from contact processing"
     else
       render :json => "Invalid API or API is not a pulling API"

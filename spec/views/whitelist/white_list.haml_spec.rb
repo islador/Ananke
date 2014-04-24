@@ -26,8 +26,6 @@ describe "whitelist/white_list.haml > " do
 		end
 
 		describe "API based whitelist entity population > " do
-			
-			#let!(:user) {FactoryGirl.create(:user)}
 			let!(:valid_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
 					FactoryGirl.create(:corp_api, user: user, active: true)
@@ -55,7 +53,9 @@ describe "whitelist/white_list.haml > " do
 			end
 
 			it "when 'Close API Pull Table' button is clicked, it should hide the valid_api_table", js: true do
+				should_not have_selector('#valid_api_table')
 				click_button 'Begin New API Pull'
+				should have_selector('#valid_api_table')
 				click_button 'Close API Pull Table'
 				should_not have_selector('#valid_api_table')
 			end
@@ -148,6 +148,19 @@ describe "whitelist/white_list.haml > " do
 
 					click_button 'Cancel'
 					should_not have_selector("tr#pull_api_#{api1.id}", text: api1.main_entity_name)
+				end
+
+				it "should remove the item's whitelist api connections when clicked", js: true do
+					visit whitelist_white_list_path
+					should have_selector("tr#pull_api_#{api1.id}", text: api1.main_entity_name)
+					
+					#http://stackoverflow.com/a/2609244
+					page.evaluate_script('window.confirm = function() { return true; }')
+
+					click_button 'Cancel'
+					#Sleep because cancel is an async call that takes time to execute and capybara doesn't wait around when doing DB queries.
+					sleep(2)
+					WhitelistApiConnection.where("id = ?", whitelist_api_connection.id).count.should be 0
 				end
 			end
 		end

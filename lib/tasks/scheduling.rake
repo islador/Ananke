@@ -15,5 +15,7 @@ namespace :scheduling do
   	query_apis.each do |qa|
   		ApiCorpContactPullWorker.perform_async(qa.id)
   	end
+
+    #In this fashion APIs that have no whitelist api connections are not queried, and thus canceling a pull requires merely deleting the connections.
   end
 end
