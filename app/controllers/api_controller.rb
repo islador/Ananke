@@ -98,4 +98,26 @@ class ApiController < ApplicationController
       render :json => "Invalid API or API is not a pulling API"
     end
   end
+
+  def update_api_whitelist_standing
+    api = Api.where("id = ?", params[:api_id])[0]
+
+    if api.ananke_type != 1
+      render :json => "API must be a corporation API"
+      raise ArgumentError, "Api must be a corporation API."
+    end
+
+    if api.active != true
+      render :json => "API must be active"
+      raise ArgumentError, "Api must be active."
+    end
+
+    api.whitelist_standings = params[:standing]
+    if api.valid? == true
+      api.save!
+      render :json => "API updated"
+    else
+      render :json => api.errors.messages
+    end
+  end
 end

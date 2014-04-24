@@ -17,6 +17,7 @@ Ananke::Application.routes.draw do
       put "/set_main", to: "api#set_main"
       put "/cancel_whitelist_api_pull", to: "api#cancel_whitelist_api_pull"
       put "/begin_whitelist_api_pull", to: "api#begin_whitelist_api_pull"
+      put "/update_api_whitelist_standing", to: "api#update_api_whitelist_standing"
     end
   end
   

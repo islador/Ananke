@@ -286,4 +286,55 @@ describe ApiController do
       pending "I have no pull schedule method. Heroku scheduler to trigger like whenever, then query DB like in market monitor?"
     end
   end
+
+  describe "PUT 'update_api_whitelist_standing'" do
+    let!(:corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, user: user)
+      end
+    }
+    it "should return http success" do
+      #VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :update_api_whitelist_standing, user_id: user.id, api_id: corp_api.id, standing: 2
+      #end
+      response.should be_success
+    end
+
+    describe "Error Handling > " do
+      let!(:inactive_api) {
+        VCR.use_cassette('workers/api_key_info/corpAPI') do
+          FactoryGirl.create(:corp_api, user: user, active: false)
+        end
+      }
+      let!(:general_api) {
+        VCR.use_cassette('workers/api_key_info/characterAPI') do
+          FactoryGirl.create(:api, user: user)
+        end
+      }
+
+      it "should throw an argument error if the API is not active." do
+        expect{
+          xhr :put, :update_api_whitelist_standing, user_id: user.id, api_id: general_api.id, standing: 2
+        }.to raise_error ArgumentError
+        response.body.should match "API must be a corporation API"
+      end
+
+      it "should throw an argument error if the API is not a corp API" do
+        expect{
+          xhr :put, :update_api_whitelist_standing, user_id: user.id, api_id: inactive_api.id, standing: 2
+        }.to raise_error ArgumentError
+        response.body.should match "API must be active"
+      end
+    end
+
+    it "should output json confirming the API was updated" do
+      xhr :put, :update_api_whitelist_standing, user_id: user.id, api_id: corp_api.id, standing: 2
+      response.body.should match "API updated"
+    end
+
+    it "should set the API's whitelist_standings to the value sent it" do
+      xhr :put, :update_api_whitelist_standing, user_id: user.id, api_id: corp_api.id, standing: 2
+      Api.where("id = ?", corp_api.id)[0].whitelist_standings.should be 2
+    end
+  end
 end
