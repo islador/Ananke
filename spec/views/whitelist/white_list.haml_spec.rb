@@ -38,18 +38,30 @@ describe "whitelist/white_list.haml > " do
 			}
 			let!(:whitelist) {FactoryGirl.create(:whitelist, source_user: user.id, source_type: 1)}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_api.id, whitelist_id: whitelist.id)}
-			it "should contain a link 'Begin new API Pull'" do
-				should have_selector('button#begin_new_api_pull')
+			it "should contain a button 'Begin New API Pull'" do
+				should have_selector('button#begin_new_api_pull', text: "Begin New API Pull")
 			end
 
-			it "when 'Begin new API Pull' is clicked, it should hide the 'Begin new API Pull' button", js: true do
+			it "when 'Begin new API Pull' is clicked, it should hide the 'Begin New API Pull' button", js: true do
 				click_button 'Begin New API Pull'
-				should_not have_selector('a#begin_new_api_pull')
+				should_not have_selector('button#begin_new_api_pull', text: "Begin New API Pull")
 			end
 
 			it "when 'Begin new API Pull' is clicked, it should have a 'Close API Pull Table' button", js: true do
 				click_button 'Begin New API Pull'
-				should have_selector('button#close_api_pull_table')
+				should have_selector('button#begin_new_api_pull', text: "Close API Pull Table")
+			end
+
+			it "when 'Close API Pull Table' button is clicked, it should hide the valid_api_table", js: true do
+				click_button 'Begin New API Pull'
+				click_button 'Close API Pull Table'
+				should_not have_selector('#valid_api_table')
+			end
+
+			it "when 'Close API Pull Table' button is clicked, it should have a 'Begin new API Pull' button", js: true do
+				click_button 'Begin New API Pull'
+				click_button 'Close API Pull Table'
+				should have_selector('button#begin_new_api_pull')
 			end
 
 			it "when 'Begin new API Pull' is clicked, it should render the 'new_whitelist_api_pull' partial", js: true do

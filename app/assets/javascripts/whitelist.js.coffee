@@ -18,14 +18,19 @@ jQuery ->
 
 		authenticity_token = $('meta[name=csrf-token]').attr("content")
 
+		if target is "Delete"
+			$('#new_query_table').empty()
+			swap_button("#begin_new_api_pull", "Begin New API Pull", "/whitelist/retrieve_pullable_apis" )
+		else
 		#If the user clicks 'Ok' then send an AJAX call deleting the user
-		$.ajax({
-			#A post with a method data attribute is used to preserve cross browser compability.
-			url: target, type: "GET",
-			data: { authenticity_token: authenticity_token}#,
-			#On success, return code 200, trigger the remove_from_table function
-			#success: remove_from_table(this.id, target_id, target_table, target_table_id)
-		})
+			$.ajax({
+				#A post with a method data attribute is used to preserve cross browser compability.
+				url: target, type: "GET",
+				data: { authenticity_token: authenticity_token},
+				#On success, return code 200, trigger the remove_from_table function
+				success: swap_button("#begin_new_api_pull", "Close API Pull Table", "Delete" )
+			})
+
 
 	#Whitelist.haml Pull API Tables
 	window.apt = $('#api_pulls_table').dataTable()
@@ -108,3 +113,8 @@ jQuery ->
 	clear_text_field = (id) ->
 		#alert id
 		$(id).val("")
+
+	#changes a button's text and target
+	swap_button = (target_id, new_text, new_target_path) ->
+		$(target_id).attr("data-target-path", new_target_path)
+		$(target_id).text(new_text)
