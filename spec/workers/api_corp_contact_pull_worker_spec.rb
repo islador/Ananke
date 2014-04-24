@@ -59,13 +59,11 @@ describe ApiCorpContactPullWorker do
 		end
 
 		it "Should remove the triggering API's whitelist_api_connection from an entity that is no longer backed by this API but is still backed by another" do
-			#Tests that only a whitelist_api_connection is removed if an entity has multiple supporting APIs
 			VCR.use_cassette('workers/corpContactList_standingsSpread') do
 				work.perform(second_api.id)
 			end
-			whitelistDB = Whitelist.where("name = ?", 'PlusFive')[0]
-			whitelistDB.should_not be_nil
-			whitelistDB.apis.should_not include second_api
+			whitelistConnectionDB = WhitelistApiConnection.where("id = ?", second_whitelist_api_connection.id)[0]
+			whitelistConnectionDB.should be_nil
 		end
 
 		it "Should remove existing entities that no longer match standings requirements." do
