@@ -329,7 +329,7 @@ describe ApiController do
 
     it "should output json confirming the API was updated" do
       xhr :put, :update_api_whitelist_standing, user_id: user.id, api_id: corp_api.id, standing: 2
-      response.body.should match "API updated"
+      response.body.should match "true"
     end
 
     it "should set the API's whitelist_standings to the value sent it" do

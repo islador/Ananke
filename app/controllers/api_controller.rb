@@ -103,19 +103,19 @@ class ApiController < ApplicationController
     api = Api.where("id = ?", params[:api_id])[0]
 
     if api.ananke_type != 1
-      render :json => "API must be a corporation API"
+      render :text => "API must be a corporation API"
       raise ArgumentError, "Api must be a corporation API."
     end
 
     if api.active != true
-      render :json => "API must be active"
+      render :text => "API must be active"
       raise ArgumentError, "Api must be active."
     end
 
     api.whitelist_standings = params[:standing]
     if api.valid? == true
       api.save!
-      render :json => "API updated"
+      render :json => true
     else
       render :json => api.errors.messages
     end
