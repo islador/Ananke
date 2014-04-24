@@ -28,25 +28,59 @@ describe "whitelist/white_list.haml > " do
 		describe "API based whitelist entity population > " do
 			let!(:valid_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, user: user)
+					FactoryGirl.create(:corp_api, user: user, active: true)
 				end
 			}
-			it "should contain a link 'Setup new API Pull'" do
-				should have_selector('a#setup_new_api_pull')
+			let!(:pulled_api) {
+				VCR.use_cassette('workers/api_key_info/corpAPI') do
+					FactoryGirl.create(:corp_api, user: user, active: true)
+				end
+			}
+			let!(:whitelist) {FactoryGirl.create(:whitelist, source_user: user.id, source_type: 1)}
+			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_api.id, whitelist_id: whitelist.id)}
+			it "should contain a link 'Begin new API Pull'" do
+				should have_selector('a#begin_new_api_pull')
+			end
+
+			it "when 'Begin new API Pull' is clicked, it should hide the 'Begin new API Pull' button", js: true do
+				click_link 'Begin New API Pull'
+				should_not have_selector('a#begin_new_api_pull')
+			end
+
+			it "when 'Begin new API Pull' is clicked, it should have a 'Close API Pull Table' button", js: true do
+				click_link 'Begin New API Pull'
+				should have_selector('button#close_api_pull_table')
 			end
 
 			it "when 'Begin new API Pull' is clicked, it should render the 'new_whitelist_api_pull' partial", js: true do
 				click_link 'Begin New API Pull'
 				should have_selector('table#valid_api_table')
 				should have_selector("tr#add_api_#{valid_api.id}")
+				should have_selector("select#select_#{valid_api.id}")
+				should have_selector("button#query_api_#{valid_api.id}")
+				should_not have_selector("tr#add_api_#{pulled_api.id}")
 				should have_selector("button#query_api_#{valid_api.id}")
 			end
 
-			it "when 'Query this API' is clicked it should let the user know the query has begun", js: true do
+			it "when 'Query API' is clicked it should let the user know the query has begun", js: true do
+				click_link 'Begin New API Pull'
 				click_button 'Query API'
 				should have_selector("div.modal-backdrop")
 			end
 
+			it "when 'Query API' is clicked it should remove the api from the table", js: true do
+				click_link 'Begin New API Pull'
+				click_button 'Query API'
+				should_not have_selector("tr#add_api_#{valid_api.id}")
+			end
+
+			it "When 'Query API' is clicked, it should add the api to the api_pulls_table", js: true do
+				click_link 'Begin New API Pull'
+				click_button 'Query API'
+				within '#api_pulls_table' do
+					should have_selector("tr#pull_api_#{valid_api.id}")
+				end
+			end
 		end
 
 		describe "API Pull Table > " do

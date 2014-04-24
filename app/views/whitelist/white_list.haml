@@ -15,6 +15,8 @@
 	%button{:id => "submit_new_entity", :class => "btn btn-xs btn-success", :data => {:target_path => "/whitelist"}} Add Entity
 
 %div{:id => "api_addition"}
+	%a{:href => "", :id => "begin_new_api_pull", :class => "btn btn-l btn-success", :data => {:target_path => "/whitelist/retrieve_pullable_apis"}} Begin New API Pull
+	=# render :partial => 'shared/new_whitelist_api_pull', :locals => { :valid_corp_apis => @valid_corp_apis}
 
 %div
 	%h3 APIs In Use
@@ -41,6 +43,7 @@
 						%button{:id => "cancel_pull_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/users/#{current_user.id}/api/#{api.id}/cancel_whitelist_api_pull", :pull_api_id => "pull_api_#{api.id}"}} Cancel Pull
 
 
+%br
 %li Allows a user to select a valid API to pull and update the white list from -> add's the API's Main Char's Corp || Alliance to the white list
 %li
 	%ul

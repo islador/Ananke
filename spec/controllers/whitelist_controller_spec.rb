@@ -107,13 +107,13 @@ describe WhitelistController do
     it "should build an @corp_apis object containing all of the user's valid corp APIs" do
       sign_in user
       xhr :get, :retrieve_pullable_apis
-      expect(assigns(:corp_apis)).to include(valid_corp_api)
+      expect(assigns(:valid_corp_apis)).to include(valid_corp_api)
     end
 
     it "should build an @corp_apis object that does not contain APIs currently being pulled from" do
       sign_in user
       xhr :get, :retrieve_pullable_apis
-      expect(assigns(:corp_apis)).to_not include(pulled_corp_api)
+      expect(assigns(:valid_corp_apis)).to_not include(pulled_corp_api)
     end
   end
 end

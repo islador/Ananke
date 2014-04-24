@@ -26,7 +26,7 @@ class WhitelistController < ApplicationController
 	def retrieve_pullable_apis
 		invalid_ids = Api.joins(:whitelist_api_connections).uniq
 		#http://stackoverflow.com/a/19984066
-		@corp_apis = current_user.apis.where.not(id: invalid_ids).where("ananke_type = 1 AND active = true")
+		@valid_corp_apis = current_user.apis.where.not(id: invalid_ids).where("ananke_type = 1 AND active = true")
 		render nothing: true
 	end
 
