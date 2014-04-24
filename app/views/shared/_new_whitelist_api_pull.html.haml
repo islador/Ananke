@@ -13,7 +13,7 @@
 			%tr{:id => "add_api_#{api.id}"}
 				%td= api.main_entity_name
 
-				%td= api.key_id
+				%td{:id => "key_id_#{api.id}"}= api.key_id
 
 				%td
 					%select{:id => "select_#{api.id}"}
@@ -22,4 +22,4 @@
 						%option{:value => "10", :selected => "10"}= "10"
 
 				%td
-					%button{:id => "query_api_#{api.id}", :class => "btn btn-xs btn-success", :data => {:target_path => "/users/#{current_user.id}/api/#{api.id}/begin_whitelist_api_pull", :query_api_id => "query_api_#{api.id}"}} Query API
+					%button{:id => "query_api_#{api.id}", :class => "btn btn-xs btn-success", :data => {:target_path => "/users/#{current_user.id}/api/#{api.id}/begin_whitelist_api_pull", :query_api_id => "add_api_#{api.id}", :main_entity_name => "#{api.main_entity_name}", :raw_id => "#{api.id}", :user_id => "#{current_user.id}"}} Query API

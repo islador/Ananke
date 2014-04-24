@@ -124,7 +124,6 @@ jQuery ->
 		api_id = data
 		#Extract necessary data for AJAX from the page.
 		target = $("#enroll_new_api").attr("data-target-path") + "/" + api_id + "/character_list"
-		console.log target
 		authenticity_token = $('meta[name=csrf-token]').attr("content")
 
 		$.ajax({

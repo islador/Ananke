@@ -18,7 +18,7 @@ jQuery ->
 
 		authenticity_token = $('meta[name=csrf-token]').attr("content")
 
-		if target is "Delete"
+		if target is "Hide"
 			$('#new_query_table').empty()
 			swap_button("#begin_new_api_pull", "Begin New API Pull", "/whitelist/retrieve_pullable_apis" )
 		else
@@ -28,7 +28,7 @@ jQuery ->
 				url: target, type: "GET",
 				data: { authenticity_token: authenticity_token},
 				#On success, return code 200, trigger the remove_from_table function
-				success: swap_button("#begin_new_api_pull", "Close API Pull Table", "Delete" )
+				success: swap_button("#begin_new_api_pull", "Close API Pull Table", "Hide" )
 			})
 
 
@@ -98,7 +98,7 @@ jQuery ->
 		#Add the new data to the table temporarily. The next page refresh will pull in the actual data.
 		wlt.fnAddData [entity_name, entity_label, "You", "Manual", "", "Freshly Added"]
 
-	#Function to remove an entire row from the volunteer index table.
+	#Function to remove an entire row from a table
 	remove_from_table = (id, target_id, target_table, target_table_id) ->
 		#Extract necessary variables from the page.
 		#entity_id = $("#" + id).attr("data-entity-id")
