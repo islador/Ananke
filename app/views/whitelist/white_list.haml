@@ -15,8 +15,8 @@
 	%button{:id => "submit_new_entity", :class => "btn btn-xs btn-success", :data => {:target_path => "/whitelist"}} Add Entity
 
 %div{:id => "api_addition"}
-	%a{:href => "", :id => "begin_new_api_pull", :class => "btn btn-l btn-success", :data => {:target_path => "/whitelist/retrieve_pullable_apis"}} Begin New API Pull
-	=# render :partial => 'shared/new_whitelist_api_pull', :locals => { :valid_corp_apis => @valid_corp_apis}
+	%button{:id => "begin_new_api_pull", :class => "btn btn-l btn-success", :data => {:target_path => "/whitelist/retrieve_pullable_apis"}} Begin New API Pull
+	%div{:id => "new_query_table"}
 
 %div
 	%h3 APIs In Use

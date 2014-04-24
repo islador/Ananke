@@ -2,7 +2,7 @@ Ananke::Application.routes.draw do
 
   get "whitelist/white_list"
   get "whitelist/white_list_log"
-  put "whitelist/retrieve_pullable_apis", to: "whitelist#retrieve_pullable_apis"
+  get "whitelist/retrieve_pullable_apis", to: "whitelist#retrieve_pullable_apis"
 
   resources :whitelist,  only: [:create, :destroy]
 

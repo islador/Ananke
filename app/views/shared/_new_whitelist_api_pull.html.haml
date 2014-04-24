@@ -1,0 +1,25 @@
+%div{:class => "explanation"}
+	%p
+
+%table.table.table-condensed{:id => "valid_api_table"}
+	%thead
+		%tr
+			%th Main Entity
+			%th Key ID
+			%th Set a Standing
+			%th
+	%tbody
+		- @valid_corp_apis.each do |api|
+			%tr{:id => "add_api_#{api.id}"}
+				%td= api.main_entity_name
+
+				%td= api.key_id
+
+				%td
+					%select{:id => "select_#{api.id}"}
+						-(-10..9).each do |s|
+							%option{:value => "#{s}"}= "#{s}"
+						%option{:value => "10", :selected => "10"}= "10"
+
+				%td
+					%button{:id => "query_api_#{api.id}", :class => "btn btn-xs btn-success", :data => {:target_path => "/users/#{current_user.id}/api/#{api.id}/begin_whitelist_api_pull", :query_api_id => "query_api_#{api.id}"}} Query API

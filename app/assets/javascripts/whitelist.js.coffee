@@ -7,6 +7,26 @@ jQuery ->
 	$('#whitelist_log_table').dataTable
 		aaSorting: [[ 6, "desc" ]]
 
+	#Whitelist.haml _new_whitelist_api_pull integration & mechanics
+	$("#begin_new_api_pull").click ->
+		#Extract necessary data from the page.
+		target = $("#begin_new_api_pull").attr("data-target-path")
+		#target_id = $("#begin_new_api_pull").attr("data-pull-api-id")
+
+		#target_table = apt
+		#target_table_id = "#api_pulls_table"
+
+		authenticity_token = $('meta[name=csrf-token]').attr("content")
+
+		#If the user clicks 'Ok' then send an AJAX call deleting the user
+		$.ajax({
+			#A post with a method data attribute is used to preserve cross browser compability.
+			url: target, type: "GET",
+			data: { authenticity_token: authenticity_token}#,
+			#On success, return code 200, trigger the remove_from_table function
+			#success: remove_from_table(this.id, target_id, target_table, target_table_id)
+		})
+
 	#Whitelist.haml Pull API Tables
 	window.apt = $('#api_pulls_table').dataTable()
 

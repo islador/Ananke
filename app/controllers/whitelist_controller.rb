@@ -27,7 +27,10 @@ class WhitelistController < ApplicationController
 		invalid_ids = Api.joins(:whitelist_api_connections).uniq
 		#http://stackoverflow.com/a/19984066
 		@valid_corp_apis = current_user.apis.where.not(id: invalid_ids).where("ananke_type = 1 AND active = true")
-		render nothing: true
+		
+		respond_to do |format|
+			format.js
+		end
 	end
 
 	def white_list_log
