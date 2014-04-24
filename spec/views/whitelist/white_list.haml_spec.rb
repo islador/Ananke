@@ -78,19 +78,23 @@ describe "whitelist/white_list.haml > " do
 			end
 
 			it "when 'Query API' is clicked it should remove the api from the table", js: true do
-				click_button 'Begin New API Pull'
-		        click_button 'Query API'
-		        should_not have_selector("tr#add_api_#{valid_api.id}")
+				VCR.use_cassette('workers/corpContactList_standingsSpread') do
+					click_button 'Begin New API Pull'
+			        click_button 'Query API'
+			        should_not have_selector("tr#add_api_#{valid_api.id}")
+				end
 			end
 
 			it "When 'Query API' is clicked, it should add the api to the api_pulls_table", js: true do
-				click_button 'Begin New API Pull'
-		        click_button 'Query API'
-		        within '#api_pulls_table' do
-					should have_selector("tr td", text: "You")
-					should have_selector("tr td", text: valid_api.main_entity_name)
-					should have_selector("tr td", text: "10")
-					should have_selector("tr td", text: valid_api.key_id)
+				VCR.use_cassette('workers/corpContactList_standingsSpread') do
+					click_button 'Begin New API Pull'
+			        click_button 'Query API'
+			        within '#api_pulls_table' do
+						should have_selector("tr td", text: "You")
+						should have_selector("tr td", text: valid_api.main_entity_name)
+						should have_selector("tr td", text: "10")
+						should have_selector("tr td", text: valid_api.key_id)
+					end
 				end
 			end
 		end
