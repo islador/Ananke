@@ -60,7 +60,7 @@ class ApiCorpContactPullWorker
 			end
 		end
 
-		WhitelistLog.create(entity_name: ananke_api.main_entity_name, source_user: ananke_api.user.id, source_type: 2, entity_type: 5, date: Date.today, time: Time.now)
+		WhitelistLog.create(entity_name: ananke_api.main_entity_name, source_user: ananke_api.user.id, source_type: 2, addition: true, entity_type: 5, date: Date.today, time: Time.now)
 		#Generate a whitelist_log entry for this pull
 
 	end

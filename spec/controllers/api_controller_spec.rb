@@ -249,6 +249,13 @@ describe ApiController do
       end
       response.body.should match "API queued for contact processing"
     end
+
+    it "should create a whitelist log indicating a new API Pull has been started" do
+      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+        xhr :put, :begin_whitelist_api_pull, user_id: user.id, api_id: corp_api.id
+      end
+      WhitelistLog.where("entity_type = 5 AND addition = true")[0].should_not be_nil
+    end
   end
 
   describe "PUT 'cancel_whitelist_api_pull'" do
@@ -287,6 +294,11 @@ describe ApiController do
       #So delete the connection to remove it from the pull schedule.
       xhr :put, :cancel_whitelist_api_pull, user_id: user.id, api_id: corp_api.id
       WhitelistApiConnection.where("id = ?", whitelist_api_connection.id).count.should be 0
+    end
+
+    it "should create a whitelist log indicating the API Pull has been cancelled" do
+      xhr :put, :cancel_whitelist_api_pull, user_id: user.id, api_id: corp_api.id
+      WhitelistLog.where("entity_type = 5 AND addition = false")[0].should_not be_nil
     end
   end
 

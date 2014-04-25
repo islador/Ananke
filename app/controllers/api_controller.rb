@@ -92,6 +92,9 @@ class ApiController < ApplicationController
     whitelist_connections = WhitelistApiConnection.where("api_id = ?", params[:api_id])
     #Determine if the API is valid and has an active pull
     if api.nil? == false && whitelist_connections.count > 0
+      #Generate a whitelist log for the cancellation
+      WhitelistLog.create(entity_name: api.main_entity_name, source_user: api.user.id, source_type: 2, addition: false, entity_type: 5, date: Date.today, time: Time.now)
+
       #Destroy all whitelist connections associated with the given api. 
       #Point of optimization - This can easily move to 100+ms and should likely be pushed to a sidekiq worker.
       whitelist_connections.each do |wc|
