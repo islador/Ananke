@@ -1,12 +1,20 @@
 %div{:class => "explanation"}
-	%p
+	%p Each API below may be used to auto-populate your whitelist. 
+	%ul
+		%li 
+			%strong ANY user with access to the whitelist page may cancel any API pull at any time.
+		%li All whitelist actions are logged in the whitelist log. This includes when an entity or API is added and removed as well as who added and removed them.
+		%li Any Corporation Contacts with equal or better standings to the minimum standing set will be automatically added to the whitelist.
+		%li When a contact's IG standings are lowered below the minimum standing, the contact is removed from the whitelist within 24 hours.
+		%li Manual additions to the whitelist are exempt from API updates. That is a manual entity may have any IG standing and it will never be removed.
+
 
 %table.table.table-condensed{:id => "valid_api_table"}
 	%thead
 		%tr
 			%th Main Entity
 			%th Key ID
-			%th Set a Standing
+			%th Minimum Standing
 			%th
 	%tbody
 		- @valid_corp_apis.each do |api|

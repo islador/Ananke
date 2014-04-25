@@ -1,5 +1,3 @@
-%h1 Whitelist#white_list_log
-
 %h3 White list log
 
 
@@ -37,6 +35,8 @@
 					%td Corporation
 				- elsif log.entity_type == 3
 					%td Faction
+				- elsif log.entity_type == 5
+					%td API Pull
 				- else
 					%td Character
 

@@ -1,0 +1,18 @@
+%header{:class => "navbar navbar-fixed-top navbar-inverse", :role =>"navigation"}
+  %div{:class => "navbar-inner"}
+    %div{:class => "container"}
+      =link_to "Ananke", root_path, :id => "logo", :class => 'navbar-brand'
+      %nav
+        %ul{:class => "nav pull-right"}
+          -if user_signed_in? == true
+            %li
+              =link_to "Whitelist", whitelist_white_list_path, :class => "navbar-link active"
+            %li
+              =link_to "Whitelist Log", whitelist_white_list_log_path, :class => "navbar-link active"
+            %li
+              =link_to "Sign Out", destroy_user_session_path, :method=>'delete', :class => "navbar-link active"
+          -else
+            %li
+              =link_to "Register", new_user_registration_path, :class => "navbar-link active"
+            
+      

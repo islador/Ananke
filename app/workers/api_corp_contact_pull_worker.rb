@@ -33,7 +33,7 @@ class ApiCorpContactPullWorker
 				#If this contact does not exist on the whitelist.  
 				if whitelist_entity.nil? == true
 					#Create a whitelist entity from it
-					new_entity = Whitelist.create(name: contact.contactName, entity_type: contact_type, source_type: 1, source_user: ananke_api.user.id)
+					new_entity = Whitelist.create(name: contact.contactName, entity_type: contact_type, source_type: 1, source_user: ananke_api.user.id, standing: contact.standing)
 
 					#and create a connection between that entity and the source API
 					ananke_api.whitelist_api_connections.create(whitelist_id: new_entity.id)
