@@ -44,6 +44,16 @@ FactoryGirl.define do
 		end
 	end
 
+	factory :share_user do
+		ignore do
+			set_share_id {FactoryGirl.create(:basic_share).id}
+			set_user_id {FactoryGirl.create(:user).id}
+		end
+		share_id {set_share_id}
+		user_id {set_user_id}
+		user_role 0
+	end
+
 	factory :api do
 		ccp_type 2
 		ananke_type 2
