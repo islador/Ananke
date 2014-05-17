@@ -14,7 +14,10 @@
 require 'spec_helper'
 
 describe ShareUser do
-	let!(:share_user){FactoryGirl.create(:share_user)}
+	let(:owner) {FactoryGirl.create(:user)}
+	let(:user) {FactoryGirl.create(:user)}
+	let(:share) {FactoryGirl.create(:basic_share, owner_id: owner.id)}
+	let!(:share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
 
 	subject{share_user}
 
@@ -24,6 +27,23 @@ describe ShareUser do
 	it {should respond_to(:main_char_name)}
 	
 	describe "Associations > " do
+		it "should have a user" do
+			share_user.user.id.should_not be_nil
+		end
+
+		it "should have a share" do
+			share_user.share.id.should_not be_nil
+		end
+
+		it "should get deleted when the user it is associated with gets deleted" do
+			user.destroy
+			ShareUser.where("user_id = ?", user.id)[0].should be_nil
+		end
+
+		it "should get deleted when the share it is associated with gets deleted" do
+			share.destroy
+			ShareUser.where("share_id = ?", share.id)[0].should be_nil
+		end
 	end
 
 	describe "Validations > " do
