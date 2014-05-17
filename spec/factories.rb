@@ -12,6 +12,38 @@ FactoryGirl.define do
 		main_char_name "Jeff"
 	end
 
+	factory :share do
+		ignore do
+			set_owner_id {FactoryGirl.create(:user).id}
+		end
+
+		sequence(:name){|n| "Share #{n}"}
+		owner_id {set_owner_id}
+		active true
+		user_limit 10
+		grade 1
+
+		factory :trial_share do
+			grade 1
+			user_limit 10
+		end
+
+		factory :basic_share do
+			grade 2
+			user_limit 50
+		end
+
+		factory :advanced_share do
+			grade 3
+			user_limit 250
+		end
+
+		factory :super_share do
+			grade 4
+			user_limit 500
+		end
+	end
+
 	factory :api do
 		ccp_type 2
 		ananke_type 2
