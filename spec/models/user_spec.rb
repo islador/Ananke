@@ -33,6 +33,17 @@ describe User do
 
 	it {should respond_to :main_char_name}
 
+	describe "Associations > " do
+		let(:share){FactoryGirl.create(:basic_share)}
+		let!(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
+
+		it {should respond_to :share_users}
+
+		it "should have share as a share_user" do
+			user.share_users[0].share_id.should be share.id
+		end
+	end
+
 	describe "set_main_char_name" do
 		
 		let!(:corp_api) {

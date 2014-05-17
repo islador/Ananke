@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
 			:recoverable, :rememberable, :trackable, :validatable, :confirmable
 	
 	has_many :apis, dependent: :destroy
+	has_many :share_users, dependent: :destroy
 
 	def set_main_char_name(character)
 		self.main_char_name = character.name

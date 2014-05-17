@@ -28,6 +28,14 @@ describe Share do
 	it {should be_valid}
 
 	describe "Associations > " do
+		let(:user) {FactoryGirl.create(:user)}
+		let!(:share_user) {FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
+
+		it {should respond_to(:share_users)}
+
+		it "should have user as a share_user" do
+			share.share_users[0].user_id.should be user.id
+		end
 	end
 
 	describe "Validations > " do

@@ -14,6 +14,9 @@
 
 class Share < ActiveRecord::Base
 	#Grade: 1 = trial, 2 = basic, 3 = advanced, 4 = super
+	
+	has_many :share_users, dependent: :destroy
+
 	validates :name, presence: true
 	validates :owner_id, presence: true
 	validates :user_limit, presence: true
