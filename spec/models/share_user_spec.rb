@@ -9,6 +9,7 @@
 #  main_char_name :string(255)
 #  created_at     :datetime
 #  updated_at     :datetime
+#  valid          :boolean
 #
 
 require 'spec_helper'
@@ -25,6 +26,7 @@ describe ShareUser do
 	it {should respond_to(:user_id)}
 	it {should respond_to(:user_role)}
 	it {should respond_to(:main_char_name)}
+	it {should respond_to(:valid)}
 	
 	describe "Associations > " do
 		it "should have a user" do
