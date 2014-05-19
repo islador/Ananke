@@ -20,6 +20,7 @@ class ShareController < ApplicationController
     end
 
     def index
+        @user_shares = current_user.shares
     end
 
     def show

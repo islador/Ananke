@@ -53,9 +53,19 @@ describe ShareController do
   end
 
   describe "GET 'index'" do
+    let(:share) {FactoryGirl.create(:basic_share)}
+    let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
+    
     it "returns http success" do
+      sign_in user
       get 'index'
       response.should be_success
+    end
+
+    it "should populate 'user_shares' with the user's share_users" do
+      sign_in user
+      get 'index'
+      expect(assigns(:user_shares)).to include share
     end
   end
 
