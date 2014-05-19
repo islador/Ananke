@@ -9,7 +9,7 @@
 #  main_char_name :string(255)
 #  created_at     :datetime
 #  updated_at     :datetime
-#  valid          :boolean
+#  approved       :boolean
 #
 
 require 'spec_helper'
