@@ -46,9 +46,16 @@ describe ShareController do
   end
 
   describe "GET 'show'" do
+    let!(:share) {FactoryGirl.create(:basic_share)}
+
     it "returns http success" do
       get 'show'
       response.should be_success
+    end
+
+    it "should retrieve the share from the database and make it available in the 'share' variable" do
+      get 'show', :id => share.id
+      expect(assigns(:share).id).to be share.id
     end
   end
 

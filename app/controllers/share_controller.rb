@@ -24,5 +24,6 @@ class ShareController < ApplicationController
     end
 
     def show
+        @share = Share.where("id = ?", params[:id])[0]
     end
 end
