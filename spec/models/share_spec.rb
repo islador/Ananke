@@ -36,6 +36,12 @@ describe Share do
 		it "should have user as a share_user" do
 			share.share_users[0].user_id.should be user.id
 		end
+
+		it {should respond_to :users}
+
+		it "should have a share" do
+			share.users[0].id.should be user.id
+		end
 	end
 
 	describe "Validations > " do

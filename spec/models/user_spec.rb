@@ -42,6 +42,12 @@ describe User do
 		it "should have share as a share_user" do
 			user.share_users[0].share_id.should be share.id
 		end
+
+		it {should respond_to :shares}
+
+		it "should have a share" do
+			user.shares[0].id.should be share.id
+		end
 	end
 
 	describe "set_main_char_name" do

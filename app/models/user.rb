@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
 	
 	has_many :apis, dependent: :destroy
 	has_many :share_users, dependent: :destroy
+	has_many :shares, through: :share_users
 
 	def set_main_char_name(character)
 		self.main_char_name = character.name
