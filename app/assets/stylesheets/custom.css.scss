@@ -47,6 +47,11 @@ header {
 
 /*Shares*/
 
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
 .indexBox {
 	width: 250px;
 	height: 250px;
@@ -75,5 +80,26 @@ header {
 		//font-size:70px;
 		margin-left: auto;
 		margin-right: auto;
+	}
+
+	.joinGroup {
+		position: relative;
+		left: 40px;
+		top: 150px;
+		font-size: 30px;
+	}
+
+	.glyphicon-plus {
+		float: none;
+    	margin: 0 auto;
+		left: 122px;
+		top: 100px;
+		color: green;
+
+		transform:scale(8.0,8.0);
+		    -ms-transform:scale(8.0,8.0); /* IE 9 */
+		    -moz-transform:scale(8.0,8.0); /* Firefox */
+		    -webkit-transform:scale(8.0,8.0); /* Safari and Chrome */
+		    -o-transform:scale(8.0,8.0); /* Opera */
 	}
 }

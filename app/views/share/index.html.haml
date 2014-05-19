@@ -1,24 +1,17 @@
-%h3 Shares Index
-%h3 Basic Concept
-A page displaying the shares the user is enrolled in
-%ul
-	%li Big clickable Boxes for each share, maybe 2inches square
-	%li Clicking a share box takes you to that share's show page
-	%ul
-		%li Share Boxes contain the share's name and logo
-
 %div{:class => "container-fluid"}
 	%div{:class => "row"}
-		%div{:class => "col-md-4"} 
-			%div{:class=>"indexBox"}
-				%div{:class=>"shareLogo"}
-					= image_tag "/assets/460642303_128.png"
-				%div{:class=>"shareName"} Jizz Lizard Team
-		%div{:class => "col-md-4"}
-			%div{:class=>"indexBox"}
-				%div{:class=>"shareLogo"}
-				%div{:class=>"shareName"} Frontier Explorer's League
-		%div{:class => "col-md-4"}
-			%div{:class=>"indexBox"}
-				%div{:class=>"shareLogo"}
-				%div{:class=>"shareName"} Goonswarm Federation
+		-if @user_shares.empty? == true
+			%div{:class => "col-centered"}
+				%div{ :class=>"indexBox"}
+					%div{:class=>"glyphicon glyphicon-plus"}
+						
+					%div{:class=>"joinGroup"}Join a Group
+		-else
+			-@user_shares.each do |share|
+				%div{:class=>"col-md-4"}
+					%div{ :class=>"indexBox link", :id=>"share_#{share.id}", :data => {:target_path => "/share/#{share.id}"}}
+						%div{:class=>"shareLogo"}
+							Logo Here
+						%div{:class=>"shareName"}
+							=share.name
+		
