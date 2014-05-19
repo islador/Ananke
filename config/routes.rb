@@ -1,5 +1,9 @@
 Ananke::Application.routes.draw do
 
+  get "share/new"
+  get "share/create"
+  get "share/destroy"
+  get "share/show"
   get "whitelist/white_list"
   get "whitelist/white_list_log"
   get "whitelist/retrieve_pullable_apis", to: "whitelist#retrieve_pullable_apis"
@@ -10,6 +14,8 @@ Ananke::Application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   devise_for :users
+  resources :share
+    get "/name_available", to: "share#name_available"
 
   resources :users do
     resources :api do

@@ -44,3 +44,36 @@ header {
 .btn-group {
 	float: right;
 }
+
+/*Shares*/
+
+.indexBox {
+	width: 250px;
+	height: 250px;
+	margin-top: 50px;
+	margin-left: auto;
+	margin-right: auto;
+	border-width: thin;
+	border-style:solid;
+	border-color: #000000;
+	background-color: 	#FAEBD7;
+	//background-color:  #EF6C9A;
+
+	.shareLogo {
+		width: 128px;
+		height: 128px;
+		background-color: #000000;
+		//background-color: #C0C0C0;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 50px;
+	}
+
+	.shareName {
+		width: 128px;
+		text-align: center;
+		//font-size:70px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
