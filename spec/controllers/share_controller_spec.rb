@@ -21,26 +21,42 @@ describe ShareController do
     end
 
     it "should return true if the name 'NameTest' is available" do
-      xhr :get, :name_available, :name => "NameTest"
+      xhr :get, :name_available, :share_name => "NameTest"
       response.body.should match "true"
     end
 
     it "should return false if the name 'TakenName' is not available" do
-      xhr :get, :name_available, :name => "TakenName"
+      xhr :get, :name_available, :share_name => "TakenName"
       response.body.should match "false"
     end
   end
 
   describe "GET 'create'" do
     it "returns http success" do
-      get 'create'
+      sign_in user
+      post 'create'
       response.should be_success
+    end
+    
+    it "should create a new group" do
+      sign_in user
+      expect{
+        post 'create', :share_name => "Available", :plan => "basic"
+      }.to change(Share, :count).by(+1)
+    end
+
+    it "should create a new group with the name 'Available'" do
+      sign_in user
+      post 'create', :share_name => "Available", :plan => "basic"
+      Share.where("name = ?", "Available")[0].nil?.should be false
     end
   end
 
   describe "GET 'destroy'" do
+    let!(:share) {FactoryGirl.create(:basic_share)}
+
     it "returns http success" do
-      get 'destroy'
+      delete 'destroy', :id => share.id
       response.should be_success
     end
   end
@@ -49,11 +65,13 @@ describe ShareController do
     let!(:share) {FactoryGirl.create(:basic_share)}
 
     it "returns http success" do
-      get 'show'
+      sign_in user
+      get 'show', :id => share.id
       response.should be_success
     end
 
     it "should retrieve the share from the database and make it available in the 'share' variable" do
+      sign_in user
       get 'show', :id => share.id
       expect(assigns(:share).id).to be share.id
     end
