@@ -31,24 +31,37 @@ describe ShareController do
     end
   end
 
-  describe "GET 'create'" do
+  describe "POST 'create'" do
     it "returns http success" do
       sign_in user
-      post 'create'
+      xhr :post, :create, :share_name => "Available", :plan => "basic"
       response.should be_success
     end
     
     it "should create a new group" do
       sign_in user
       expect{
-        post 'create', :share_name => "Available", :plan => "basic"
+        xhr :post, :create, :share_name => "Available", :plan => "basic"
       }.to change(Share, :count).by(+1)
     end
 
     it "should create a new group with the name 'Available'" do
       sign_in user
-      post 'create', :share_name => "Available", :plan => "basic"
+      xhr :post, :create, :share_name => "Available", :plan => "basic"
       Share.where("name = ?", "Available")[0].nil?.should be false
+    end
+
+    it "should return the ID of the new share when successfully created" do
+      sign_in user
+      xhr :post, :create, :share_name => "Available", :plan => "basic"
+      share_id = Share.where("name = ?", "Available")[0].id
+      response.body.should match "#{share_id}"
+    end
+
+    it "should return false if the share is not successfully created" do
+      sign_in user
+      xhr :post, :create, :plan => "basic"
+      response.body.should match "false"
     end
   end
 

@@ -26,4 +26,17 @@ jQuery ->
 					$("#register_new_group").removeClass('btn-success')
 					$("#register_new_group").addClass('btn-danger')
 			})
+
+	$("#register_new_group").click ->
+		if $("#register_new_group").hasClass("btn-success")
+			name = $("#name_name").val()
+			console.log(name)
+			$.ajax({
+				url: "/share/", type: "POST",
+				data: {share_name: name, plan: 2},
+				async: false,
+				success: (data) ->
+					if data != false
+						window.location.href = "/share/" + data
+				})
 		

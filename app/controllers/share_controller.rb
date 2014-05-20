@@ -5,7 +5,7 @@ class ShareController < ApplicationController
     end
 
     def name_available
-        name = Share.where("name = ?", params[:name])[0]
+        name = Share.where("name = ?", params[:share_name])[0]
         if name.nil? == true
             render :json => true
         else
@@ -14,6 +14,13 @@ class ShareController < ApplicationController
     end
 
     def create
+        @new_share = Share.new(name: params[:share_name], grade: 2, owner_id: current_user.id, user_limit: 50)
+        if @new_share.valid? == true
+            @new_share.save!
+            render :json => @new_share.id
+        else
+            render :json => false
+        end
     end
 
     def destroy
