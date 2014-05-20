@@ -1,9 +1,5 @@
 Ananke::Application.routes.draw do
 
-  get "share/new"
-  get "share/create"
-  get "share/destroy"
-  get "share/show"
   get "whitelist/white_list"
   get "whitelist/white_list_log"
   get "whitelist/retrieve_pullable_apis", to: "whitelist#retrieve_pullable_apis"
@@ -30,7 +26,8 @@ Ananke::Application.routes.draw do
   #Set root to the sign_in page.
   #http://stackoverflow.com/questions/4954876/setting-devise-login-to-be-root-page
   devise_scope :user do
-    root to: "devise/sessions#new"
+    root to: "share#index"
+    #root to: "devise/sessions#new"
   end
 
   #root to: 'static_pages#home'

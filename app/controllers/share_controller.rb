@@ -1,5 +1,5 @@
 class ShareController < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_user!, only: [:create, :destroy, :index, :show]
 
     def new
     end

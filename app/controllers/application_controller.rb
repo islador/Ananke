@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def after_sign_in_path_for(user)
-  	#This needs to be changed to link to the APIs pages once they're up.
-	  user_api_index_path(current_user)
+	  share_index_path(current_user)
 	end
 end
