@@ -1,5 +1,5 @@
 require 'spec_helper'
 
 describe "share/new.html.haml" do
-  pending "add some examples to (or delete) #{__FILE__}"
+	subject {page}
 end

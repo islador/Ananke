@@ -16,6 +16,17 @@ header {
 				background-color: #222222;
 			}
 		}
+		.dropdown{
+			a:hover{
+				background-color: #222222;
+				background-image: none;
+			}
+		}
+	}
+	ul.dropdown-menu {
+		float: none;
+		list-style: none;
+		background-color: #222222;
 	}
 }
 
@@ -49,7 +60,51 @@ header {
 
 .col-centered{
     float: none;
-    margin: 0 auto;
+    width: 25%;
+    margin-left: auto;
+	margin-right: auto;
+}
+
+.input-valid-icon-right {
+    position: relative;
+    i.glyphicon-ok{
+    	position: absolute;
+	    right: 120px;
+	    padding: 2px 0px;
+	    color: green;
+	    display: none;
+    }
+    i.glyphicon-remove{
+    	position: absolute;
+	    right: 120px;
+	    padding: 2px 0px;
+	    color: red;
+	    display: none;
+    }
+}
+
+
+#name_taken {
+	position: relative;
+	left: 180px;
+	bottom: 26px;
+	//background-color: pink;
+	width: 160px;
+	height: 25px;
+	
+	.glyphicon-ok {
+		position: relative;
+		bottom: 20px;
+		//display: none;
+		//right: 145px;
+		color: green;
+	}
+
+	.glyphicon-remove {
+		display: none;
+		right: 165px;
+		color: red;
+	}
 }
 
 .indexBox {
