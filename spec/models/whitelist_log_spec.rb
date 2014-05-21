@@ -2,16 +2,16 @@
 #
 # Table name: whitelist_logs
 #
-#  id          :integer          not null, primary key
-#  entity_name :string(255)
-#  source_user :integer
-#  source_type :integer
-#  addition    :boolean
-#  entity_type :integer
-#  date        :date
-#  created_at  :datetime
-#  updated_at  :datetime
-#  time        :datetime
+#  id                :integer          not null, primary key
+#  entity_name       :string(255)
+#  source_share_user :integer
+#  source_type       :integer
+#  addition          :boolean
+#  entity_type       :integer
+#  date              :date
+#  created_at        :datetime
+#  updated_at        :datetime
+#  time              :datetime
 #
 
 require 'spec_helper'
@@ -22,7 +22,7 @@ describe WhitelistLog do
   subject{log}
 
   it {should respond_to(:entity_name)}
-  it {should respond_to(:source_user)}
+  it {should respond_to(:source_share_user)}
   it {should respond_to(:source_type)}
   it {should respond_to(:addition)}
   it {should respond_to(:entity_type)}
@@ -38,7 +38,7 @@ describe WhitelistLog do
 		end
 
 		describe "should validate presence of source_user" do
-			before {log.source_user = nil}
+			before {log.source_share_user = nil}
 			it {should_not be_valid}
 		end
 

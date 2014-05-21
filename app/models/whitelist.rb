@@ -2,14 +2,14 @@
 #
 # Table name: whitelists
 #
-#  id          :integer          not null, primary key
-#  name        :string(255)
-#  standing    :integer
-#  entity_type :integer
-#  source_type :integer
-#  source_user :integer
-#  created_at  :datetime
-#  updated_at  :datetime
+#  id                :integer          not null, primary key
+#  name              :string(255)
+#  standing          :integer
+#  entity_type       :integer
+#  source_type       :integer
+#  source_share_user :integer
+#  created_at        :datetime
+#  updated_at        :datetime
 #
 
 class Whitelist < ActiveRecord::Base
@@ -25,7 +25,7 @@ class Whitelist < ActiveRecord::Base
 	#validates :standing, presence: true
 	validates :entity_type, presence: true
 	validates :source_type, presence: true
-	validates :source_user, presence: true
+	validates :source_share_user, presence: true
 
 	after_destroy :generate_removal_log
 	after_save :generate_addition_log
@@ -41,12 +41,12 @@ class Whitelist < ActiveRecord::Base
 	#Creates a new whitelist log record representing itself being created.
 	#This can be moved to sidekiq if necessary.
 	def generate_addition_log
-		WhitelistLog.create(entity_name: self.name, addition: true, entity_type: self.entity_type, source_type: self.source_type, source_user: self.source_user, date: Date.today, time: Time.now)
+		WhitelistLog.create(entity_name: self.name, addition: true, entity_type: self.entity_type, source_type: self.source_type, source_share_user: self.source_share_user, date: Date.today, time: Time.now)
 	end
 
 	#Creates a new whitelist log record representing itself being destroyed.
 	#This can be moved to sidekiq if necessary.
 	def generate_removal_log
-		WhitelistLog.create(entity_name: self.name, addition: false, entity_type: self.entity_type, source_type: self.source_type, source_user: self.source_user, date: Date.today, time: Time.now)
+		WhitelistLog.create(entity_name: self.name, addition: false, entity_type: self.entity_type, source_type: self.source_type, source_share_user: self.source_share_user, date: Date.today, time: Time.now)
 	end
 end

@@ -103,12 +103,12 @@ FactoryGirl.define do
 		standing 0
 		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
 		source_type 1 #1 for api, 2 for manual
-		source_user 1
+		source_share_user 1 #this is poorly stubbed
 	end
 
 	factory :whitelist_log do
 		sequence(:entity_name) {|n| "Name#{n}"}
-		source_user 1
+		source_share_user 1 #this is poorly stubbed
 		source_type 1 #1 for api, 2 for manual
 		addition true
 		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
