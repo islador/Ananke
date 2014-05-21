@@ -24,7 +24,7 @@ class Api < ActiveRecord::Base
 	#main_entity_name: the name of the corporation if a corporation API, the name of the main character if this is a main API
 	#main: is the main API true/false
 	#A CCP Corp Key is always an Ananke Corp Key, A CCP Account Key is never an Ananke Corp Key, An Ananke Corp Key may be either a main or a general API, a CCP Account or Character Key may be either a main or a general Ananke Key.
-	belongs_to :user
+	belongs_to :share_user
 	has_many :characters, dependent: :destroy
 	has_many :whitelist_api_connections, dependent: :destroy
 	has_many :whitelists, through: :whitelist_api_connections

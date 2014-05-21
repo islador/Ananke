@@ -27,8 +27,7 @@ class User < ActiveRecord::Base
 	# :confirmable, :lockable, :timeoutable and :omniauthable
 	devise :database_authenticatable, :async, :registerable,
 			:recoverable, :rememberable, :trackable, :validatable, :confirmable
-	
-	has_many :apis, dependent: :destroy
+			
 	has_many :share_users, foreign_key: "user_id", dependent: :destroy
 	has_many :shares, through: :share_users
 
