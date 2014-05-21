@@ -33,7 +33,7 @@ describe "share/index.html.haml" do
 			describe "Click indexBox > " do
 				it "clicking an indexBox should take you to that share's show page", js: true do
 					page.evaluate_script("document.getElementById('share_#{share.id}').click()")
-					should have_selector("h1#{share.name}")
+					should have_selector("h1", text: "#{share.name}")
 				end
 			end
 		end
@@ -50,7 +50,8 @@ describe "share/index.html.haml" do
 			end
 
 			it "should contain a centered indexBox" do
-				should have_selector(".col-centered")
+				should have_selector(".indexBox .joinGroup")
+				should_not have_selector(".col-md-4 .indexBox .joinGroup")
 			end
 		end
 	end
