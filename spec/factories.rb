@@ -71,7 +71,7 @@ FactoryGirl.define do
 		active true
 		main_entity_name "John"
 		main false
-		user
+		share_user
 
 		factory :corp_api do
 			#Islador's corp API

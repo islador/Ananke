@@ -24,9 +24,10 @@ Sidekiq::Testing.inline!
 
 describe Api do
 	let(:user) {FactoryGirl.create(:user, :email => "user@example.com")}
+	let(:share_user) {FactoryGirl.create(:share_user, user_id: user.id)}
 	let!(:api) {
 		VCR.use_cassette('workers/api_key_info/accountAPI') do
-			FactoryGirl.create(:api, user: user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689", main: true)
+			FactoryGirl.create(:api, share_user: share_user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689", main: true)
 		end
 	}
 	let!(:api_character) {FactoryGirl.create(:character, api: api, main: true)}
@@ -48,7 +49,7 @@ describe Api do
 
 	describe "Associations > " do
 		it "should belong to a user with email 'user@example.com'" do
-			api.user.email.should match "user@example.com"
+			api.share_user.user.email.should match "user@example.com"
 		end
 
 		let!(:characterZeke) {FactoryGirl.create(:character, :api => api, :name => "Zeke")}
@@ -70,7 +71,7 @@ describe Api do
 		describe "Corp API >" do
 			let!(:corp_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, user: user)
+					FactoryGirl.create(:corp_api, share_user: share_user)
 				end
 			}
 			let!(:whitelist) {FactoryGirl.create(:whitelist)}
@@ -123,14 +124,14 @@ describe Api do
 
 		let!(:corporation_api) {
 			VCR.use_cassette('workers/api_key_info/corpAPI') do
-				FactoryGirl.create(:corp_api, user: user, main: true)
+				FactoryGirl.create(:corp_api, share_user: share_user, main: true)
 			end
 		}
 		let!(:corp_character) {FactoryGirl.create(:character, api: corporation_api, main: true)}
 
 		let!(:general_api) {
 			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				FactoryGirl.create(:api, user: user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")
+				FactoryGirl.create(:api, share_user: share_user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")
 			end
 		}
 		let!(:general_character) {FactoryGirl.create(:character, api: api)}
