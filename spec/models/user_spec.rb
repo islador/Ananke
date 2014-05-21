@@ -19,7 +19,6 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
-#  main_char_name         :string(255)
 #
 
 require 'spec_helper'
@@ -30,8 +29,6 @@ describe User do
 	let!(:user) {FactoryGirl.create(:user)}
 
 	subject{user}
-
-	it {should respond_to :main_char_name}
 
 	describe "Associations > " do
 		let(:share){FactoryGirl.create(:basic_share)}
@@ -47,24 +44,6 @@ describe User do
 
 		it "should have a share" do
 			user.shares[0].id.should be share.id
-		end
-	end
-
-	describe "set_main_char_name" do
-		
-		let!(:corp_api) {
-			VCR.use_cassette('workers/api_key_info/corpAPI') do
-				FactoryGirl.create(:corp_api, user: user, main: true)
-			end
-		}
-		let!(:corp_character) {FactoryGirl.create(:character, api: corp_api, main: true, corporationName: "Alaskan Fish")}
-
-		it "should set the user's main_char_name to the main character of the API's name" do
-			user.set_main_char_name(corp_character)
-
-			userDB = User.where("id = ?", user.id)[0]
-			userDB.should_not be_nil
-			userDB.main_char_name.should match "#{corp_character.name}"
 		end
 	end
 end

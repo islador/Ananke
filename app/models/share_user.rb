@@ -21,4 +21,9 @@ class ShareUser < ActiveRecord::Base
 	validates :share_id, presence: true
 	validates :user_id, presence: true
 	validates :user_role, presence: true
+
+	def set_main_char_name(character)
+		self.main_char_name = character.name
+		self.save!
+	end
 end

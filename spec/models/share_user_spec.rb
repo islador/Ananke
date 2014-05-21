@@ -13,6 +13,8 @@
 #
 
 require 'spec_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe ShareUser do
 	let(:owner) {FactoryGirl.create(:user)}
@@ -45,6 +47,28 @@ describe ShareUser do
 		it "should get deleted when the share it is associated with gets deleted" do
 			share.destroy
 			ShareUser.where("share_id = ?", share.id)[0].should be_nil
+		end
+	end
+
+	describe "set_main_char_name" do
+		it {should respond_to :main_char_name}
+
+		let(:share){FactoryGirl.create(:basic_share)}
+		let!(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
+		
+		let!(:corp_api) {
+			VCR.use_cassette('workers/api_key_info/corpAPI') do
+				FactoryGirl.create(:corp_api, share_user: share_user, main: true)
+			end
+		}
+		let!(:corp_character) {FactoryGirl.create(:character, api: corp_api, main: true, corporationName: "Alaskan Fish")}
+		
+		it "should set the user's main_char_name to the main character of the API's name" do
+			share_user.set_main_char_name(corp_character)
+
+			share_userDB = ShareUser.where("id = ?", share_user.id)[0]
+			share_userDB.should_not be_nil
+			share_userDB.main_char_name.should match "#{corp_character.name}"
 		end
 	end
 

@@ -3,7 +3,7 @@
 # Table name: apis
 #
 #  id                  :integer          not null, primary key
-#  user_id             :integer
+#  share_user_id       :integer
 #  ccp_type            :integer
 #  key_id              :string(255)
 #  v_code              :string(255)

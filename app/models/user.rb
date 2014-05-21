@@ -19,7 +19,6 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
-#  main_char_name         :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -27,12 +26,7 @@ class User < ActiveRecord::Base
 	# :confirmable, :lockable, :timeoutable and :omniauthable
 	devise :database_authenticatable, :async, :registerable,
 			:recoverable, :rememberable, :trackable, :validatable, :confirmable
-			
+
 	has_many :share_users, foreign_key: "user_id", dependent: :destroy
 	has_many :shares, through: :share_users
-
-	def set_main_char_name(character)
-		self.main_char_name = character.name
-		self.save!
-	end
 end
