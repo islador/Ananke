@@ -1,12 +1,12 @@
 class ApiController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, :require_share_user
 
   def new
     @count = current_user.apis.count
   end
 
   def create
-    api = current_user.apis.build(key_id: params[:key_id], v_code: params[:v_code])
+    api = current_share_user.apis.build(key_id: params[:key_id], v_code: params[:v_code])
     api.save!
     render :json => api.id
   end
