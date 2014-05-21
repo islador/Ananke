@@ -26,7 +26,7 @@ describe ShareUser do
 	it {should respond_to(:user_id)}
 	it {should respond_to(:user_role)}
 	it {should respond_to(:main_char_name)}
-	it {should respond_to(:valid)}
+	it {should respond_to(:approved)}
 	
 	describe "Associations > " do
 		it "should have a user" do
