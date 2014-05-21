@@ -14,7 +14,7 @@ class ShareController < ApplicationController
     end
 
     def create
-        @new_share = Share.new(name: params[:share_name], grade: 2, owner_id: current_user.id, user_limit: 50)
+        @new_share = Share.new(name: params[:share_name], grade: 2, active: true, owner_id: current_user.id, user_limit: 50)
         if @new_share.valid? == true
             @new_share.save!
             render :json => @new_share.id
@@ -32,5 +32,6 @@ class ShareController < ApplicationController
 
     def show
         @share = Share.where("id = ?", params[:id])[0]
+        session[:share_id] = @share.id
     end
 end
