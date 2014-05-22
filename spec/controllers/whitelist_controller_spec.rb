@@ -4,7 +4,10 @@ Sidekiq::Testing.inline!
 
 describe WhitelistController do
   # http://stackoverflow.com/questions/8819343/rails-rspec-devise-undefined-method-authenticate-user
-  before { controller.stub(:authenticate_user!).and_return true }
+  before {
+    controller.stub(:authenticate_user!).and_return true
+    controller.stub(:require_share_user).and_return true
+  }
   let!(:user) {FactoryGirl.create(:user)}
   let!(:share_user) {FactoryGirl.create(:share_user, user_id: user.id)}
 

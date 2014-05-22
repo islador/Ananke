@@ -1,5 +1,5 @@
 class WhitelistController < ApplicationController
-	before_action :authenticate_user!
+	before_action :authenticate_user!, :require_share_user
 
 	#CRUD methods
 
