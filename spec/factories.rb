@@ -51,6 +51,7 @@ FactoryGirl.define do
 		share_id {set_share_id}
 		user_id {set_user_id}
 		user_role 0
+		sequence(:main_char_name) {|n| "Main Char #{n}"}
 	end
 
 	factory :api do

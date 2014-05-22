@@ -1,10 +1,8 @@
 Ananke::Application.routes.draw do
 
-  get "whitelist/white_list"
-  get "whitelist/white_list_log"
-  get "whitelist/retrieve_pullable_apis", to: "whitelist#retrieve_pullable_apis"
+  
 
-  resources :whitelist,  only: [:create, :destroy]
+  #resources :whitelist,  only: [:create, :destroy]
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
@@ -21,6 +19,11 @@ Ananke::Application.routes.draw do
       put "/begin_whitelist_api_pull", to: "api#begin_whitelist_api_pull"
       put "/update_api_whitelist_standing", to: "api#update_api_whitelist_standing"
     end
+
+    resources :whitelist,  only: [:create, :destroy]
+    get "whitelist/white_list"
+    get "whitelist/white_list_log"
+    get "whitelist/retrieve_pullable_apis", to: "whitelist#retrieve_pullable_apis"
   end
   
   #Set root to the sign_in page.

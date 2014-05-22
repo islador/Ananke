@@ -4,7 +4,7 @@ class WhitelistController < ApplicationController
 	#CRUD methods
 
 	def create
-		Whitelist.create(name: params[:entity_name], entity_type: params[:entity_type], source_type: 2, source_user: current_user.id)
+		Whitelist.create(name: params[:entity_name], entity_type: params[:entity_type], source_type: 2, source_share_user: current_share_user.id)
 		render nothing: true
 	end
 
@@ -19,14 +19,14 @@ class WhitelistController < ApplicationController
 		@active_pull_apis = Api.joins(:whitelist_api_connections).uniq
 		@user_char_names = []
 		@active_pull_apis.each do |api|
-			@user_char_names.push(api.user.main_char_name)
+			@user_char_names.push(api.share_user.main_char_name)
 		end
 	end
 
 	def retrieve_pullable_apis
 		invalid_ids = Api.joins(:whitelist_api_connections).uniq
 		#http://stackoverflow.com/a/19984066
-		@valid_corp_apis = current_user.apis.where.not(id: invalid_ids).where("ananke_type = 1 AND active = true")
+		@valid_corp_apis = current_share_user.apis.where.not(id: invalid_ids).where("ananke_type = 1 AND active = true")
 		
 		respond_to do |format|
 			format.js
