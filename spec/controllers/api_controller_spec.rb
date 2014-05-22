@@ -12,6 +12,14 @@ describe ApiController do
   let!(:share_user) {FactoryGirl.create(:share_user, user_id: user.id)}
 
   describe "CREATE 'create'" do
+    it "should return http success" do
+      sign_in user
+      VCR.use_cassette('workers/api_key_info/characterAPI') do
+        xhr :post, :create, share_user_id: share_user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
+      end
+      response.should be_success
+    end
+
     it "should enroll a new API" do
       sign_in user
       expect{
@@ -215,8 +223,8 @@ describe ApiController do
       sign_in user
       xhr :put, :set_main, :share_user_id => share_user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
 
-      userDB = User.where("id = ?", user.id)[0]
-      userDB.main_char_name.should match "#{corporation_character.name}"
+      shareUserDB = ShareUser.where("id = ?", share_user.id)[0]
+      shareUserDB.main_char_name.should match "#{corporation_character.name}"
     end
   end
 

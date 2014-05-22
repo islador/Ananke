@@ -13,7 +13,7 @@ Ananke::Application.routes.draw do
   resources :share
     get "/name_available", to: "share#name_available"
 
-  resources :users do
+  resources :share_users do
     resources :api do
       get "/character_list", to: "api#character_list"
       put "/set_main", to: "api#set_main"

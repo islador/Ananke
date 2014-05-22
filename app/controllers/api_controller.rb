@@ -2,7 +2,7 @@ class ApiController < ApplicationController
   before_action :authenticate_user!, :require_share_user
 
   def new
-    @count = current_user.apis.count
+    @count = current_share_user.apis.count
   end
 
   def create
@@ -22,7 +22,7 @@ class ApiController < ApplicationController
   end
 
   def index
-    @apis = current_user.apis
+    @apis = current_share_user.apis
   end
 
   def show
@@ -42,7 +42,7 @@ class ApiController < ApplicationController
   def set_main
     #Point of possible optimization
     #Retrieve the old API and set it's main to false
-    old_api = current_user.apis.where("main = true")[0]
+    old_api = current_share_user.apis.where("main = true")[0]
     #Nil check first to avoid empty on nil error
     if old_api.nil? == false
       old_character = old_api.characters.where("main = true")[0]
@@ -73,7 +73,7 @@ class ApiController < ApplicationController
     #Point of optimization. This method could take the Api model already had, do its thing, then save it. Thus avoiding a DB access.
     @api.set_main_entity_name
 
-    current_user.set_main_char_name(@character)
+    current_share_user.set_main_char_name(@character)
     render nothing: true
   end
 
@@ -93,7 +93,7 @@ class ApiController < ApplicationController
     #Determine if the API is valid and has an active pull
     if api.nil? == false && whitelist_connections.count > 0
       #Generate a whitelist log for the cancellation
-      WhitelistLog.create(entity_name: api.main_entity_name, source_user: api.user.id, source_type: 2, addition: false, entity_type: 5, date: Date.today, time: Time.now)
+      WhitelistLog.create(entity_name: api.main_entity_name, source_share_user: api.share_user.id, source_type: 2, addition: false, entity_type: 5, date: Date.today, time: Time.now)
 
       #Destroy all whitelist connections associated with the given api. 
       #Point of optimization - This can easily move to 100+ms and should likely be pushed to a sidekiq worker.
