@@ -5,22 +5,23 @@ Sidekiq::Testing.inline!
 #Testing with sidekiq inline! runs the code the minute it is called without enqueuing it.
 describe ApiKeyInfoWorker do
 	let!(:user) {FactoryGirl.create(:user)}
+	let!(:share_user) { FactoryGirl.create(:share_user, user_id: user.id)}
 	#islador -corp API
 	let!(:api) {
 		VCR.use_cassette('workers/api_key_info/corpAPI') do
-			FactoryGirl.create(:api, user: user, v_code: "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1", key_id: "3229801")
+			FactoryGirl.create(:api, share_user: share_user, v_code: "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1", key_id: "3229801")
 		end
 	}
 	#tany - Character API
 	let!(:api_character) {
 		VCR.use_cassette('workers/api_key_info/characterAPI') do
-			FactoryGirl.create(:api, user: user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")
+			FactoryGirl.create(:api, share_user: share_user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")
 		end
 	}
 	#Tera - Account API
 	let!(:api_account) {
 		VCR.use_cassette('workers/api_key_info/accountAPI') do
-			FactoryGirl.create(:api, user: user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689")
+			FactoryGirl.create(:api, share_user: share_user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689")
 		end
 	}
 	work = ApiKeyInfoWorker.new
