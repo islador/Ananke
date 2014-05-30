@@ -38,7 +38,7 @@
 					%td= api.key_id
 
 					%td
-						%button{:id => "cancel_pull_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/users/#{current_user.id}/api/#{api.id}/cancel_whitelist_api_pull", :pull_api_id => "pull_api_#{api.id}"}} Cancel Pull
+						%button{:id => "cancel_pull_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/share_users/#{current_share_user.id}/api/#{api.id}/cancel_whitelist_api_pull", :pull_api_id => "pull_api_#{api.id}"}} Cancel Pull
 
 
 %br
@@ -67,7 +67,7 @@
 				- else
 					%td Character
 
-				%td= entity.source_user
+				%td= entity.source_share_user
 
 				-if entity.source_type == 1
 					%td API

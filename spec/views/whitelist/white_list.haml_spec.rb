@@ -5,18 +5,25 @@ Sidekiq::Testing.fake!
 describe "whitelist/white_list.haml > " do
 	subject {page}
 	let!(:user) {FactoryGirl.create(:user)}
-	let!(:whitelist) {FactoryGirl.create(:whitelist, source_user: user.id)}
+	let!(:share) {FactoryGirl.create(:share)}
+	let!(:share_user) {FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
+	let!(:whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id)}
 
 	before(:each) do
-		visit whitelist_white_list_path
+		visit share_user_whitelist_white_list_path(share_user)
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
-		visit whitelist_white_list_path
+		#page.evaluate_script("document.getElementById('share_#{share.id}').click()")
+		#visit share_user_whitelist_white_list_path(share_user)
 	end
 
 	describe "Moderation Panel > " do
-		it "should render a form to manually add an entity" do
+		it "should render a form to manually add an entity", js: true do
+			page.evaluate_script("document.getElementById('share_#{share.id}').click()")
+			sleep(1)
+			visit share_user_whitelist_white_list_path(share_user)
+
 			should have_selector('input#entity_name')
 			should have_selector('input#entity_type_1')
 			should have_selector('input#entity_type_2')
@@ -26,18 +33,25 @@ describe "whitelist/white_list.haml > " do
 		end
 
 		describe "API based whitelist entity population > " do
+			before (:each) do
+				page.evaluate_script("document.getElementById('share_#{share.id}').click()")
+				sleep(1)
+				visit share_user_whitelist_white_list_path(share_user)
+			end
+			
 			let!(:valid_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, user: user, active: true)
+					FactoryGirl.create(:corp_api, share_user: share_user, active: true)
 				end
 			}
 			let!(:pulled_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, user: user, active: true)
+					FactoryGirl.create(:corp_api, share_user: share_user, active: true)
 				end
 			}
-			let!(:whitelist) {FactoryGirl.create(:whitelist, source_user: user.id, source_type: 1)}
+			let!(:whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, source_type: 1)}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_api.id, whitelist_id: whitelist.id)}
+
 			it "should contain a button 'Begin New API Pull'" do
 				should have_selector('button#begin_new_api_pull', text: "Begin New API Pull")
 			end
@@ -102,13 +116,13 @@ describe "whitelist/white_list.haml > " do
 		describe "API Pull Table > " do
 			let!(:api1) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, user: user)
+					FactoryGirl.create(:corp_api, share_user: share_user)
 				end
 			}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: api1.id, whitelist_id: whitelist.id)}
 			let!(:api2) {
 				VCR.use_cassette('workers/api_key_info/characterAPI') do
-					FactoryGirl.create(:api, user: user)
+					FactoryGirl.create(:api, share_user: share_user)
 				end
 			}
 			it "should render the api pulls table" do
