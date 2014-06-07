@@ -9,7 +9,7 @@ jQuery ->
 			target = $("#"+this.id).attr("data-target-path")
 			main_entity_name = $("#"+this.id).attr("data-main-entity-name")
 			raw_id = $("#"+this.id).attr("data-raw-id")
-			user_id = $("#"+this.id).attr("data-user-id")
+			share_user_id = $("#"+this.id).attr("data-share-user-id")
 
 			standing = $("#select_"+ raw_id).val();
 			key_id = $("#key_id_"+ raw_id).text();
@@ -21,7 +21,7 @@ jQuery ->
 			authenticity_token = $('meta[name=csrf-token]').attr("content")
 
 			$.ajax({
-				url: "/users/" + user_id + "/api/" + raw_id + "/update_api_whitelist_standing", type: "PUT",
+				url: "/share_users/" + share_user_id + "/api/" + raw_id + "/update_api_whitelist_standing", type: "PUT",
 				data: { authenticity_token: authenticity_token, standing: standing},
 				success: (data) ->
 					console.log data

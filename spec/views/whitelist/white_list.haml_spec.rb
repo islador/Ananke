@@ -14,16 +14,12 @@ describe "whitelist/white_list.haml > " do
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
-		#page.evaluate_script("document.getElementById('share_#{share.id}').click()")
-		#visit share_user_whitelist_white_list_path(share_user)
+		find("#share_#{share.id}").click
+		visit share_user_whitelist_white_list_path(share_user)
 	end
 
 	describe "Moderation Panel > " do
 		it "should render a form to manually add an entity", js: true do
-			page.evaluate_script("document.getElementById('share_#{share.id}').click()")
-			sleep(1)
-			visit share_user_whitelist_white_list_path(share_user)
-
 			should have_selector('input#entity_name')
 			should have_selector('input#entity_type_1')
 			should have_selector('input#entity_type_2')
@@ -33,11 +29,10 @@ describe "whitelist/white_list.haml > " do
 		end
 
 		describe "API based whitelist entity population > " do
-			before (:each) do
-				page.evaluate_script("document.getElementById('share_#{share.id}').click()")
-				sleep(1)
-				visit share_user_whitelist_white_list_path(share_user)
-			end
+			#before (:each) do
+			#	find("#share_#{share.id}").click
+			#	visit share_user_whitelist_white_list_path(share_user)
+			#end
 			
 			let!(:valid_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
@@ -52,7 +47,7 @@ describe "whitelist/white_list.haml > " do
 			let!(:whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, source_type: 1)}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_api.id, whitelist_id: whitelist.id)}
 
-			it "should contain a button 'Begin New API Pull'" do
+			it "should contain a button 'Begin New API Pull'", js: true do
 				should have_selector('button#begin_new_api_pull', text: "Begin New API Pull")
 			end
 
@@ -125,7 +120,7 @@ describe "whitelist/white_list.haml > " do
 					FactoryGirl.create(:api, share_user: share_user)
 				end
 			}
-			it "should render the api pulls table" do
+			it "should render the api pulls table", js: true do
 				should have_selector('#api_pulls_table')
 			end
 
@@ -133,16 +128,16 @@ describe "whitelist/white_list.haml > " do
 				should have_selector('#api_pulls_table_wrapper')
 			end
 
-			it "should contain items from the database" do
-				visit whitelist_white_list_path
+			it "should contain items from the database", js: true do
+				visit share_user_whitelist_white_list_path(share_user)
 				within '#api_pulls_table' do
-					should have_selector("tr#pull_api_#{api1.id}", text: api1.user.main_char_name)
+					should have_selector("tr#pull_api_#{api1.id}", text: api1.share_user.main_char_name)
 				end
 			end
 
 			
-			it "should contain a cancel button for each API" do
-				visit whitelist_white_list_path
+			it "should contain a cancel button for each API", js: true do
+				visit share_user_whitelist_white_list_path(share_user)
 				should have_selector("button#cancel_pull_api_#{api1.id}", text: "Cancel Pull")
 			end
 
@@ -153,7 +148,7 @@ describe "whitelist/white_list.haml > " do
 					end
 				}
 				it "should remove the item from the datatable when clicked", js: true do
-					visit whitelist_white_list_path
+					visit share_user_whitelist_white_list_path(share_user)
 					
 					should have_selector("tr#pull_api_#{api1.id}", text: api1.main_entity_name)
 					
@@ -165,7 +160,7 @@ describe "whitelist/white_list.haml > " do
 				end
 
 				it "should remove the item's whitelist api connections when clicked", js: true do
-					visit whitelist_white_list_path
+					visit share_user_whitelist_white_list_path(share_user)
 					should have_selector("tr#pull_api_#{api1.id}", text: api1.main_entity_name)
 					
 					#http://stackoverflow.com/a/2609244
@@ -181,7 +176,7 @@ describe "whitelist/white_list.haml > " do
 	end
 
 	describe "Table > " do
-		it "should render the white_list table" do
+		it "should render the white_list table", js: true do
 			should have_selector('#whitelist_table')
 		end
 
@@ -190,16 +185,16 @@ describe "whitelist/white_list.haml > " do
 		end
 
 		let!(:whitelist1) {FactoryGirl.create(:whitelist, name: "Jeff")}
-		it "should contain items from the database" do
-			visit whitelist_white_list_path
+		it "should contain items from the database", js: true do
+			visit share_user_whitelist_white_list_path(share_user)
 			within '#whitelist_table' do
 				should have_selector("tr#entity_#{whitelist1.id}", text: whitelist1.name)
 			end
 		end
 
 		let!(:whitelist2) {FactoryGirl.create(:whitelist)}
-		it "should contain a delete button for each entity" do
-			visit whitelist_white_list_path
+		it "should contain a delete button for each entity", js: true do
+			visit share_user_whitelist_white_list_path(share_user)
 			should have_selector("button#destroy_entity_#{whitelist2.id}", text: "Delete")
 		end
 	end
@@ -207,7 +202,7 @@ describe "whitelist/white_list.haml > " do
 	describe "Delete > " do
 		#let!(:whitelist3) {FactoryGirl.create(:whitelist, name: "Jeff")}
 		it "should remove the item from the datatable when clicked", js: true do
-			visit whitelist_white_list_path
+			visit share_user_whitelist_white_list_path(share_user)
 			
 			should have_selector("tr#entity_#{whitelist.id}", text: whitelist.name)
 			
@@ -251,7 +246,7 @@ describe "whitelist/white_list.haml > " do
 			choose 'Alliance'
 			click_button 'Add Entity'
 			#Table refresh uses a stubbing method. TR ID's are not possible in this iteration.
-			visit whitelist_white_list_path
+			visit share_user_whitelist_white_list_path(share_user)
 			within "tr#entity_#{Whitelist.last.id}" do
 				should have_selector("td", text: "Alliance")
 			end
@@ -262,7 +257,7 @@ describe "whitelist/white_list.haml > " do
 			choose 'Corporation'
 			click_button 'Add Entity'
 			#Table refresh uses a stubbing method. TR ID's are not possible in this iteration.
-			visit whitelist_white_list_path
+			visit share_user_whitelist_white_list_path(share_user)
 			within "tr#entity_#{Whitelist.last.id}" do
 				should have_selector("td", text: "Corporation")
 			end
@@ -272,7 +267,7 @@ describe "whitelist/white_list.haml > " do
 			choose 'Faction'
 			click_button 'Add Entity'
 			#Table refresh uses a stubbing method. TR ID's are not possible in this iteration.
-			visit whitelist_white_list_path
+			visit share_user_whitelist_white_list_path(share_user)
 			within "tr#entity_#{Whitelist.last.id}" do
 				should have_selector("td", text: "Faction")
 			end
@@ -282,7 +277,7 @@ describe "whitelist/white_list.haml > " do
 			choose 'Character'
 			click_button 'Add Entity'
 			#Table refresh uses a stubbing method. TR ID's are not possible in this iteration.
-			visit whitelist_white_list_path
+			visit share_user_whitelist_white_list_path(share_user)
 			within "tr#entity_#{Whitelist.last.id}" do
 				should have_selector("td", text: "Character")
 			end

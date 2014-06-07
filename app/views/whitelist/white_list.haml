@@ -10,10 +10,10 @@
 	=label_tag(:entity_type_3, "Faction")
 	=radio_button_tag(:entity_type, 4)
 	=label_tag(:entity_type_4, "Character")
-	%button{:id => "submit_new_entity", :class => "btn btn-xs btn-success", :data => {:target_path => "/whitelist"}} Add Entity
+	%button{:id => "submit_new_entity", :class => "btn btn-xs btn-success", :data => {:target_path => "/share_users/#{current_share_user.id}/whitelist"}} Add Entity
 
 %div{:id => "api_addition"}
-	%button{:id => "begin_new_api_pull", :class => "btn btn-l btn-success", :data => {:target_path => "/whitelist/retrieve_pullable_apis"}} Begin New API Pull
+	%button{:id => "begin_new_api_pull", :class => "btn btn-l btn-success", :data => {:target_path => "/share_users/#{current_share_user.id}/whitelist/retrieve_pullable_apis"}} Begin New API Pull
 	%div{:id => "new_query_table"}
 
 %div
@@ -76,4 +76,4 @@
 				
 				%td= entity.standing
 				%td
-					%button{:id => "destroy_entity_#{entity.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/whitelist/#{entity.id}", :entity_id => "entity_#{entity.id}"}} Delete
+					%button{:id => "destroy_entity_#{entity.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/share_users/#{current_share_user.id}/whitelist/#{entity.id}", :entity_id => "entity_#{entity.id}"}} Delete
