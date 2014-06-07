@@ -1,11 +1,12 @@
 %h3 Your APIs
 %div{:class => "explanation"}
+	%p= session[:share_id]
 	%p Below is a list of all APIs you've enrolled with this organization.
 	%ul
 		%li APIs may be used to authorize yourself for access to coms
 
 %div{:class => "btn-group"}
-	%a{:href => "/users/#{current_user.id}/api/new", :id => "enroll_new_api_1", :class => "btn btn-l btn-primary enroll-api"} Enroll New API
+	%a{:href => "/share_users/#{current_share_user.id}/api/new", :id => "enroll_new_api_1", :class => "btn btn-l btn-primary enroll-api"} Enroll New API
 
 %table.table.table-condensed{:id => "api_list_table"}
 	%thead
@@ -31,7 +32,7 @@
 					%td Main API
 				-else
 					%td
-						%a{:href => "/users/#{current_user.id}/api/#{api.id}", :id => "link_set_main_api_#{api.id}", :class => "btn btn-xs btn-warning"} Set as Main API
+						%a{:href => "/share_users/#{current_share_user.id}/api/#{api.id}", :id => "link_set_main_api_#{api.id}", :class => "btn btn-xs btn-warning"} Set as Main API
 
 				-if api.main == true
 					%td= api.main_entity_name
@@ -45,10 +46,10 @@
 					%td 
 				-else
 					%td
-						%button{:id => "destroy_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/users/#{current_user.id}/api/#{api.id}", :api_id => "api_#{api.id}"}} Delete
+						%button{:id => "destroy_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/share_users/#{current_share_user.id}/api/#{api.id}", :api_id => "api_#{api.id}"}} Delete
 
 %div{:class => "btn-group"}
-	%a{:href => "/users/#{current_user.id}/api/new", :id => "enroll_new_api_2", :class => "btn btn-l btn-primary enroll-api"} Enroll New API
+	%a{:href => "/share_users/#{current_share_user.id}/api/new", :id => "enroll_new_api_2", :class => "btn btn-l btn-primary enroll-api"} Enroll New API
 
 %h3 Basic Concept
 An index page comprised of a datatable displaying all the APIs currently owned by this user.

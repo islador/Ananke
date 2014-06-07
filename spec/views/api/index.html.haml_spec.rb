@@ -3,24 +3,27 @@ require 'sidekiq/testing'
 Sidekiq::Testing.inline!
 
 describe "api/index.html.haml > " do
-	let!(:user) {FactoryGirl.create(:user)}
+	let(:user) {FactoryGirl.create(:user)}
+	let(:share) {FactoryGirl.create(:share)}
+	let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
 	Capybara.default_wait_time = 10
 
 	subject {page}
 
 	before(:each) do
-		visit user_api_index_path(user)
+		visit share_user_api_index_path(share_user)
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
-		visit user_api_index_path(user)
+		find("#share_#{share.id}").click
+		visit share_user_api_index_path(share_user)
 	end
 
-	it "should contain an explanation of terms" do
+	it "should contain an explanation of terms", js: true do
 		should have_selector('div.explanation')
 	end
 
-	it "should contain a table of the user's APIs" do
+	it "should contain a table of the user's APIs", js: true do
 		should have_selector('#api_list_table')
 	end
 
@@ -28,17 +31,17 @@ describe "api/index.html.haml > " do
 		should have_selector('#api_list_table_wrapper')
 	end
 
-	it "should have two 'Enroll new API' buttons" do
+	it "should have two 'Enroll new API' buttons", js: true do
 		should have_selector('#enroll_new_api_1')
 		should have_selector('#enroll_new_api_2')
 	end
 
-	it "should have two 'Enroll new API' buttons that link you to the new api page" do
+	it "should have two 'Enroll new API' buttons that link you to the new api page", js: true do
 		find("#enroll_new_api_1").click
 		should have_selector("#new_api_enroll")
 	end
 
-	it "should have two 'Enroll New API' buttons that link you to the new api page" do
+	it "should have two 'Enroll New API' buttons that link you to the new api page", js: true do
 		find("#enroll_new_api_2").click
 		should have_selector("#new_api_enroll")
 	end
@@ -46,45 +49,45 @@ describe "api/index.html.haml > " do
 	describe "Api List Table > " do
 		let!(:main) {
 			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				FactoryGirl.create(:api, user: user, main_entity_name: "Jeff", main: true)
+				FactoryGirl.create(:api, share_user: share_user, main_entity_name: "Jeff", main: true)
 			end
 		}
 		let!(:character) {FactoryGirl.create(:character, api: main, main: true)}
 		let!(:general) {
 			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				FactoryGirl.create(:api, user: user)
+				FactoryGirl.create(:api, share_user: share_user)
 			end
 		}
 
-		it "should contain items from the database" do
-			visit user_api_index_path(user)
+		it "should contain items from the database", js: true do
+			visit share_user_api_index_path(share_user)
 			within '#api_list_table' do
 				should have_selector("tr#api_#{main.id}", text: main.main_entity_name)
 			end
 		end
 		
-		it "should contain a delete button for each non main api" do
-			visit user_api_index_path(user)
+		it "should contain a delete button for each non main api", js: true do
+			visit share_user_api_index_path(share_user)
 			should have_selector("button#destroy_api_#{general.id}", text: "Delete")
 		end
 		
-		it "should not have a delete button for the main API" do
-			visit user_api_index_path(user)
+		it "should not have a delete button for the main API", js: true do
+			visit share_user_api_index_path(share_user)
 			should_not have_selector("button#destroy_api_#{main.id}", text: "Delete")
 		end
 
-		it "should have a 'Set as Main API' button for non-main APIs" do
-			visit user_api_index_path(user)
+		it "should have a 'Set as Main API' button for non-main APIs", js: true do
+			visit share_user_api_index_path(share_user)
 			should have_selector("a#link_set_main_api_#{general.id}", text: "Set as Main API")
 		end
 
-		it "should not have a 'Set as Main API' button for main APIs" do
-			visit user_api_index_path(user)
+		it "should not have a 'Set as Main API' button for main APIs", js: true do
+			visit share_user_api_index_path(share_user)
 			should_not have_selector("a#set_main_api_#{main.id}", text: "Set as Main API")
 		end
 
-		it "the 'Set as Main API' button should link to that API's show page" do
-			visit user_api_index_path(user)
+		it "the 'Set as Main API' button should link to that API's show page", js: true do
+			visit share_user_api_index_path(share_user)
 			should have_selector("#api_list_table")
 			click_link 'Set as Main API'
 			should_not have_selector("#api_list_table")
@@ -95,11 +98,11 @@ describe "api/index.html.haml > " do
 	describe "Delete > " do
 		let!(:api) {
 			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				FactoryGirl.create(:api, user: user)
+				FactoryGirl.create(:api, share_user: share_user)
 			end
 		}
 		it "should remove the api from the datatable when clicked", js: true do
-			visit user_api_index_path(user)
+			visit share_user_api_index_path(share_user)
 			
 			should have_selector("tr#api_#{api.id}")
 			
