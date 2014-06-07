@@ -86,7 +86,8 @@ describe ShareController do
     it "should retrieve the share from the database and make it available in the 'share' variable" do
       sign_in user
       get 'show', :id => share.id
-      expect(assigns(:share).id).to be share.id
+      DBshare = Share.where("id = ?", share.id)[0]
+      expect(assigns(:share)).to eq(share)
     end
   end
 

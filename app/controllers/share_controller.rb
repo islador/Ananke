@@ -32,6 +32,10 @@ class ShareController < ApplicationController
 
     def show
         @share = Share.where("id = ?", params[:id])[0]
-        session[:share_id] = @share.id
+        #session[:share_id] = @share.id
+        shareUser = ShareUser.where("share_id = ? AND user_id = ?", @share.id, current_user.id)[0]
+        if shareUser.nil? == false
+            session[:share_user_id] = shareUser.id
+        end
     end
 end
