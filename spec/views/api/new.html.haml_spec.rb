@@ -3,38 +3,37 @@ require 'sidekiq/testing'
 Sidekiq::Testing.inline!
 
 describe "api/new.html.haml > " do
-	let!(:user) {FactoryGirl.create(:user)}
+	let(:user) {FactoryGirl.create(:user)}
+	let(:share) {FactoryGirl.create(:share)}
+	let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
 	Capybara.default_wait_time = 10
 
 	subject {page}
 	
 
 	before(:each) do
-		visit new_user_api_path(user)
+		visit new_share_user_api_path(share_user)
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
-		visit new_user_api_path(user)
+		find("#share_#{share.id}").click
+		visit new_share_user_api_path(share_user)
 	end
 
-	it "should contain a link to generate a prefab key from" do
+	it "should contain a link to generate a prefab key from", js: true do
 		should have_selector('a#user_prefab_key')
 	end
 
-	it "should render a form to enroll an API with" do
+	it "should render a form to enroll an API with", js: true do
 		should have_selector('input#key_id')
 		should have_selector('input#v_code')
 		should have_selector('input#main_api')
 		should have_selector('button#enroll_new_api', text: 'Enroll Key')
 	end
 
-	it "should contain a div for the characters partial to load into" do
-		should have_selector('div#characters_partial')
-	end
-
 	describe "First API > " do
 		
-		it "should have the main api box checked by default" do
+		it "should have the main api box checked by default", js: true do
 			find('input#main_api').should be_checked
 		end
 
@@ -50,11 +49,11 @@ describe "api/new.html.haml > " do
 
 		let!(:api) {
 			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				FactoryGirl.create(:api, user: user)
+				FactoryGirl.create(:api, share_user: share_user)
 			end
 		}
-		it "should not have the main api box checked if it is not the user's first API" do
-			visit new_user_api_path(user)
+		it "should not have the main api box checked if it is not the user's first API", js: true do
+			visit new_share_user_api_path(share_user)
 			find('input#main_api').should_not be_checked
 		end
 	end

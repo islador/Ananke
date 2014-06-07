@@ -20,7 +20,7 @@
 	- else
 		=label_tag(:main_api, "Main API?")
 		=check_box_tag(:main_api, 0)
-	%button{:id => "enroll_new_api", :class => "btn btn-xs btn-success", :data => {:target_path => "/users/#{current_user.id}/api"}} Enroll Key
+	%button{:id => "enroll_new_api", :class => "btn btn-xs btn-success", :data => {:target_path => "/share_users/#{current_share_user.id}/api"}} Enroll Key
 
 %div{:id => "characters_partial"}
 
