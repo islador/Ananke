@@ -7,6 +7,7 @@
 #  whitelist_id :integer
 #  created_at   :datetime
 #  updated_at   :datetime
+#  share_id     :integer
 #
 
 class WhitelistApiConnection < ActiveRecord::Base
@@ -18,6 +19,7 @@ class WhitelistApiConnection < ActiveRecord::Base
 
 	validates :api_id, presence: true
 	validates :whitelist_id, presence: true
+	validates :share_id, presence: true
 
 	def check_whitelist
 		self.whitelist.check_for_active_api_connections

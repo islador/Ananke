@@ -36,7 +36,12 @@ class ApiCorpContactPullWorker
 					new_entity = Whitelist.create(name: contact.contactName, entity_type: contact_type, source_type: 1, source_share_user: ananke_api.share_user.id, standing: contact.standing)
 
 					#and create a connection between that entity and the source API
-					ananke_api.whitelist_api_connections.create(whitelist_id: new_entity.id)
+					wac = ananke_api.whitelist_api_connections.build(whitelist_id: new_entity.id, share_id: ananke_api.share_user.share_id)
+					if wac.invalid? == true
+						raise wac.errors.messages
+					else
+						wac.save!
+					end
 				end
 			end
 

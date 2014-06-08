@@ -7,6 +7,7 @@
 #  whitelist_id :integer
 #  created_at   :datetime
 #  updated_at   :datetime
+#  share_id     :integer
 #
 
 require 'spec_helper'
@@ -39,6 +40,7 @@ describe WhitelistApiConnection do
 
 	it {should respond_to(:api_id)}
 	it {should respond_to(:whitelist_id)}
+	it {should respond_to(:share_id)}
 
 	describe "Associations > " do
 		it "should have an API" do
@@ -79,6 +81,11 @@ describe WhitelistApiConnection do
 
 		describe "should validate presence of api_id" do
 			before{whitelist_api_connection.api_id = nil}
+			it {should_not be_valid}
+		end
+
+		describe "should validate the presnce of share_id" do
+			before{whitelist_api_connection.share_id = nil}
 			it {should_not be_valid}
 		end
 	end

@@ -121,9 +121,11 @@ FactoryGirl.define do
 		ignore do
 			set_api_id {FactoryGirl.create(:api).id}
 			set_whitelist_id {FactoryGirl.create(:whitelist).id}
+			set_share_id {FactoryGirl.create(:basic_share).id}
 		end
 		
 		api_id {set_api_id}
 		whitelist_id {set_whitelist_id}
+		share_id {set_share_id}
 	end
 end
