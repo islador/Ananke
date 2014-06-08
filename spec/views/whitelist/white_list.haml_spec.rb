@@ -29,11 +29,6 @@ describe "whitelist/white_list.haml > " do
 		end
 
 		describe "API based whitelist entity population > " do
-			#before (:each) do
-			#	find("#share_#{share.id}").click
-			#	visit share_user_whitelist_white_list_path(share_user)
-			#end
-			
 			let!(:valid_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
 					FactoryGirl.create(:corp_api, share_user: share_user, active: true)

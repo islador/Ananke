@@ -1,11 +1,9 @@
 %div{:class => "container-fluid"}
 	%div{:class => "row"}
 		-if @user_shares.empty? == true
-			%div{:class => "col-centered"}
-				%div{ :class=>"indexBox"}
-					%div{:class=>"glyphicon glyphicon-plus"}
-						
-					%div{:class=>"joinGroup"}Join a Group
+			%div{ :class=>"indexBox"}
+				%div{:class=>"glyphicon glyphicon-plus"}
+				%div{:class=>"joinGroup"}Join a Group
 		-else
 			-@user_shares.each do |share|
 				%div{:class=>"col-md-4"}
@@ -14,4 +12,8 @@
 							Logo Here
 						%div{:class=>"shareName"}
 							=share.name
+			%div{:class => "col-md-4"}
+				%div{ :class=>"indexBox"}
+					%div{:class=>"glyphicon glyphicon-plus"}
+					%div{:class=>"joinGroup"}Join a Group
 		
