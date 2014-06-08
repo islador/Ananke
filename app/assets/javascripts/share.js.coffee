@@ -30,6 +30,7 @@ jQuery ->
 	$("#register_new_group").click ->
 		if $("#register_new_group").hasClass("btn-success")
 			name = $("#name_name").val()
+			authenticity_token = $('meta[name=csrf-token]').attr("content")
 			console.log(name)
 			$.ajax({
 				url: "/share/", type: "POST",
@@ -38,5 +39,8 @@ jQuery ->
 				success: (data) ->
 					if data != false
 						window.location.href = "/share/" + data
+					if data == false
+						#add the alert class to the error_message div
+						#add the text indicating the user's desired group name is available but s/he must login/register to create it the error_message div
 				})
 		

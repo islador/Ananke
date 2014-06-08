@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
 
 	def require_share_user
 		if session[:share_user_id] == nil
-			flash[:error] = "Please select a group before continuing."
+			flash[:error] = "You either lack permission to view that page, or have not selected a gropu yet. Please select a group before continuing."
 			redirect_to share_index_path
 		end
 	end
