@@ -105,6 +105,7 @@ FactoryGirl.define do
 		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
 		source_type 1 #1 for api, 2 for manual
 		source_share_user 1 #this is poorly stubbed
+		share_id {FactoryGirl.create(:basic_share).id}
 	end
 
 	factory :whitelist_log do
@@ -115,6 +116,7 @@ FactoryGirl.define do
 		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
 		date Date.today
 		time Time.new(2014)
+		share_id {FactoryGirl.create(:basic_share).id}
 	end
 
 	factory :whitelist_api_connection do

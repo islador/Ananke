@@ -12,6 +12,7 @@
 #  created_at        :datetime
 #  updated_at        :datetime
 #  time              :datetime
+#  share_id          :integer
 #
 
 require 'spec_helper'
@@ -28,6 +29,7 @@ describe WhitelistLog do
   it {should respond_to(:entity_type)}
   it {should respond_to(:date)}
   it {should respond_to(:time)}
+  it {should respond_to(:share_id)}
 
   it {should be_valid}
 
@@ -59,6 +61,11 @@ describe WhitelistLog do
 
 		describe "should validate presence of time" do
 			before {log.time = nil}
+			it {should_not be_valid}
+		end
+
+		describe "should validate presence of share_id" do
+			before {log.share_id = nil}
 			it {should_not be_valid}
 		end
 	end
