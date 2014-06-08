@@ -11,7 +11,7 @@ jQuery ->
 	$("#begin_new_api_pull").click ->
 		#Extract necessary data from the page.
 		target = $("#begin_new_api_pull").attr("data-target-path")
-		#target_id = $("#begin_new_api_pull").attr("data-pull-api-id")
+		share_user_id = $("#begin_new_api_pull").attr("data-share-user-id")
 
 		#target_table = apt
 		#target_table_id = "#api_pulls_table"
@@ -20,7 +20,8 @@ jQuery ->
 
 		if target is "Hide"
 			$('#new_query_table').empty()
-			swap_button("#begin_new_api_pull", "Begin New API Pull", "/whitelist/retrieve_pullable_apis" )
+
+			swap_button("#begin_new_api_pull", "Begin New API Pull", "/share_users/"+share_user_id+"/whitelist/retrieve_pullable_apis")
 		else
 		#If the user clicks 'Ok' then send an AJAX call deleting the user
 			$.ajax({
@@ -44,7 +45,7 @@ jQuery ->
 		authenticity_token = $('meta[name=csrf-token]').attr("content")
 
 		#Trigger confirm dialog before making AJAX call
-		if confirm("Canceling this API's pull will immediately remove it from this table and delete any whitelist entities it is soley responsible. Do you want to do this?") is true
+		if confirm("Canceling this API's pull will immediately remove it from this table and delete any whitelist entities it is soley responsible for. Do you want to do this?") is true
 			#If the user clicks 'Ok' then send an AJAX call deleting the user
 			$.ajax({
 				#A post with a method data attribute is used to preserve cross browser compability.

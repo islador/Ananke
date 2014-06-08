@@ -13,7 +13,7 @@
 	%button{:id => "submit_new_entity", :class => "btn btn-xs btn-success", :data => {:target_path => "/share_users/#{current_share_user.id}/whitelist"}} Add Entity
 
 %div{:id => "api_addition"}
-	%button{:id => "begin_new_api_pull", :class => "btn btn-l btn-success", :data => {:target_path => "/share_users/#{current_share_user.id}/whitelist/retrieve_pullable_apis"}} Begin New API Pull
+	%button{:id => "begin_new_api_pull", :class => "btn btn-l btn-success", :data => {:target_path => "/share_users/#{current_share_user.id}/whitelist/retrieve_pullable_apis", :share_user_id => "#{current_share_user.id}"}} Begin New API Pull
 	%div{:id => "new_query_table"}
 
 %div
