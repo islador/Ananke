@@ -62,7 +62,7 @@ describe WhitelistApiConnection do
 		end
 
 		it "should destroy invalid whitelist objects when destroyed." do
-			api.destroy
+			whitelist_api_connection.destroy
 			Whitelist.where("id = ?", whitelist_entity.id)[0].should be_nil
 		end
 
