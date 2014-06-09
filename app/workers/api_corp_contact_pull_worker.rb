@@ -46,7 +46,7 @@ class ApiCorpContactPullWorker
 			end
 
 			if contact.standing < ananke_api.whitelist_standings
-				whitelist_entity = Whitelist.where("name = ? AND share.id = ?", contact.contactName, ananke_api.share_user.share_id)[0]
+				whitelist_entity = Whitelist.where("name = ? AND share_id = ?", contact.contactName, ananke_api.share_user.share_id)[0]
 				#If this contact is already on the whitelist
 				if whitelist_entity.nil? == false
 					connection_api_ids = []
