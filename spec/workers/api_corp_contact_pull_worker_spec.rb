@@ -5,17 +5,18 @@ Sidekiq::Testing.inline!
 describe ApiCorpContactPullWorker do
 	describe "Perform > " do
 		let!(:user) {FactoryGirl.create(:user)}
-		let!(:share_user){FactoryGirl.create(:share_user, user_id: user.id)}
+		let!(:share) {FactoryGirl.create(:share)}
+		let!(:share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
 		let!(:corp_api) {
 			VCR.use_cassette('workers/api_key_info/corpAPI') do
 				FactoryGirl.create(:corp_api, share_user: share_user, whitelist_standings: 5)
 			end
 		}
-		let!(:whitelist_entity_api) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 10, name: "Alexander Fits")}
-		let!(:whitelist_entity_manual) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, source_type: 2, standing: -10, name: "Jacob Dallen")}
-		let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist_entity_api.id)}
-		let!(:whitelist_api_standings_invalid) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 5, name: "Flapjack Shortpants")}
-		let!(:whitelist_api_connection_standings_invalid) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist_api_standings_invalid.id)}
+		let!(:whitelist_entity_api) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 10, name: "Alexander Fits", share_id: share.id)}
+		let!(:whitelist_entity_manual) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, source_type: 2, standing: -10, name: "Jacob Dallen", share_id: share.id)}
+		let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist_entity_api.id, share_id: share.id)}
+		let!(:whitelist_api_standings_invalid) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 5, name: "Flapjack Shortpants", share_id: share.id)}
+		let!(:whitelist_api_connection_standings_invalid) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist_api_standings_invalid.id, share_id: share.id)}
 
 		#Second API, a whitelist entity, and two connections, one to corp_api and one to second_api
 		let!(:second_api) {
@@ -23,9 +24,9 @@ describe ApiCorpContactPullWorker do
 				FactoryGirl.create(:corp_api, share_user: share_user, whitelist_standings: 10)
 			end
 		}
-		let!(:second_whitelist_entity) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 5, name: "PlusFive")}
-		let!(:second_whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: second_api.id, whitelist_id: second_whitelist_entity.id)}
-		let!(:corp_whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: second_whitelist_entity.id)}
+		let!(:second_whitelist_entity) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 5, name: "PlusFive", share_id: share.id)}
+		let!(:second_whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: second_api.id, whitelist_id: second_whitelist_entity.id, share_id: share.id)}
+		let!(:corp_whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: second_whitelist_entity.id, share_id: share.id)}
 
 		work = ApiCorpContactPullWorker.new
 
