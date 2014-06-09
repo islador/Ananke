@@ -6,16 +6,14 @@ namespace :scheduling do
   	#Hit each API via sidekiq and validate its main character against the whitelist.
   end
 
-  desc "Validate all whitelist APIs"
+  desc "Validate all shares' whitelist APIs"
   task query_whitelist_apis: :environment do
-  	#Retrieve all APIs with active whitelist_api_connections and thus need to be queried.
-  	query_apis = Api.joins(:whitelist_api_connections).uniq
-
-  	#Queue an ApiCorpContactPullWorker job for each API that needs querying.
-  	query_apis.each do |qa|
-  		ApiCorpContactPullWorker.perform_async(qa.id)
-  	end
-
-    #In this fashion APIs that have no whitelist api connections are not queried, and thus canceling a pull requires merely deleting the connections.
+  	#Retrieve a list of all shares.
+    shares = Shares.all
+    shares.each do |share|
+      puts "Updating share #{share.name}(#{share.id})'s whitelist."
+      #WhitelistUpdateWorker retrieves each unique API used for whitelists from the WhitelistApiConnections table. Thus canceling a pull, merely requires deleting that API's WACs.
+      WhitelistUpdateWorker.perform_async(share.id)
+    end
   end
 end

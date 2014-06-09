@@ -54,12 +54,9 @@ class WhitelistUpdateWorker
 						end
 						#Remove the wac's id from the wac_ids array.
 						wac = whitelist_entity.whitelist_api_connections.where("api_id = ?", ananke_api.id)[0]
-						#This nil check should not be necessary, a type 1 whitelist_entity should always have a WAC, without one it shouldn't exist.
-						if wac.nil? == false
-							wac_ids.delete_if{|list_id| 
-								list_id == wac.id
-							}
-						end
+						wac_ids.delete_if{|list_id| 
+							list_id == wac.id
+						}
 					end
 				end
 
