@@ -1,14 +1,18 @@
 class WhitelistUpdateWorker
 	include Sidekiq::Worker
-	#Update all of the api sourced whitelist entities belonging to the specified share.
+	#WhitelistUpdateWorker updates all of the api sourced whitelist entities belonging to the specified share.
+	#It is intentionally incapable of enrolling new APIs in the whitelisting process, it merely ensures that the whitelist is
+	#up to date with the latest in game state.
+	#WhitelistUpdateWorker does NOT respect cachedUntil
 	def perform(share_id)
 		#Retrieve the IDs for each whitelist api connection
 		wac_ids = WhitelistApiConnection.where("share_id = ?", share_id).pluck("id")
 		#Retrieve all of the APIs with active pulls on this share from the database.
-		apis = Api.joins(:whitelist_api_connections).where("share_id = ?", share_id)
-		#puts apis.count
+		apis = Api.joins(:whitelist_api_connections).where("share_id = ?", share_id).uniq
+		#puts "API count: " + apis.count.to_s
 		#Iterate through each API
 		apis.each do |ananke_api|
+			#puts "API Id: " + ananke_api.id.to_s
 			raise ArgumentError, "Api must be a corporation API." if ananke_api.ananke_type != 1
 			raise ArgumentError, "Api must be active." if ananke_api.active != true
 
@@ -31,17 +35,16 @@ class WhitelistUpdateWorker
 				else
 					contact_type = 3
 				end
-				
 
 				if contact.standing >= ananke_api.whitelist_standings
-					whitelist_entity = Whitelist.where("name = ?", contact.contactName)[0]
+					whitelist_entity = Whitelist.where("name = ? AND share_id = ?", contact.contactName, share_id)[0]
 					#If this contact does not exist on the whitelist.  
 					if whitelist_entity.nil? == true
 						#Create a whitelist entity from it
-						new_entity = Whitelist.create(name: contact.contactName, entity_type: contact_type, source_type: 1, source_share_user: ananke_api.share_user.id, standing: contact.standing)
+						new_entity = Whitelist.create(name: contact.contactName, entity_type: contact_type, source_type: 1, source_share_user: ananke_api.share_user.id, standing: contact.standing, share_id: share_id)
 
 						#and create a connection between that entity and the source API
-						ananke_api.whitelist_api_connections.create(whitelist_id: new_entity.id)
+						ananke_api.whitelist_api_connections.create(whitelist_id: new_entity.id, share_id: share_id)
 						#No need to remove the new wac's id from the wac_ids array because it was never there.
 					else
 						#Check the entity's standings and see if they've changed.
@@ -51,20 +54,20 @@ class WhitelistUpdateWorker
 						end
 						#Remove the wac's id from the wac_ids array.
 						wac = whitelist_entity.whitelist_api_connections.where("api_id = ?", ananke_api.id)[0]
-						wac_ids.delete_if{|list_id| list_id == wac.id}
+						#This nil check should not be necessary, a type 1 whitelist_entity should always have a WAC, without one it shouldn't exist.
+						if wac.nil? == false
+							wac_ids.delete_if{|list_id| 
+								list_id == wac.id
+							}
+						end
 					end
 				end
 
 				if contact.standing < ananke_api.whitelist_standings
-					whitelist_entity = Whitelist.where("name = ?", contact.contactName)[0]
+					whitelist_entity = Whitelist.where("name = ? AND share_id = ?", contact.contactName, share_id)[0]
 					#If this contact is already on the whitelist
 					if whitelist_entity.nil? == false
 						connection_api_ids = whitelist_entity.apis.pluck("api_id")
-
-						#connection_api_ids = []
-						#whitelist_entity.apis.each do |api|
-						#	connection_api_ids.push(api.id)
-						#end
 
 						#If this contact does not have a connection with this api
 						if connection_api_ids.include?(ananke_api.id) == true
@@ -78,7 +81,7 @@ class WhitelistUpdateWorker
 				end
 			end
 
-			WhitelistLog.create(entity_name: ananke_api.main_entity_name, source_share_user: ananke_api.share_user.id, source_type: 2, addition: true, entity_type: 5, date: Date.today, time: Time.now)
+			WhitelistLog.create(entity_name: ananke_api.main_entity_name, source_share_user: ananke_api.share_user.id, source_type: 2, addition: true, entity_type: 5, date: Date.today, time: Time.now, share_id: share_id)
 			#Generate a whitelist_log entry for this pull
 		end
 		#Delete any whitelist api connections (wacs) that remain.

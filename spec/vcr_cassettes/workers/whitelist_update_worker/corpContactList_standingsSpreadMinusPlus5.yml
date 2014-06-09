@@ -1,0 +1,61 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.eveonline.com/corp/Contactlist.xml.aspx
+    body:
+      encoding: US-ASCII
+      string: Submodules&KeyId=3229801&VCode=UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1&Includes=corporation
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/xml; charset=utf-8
+      Vary:
+      - Accept-Encoding
+      Date:
+      - Fri, 18 Apr 2014 01:52:03 GMT
+    body:
+      encoding: UTF-8
+      string: "<?xml version='1.0' encoding='UTF-8'?>\r\n<eveapi version=\"2\">\r\n
+        \ <currentTime>2014-04-18 01:52:03</currentTime>\r\n  <result>\r\n    <rowset
+        name=\"corporateContactList\" key=\"contactID\" columns=\"contactID,contactName,standing,contactTypeID\">\r\n
+        \      <row contactID=\"90268350\" contactName=\"NegTen\" standing=\"-10\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268351\" contactName=\"NegNine\" standing=\"-9\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268352\" contactName=\"NegEight\" standing=\"-8\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268353\" contactName=\"NegSeven\" standing=\"-7\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268354\" contactName=\"NegSix\" standing=\"-6\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268355\" contactName=\"NegFive\" standing=\"-5\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268356\" contactName=\"NegFour\" standing=\"-4\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268357\" contactName=\"NegThree\" standing=\"-3\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268358\" contactName=\"NegTwo\" standing=\"-2\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268359\" contactName=\"NegOne\" standing=\"-1\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268360\" contactName=\"Zero\" standing=\"0\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268361\" contactName=\"PlusOne\" standing=\"1\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268362\" contactName=\"PlusTwo\" standing=\"2\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268363\" contactName=\"PlusThree\" standing=\"3\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268364\" contactName=\"PlusFour\" standing=\"4\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268366\" contactName=\"PlusSix\" standing=\"6\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268367\" contactName=\"PlusSeven\" standing=\"7\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268368\" contactName=\"PlusEight\" standing=\"8\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268369\" contactName=\"PlusNine\" standing=\"9\"
+        contactTypeID=\"1385\" />\r\n      <row contactID=\"90268370\" contactName=\"PlusTen\" standing=\"10\"
+        contactTypeID=\"1385\" />\r\n    </rowset>\r\n
+        \   <rowset name=\"allianceContactList\" key=\"contactID\" columns=\"contactID,contactName,standing,contactTypeID\"
+        />\r\n  </result>\r\n  <cachedUntil>2014-04-18 02:07:03</cachedUntil>\r\n</eveapi>"
+    http_version: 
+  recorded_at: Fri, 18 Apr 2014 01:52:03 GMT
+recorded_with: VCR 2.9.0
