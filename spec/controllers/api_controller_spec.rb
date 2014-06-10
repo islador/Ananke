@@ -112,6 +112,11 @@ describe ApiController do
   end
 
   describe "GET 'character_list'" do
+    let!(:corp_api) {
+      VCR.use_cassette('workers/api_key_info/corpAPI') do
+        FactoryGirl.create(:corp_api, share_user: share_user)
+      end
+    }
     let!(:api1) {
       VCR.use_cassette('workers/api_key_info/characterAPI') do
         FactoryGirl.create(:api, share_user: share_user)
@@ -119,7 +124,7 @@ describe ApiController do
     }
     let!(:character1){FactoryGirl.create(:character, api: api1)}
     let!(:character2){FactoryGirl.create(:character, api: api1)}
-    #The current API used in the factory is returning a single character. Thus to get the three max characters we need only build one.
+    #The current API used in the factory is returning a single character. Thus to get the three max characters we need only build two.
     #let!(:character3){FactoryGirl.create(:character, api: api1)}
 
     it "should return http success" do
@@ -133,6 +138,12 @@ describe ApiController do
       xhr :get, :character_list, share_user_id: share_user.id, api_id: api1.id
       
       expect(assigns(:cl).count).to be 3
+    end
+
+    it "should return 'false' when called on a corp api" do
+      sign_in user
+      xhr :get, :character_list, share_user_id: share_user.id, api_id: corp_api.id
+      response.body.should match "false"
     end
   end
 

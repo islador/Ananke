@@ -34,8 +34,12 @@ class ApiController < ApplicationController
     @api = Api.where("id = ?", params[:api_id])[0]
     @cl = @api.characters
 
-    respond_to do |format|
-      format.js
+    if @api.ananke_type == 1
+      render :json => false
+    else
+      respond_to do |format|
+        format.js
+      end
     end
   end
 
