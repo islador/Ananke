@@ -136,13 +136,6 @@ describe Api do
 		}
 		let!(:general_character) {FactoryGirl.create(:character, api: api)}
 
-		it "should add the main character's name to a corporation API's main_entity_name" do
-			corporation_api.set_main_entity_name()
-
-			apiDB = Api.where("id = ?", corporation_api.id)[0]
-			apiDB.main_entity_name.should match "#{corp_character.name} - Alaskan Fish"
-		end
-
 		it "should set the main character's name as the api's main entity name" do
 			api.set_main_entity_name()
 
@@ -152,7 +145,14 @@ describe Api do
 
 		it "should not work on a non-main API" do
 			expect{
-				general_api.set_main_entity_name()}.to raise_error ArgumentError
+				general_api.set_main_entity_name()
+				}.to raise_error ArgumentError
+		end
+
+		it "should not work with a corp API" do
+			expect{
+				corporation_api.set_main_entity_name()
+				}.to raise_error ArgumentError
 		end
 	end
 end
