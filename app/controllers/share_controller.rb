@@ -27,7 +27,8 @@ class ShareController < ApplicationController
     end
 
     def index
-        @user_shares = current_user.shares
+        #Retrieves the current user's shares from the database, then sorts them alphabetically to ensure the names don't move around unexpectedly.
+        @user_shares = current_user.shares.sort_by!{|a| a.name.downcase}
     end
 
     def show
