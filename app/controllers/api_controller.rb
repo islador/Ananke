@@ -44,41 +44,47 @@ class ApiController < ApplicationController
   end
 
   def set_main
-    #Point of possible optimization
-    #Retrieve the old API and set it's main to false
-    old_api = current_share_user.apis.where("main = true")[0]
-    #Nil check first to avoid empty on nil error
-    if old_api.nil? == false
-      old_character = old_api.characters.where("main = true")[0]
-      if old_character.nil? == false
-        old_character.main = false
-        old_character.save!
+    #Retrieve the new API
+    @api = Api.where("id = ?", params[:api_id])[0]
+    if @api.ananke_type !=1
+      #Point of possible optimization
+      #Retrieve the old API and set it's main to false
+      old_api = current_share_user.apis.where("main = true")[0]
+      #Nil check first to avoid empty on nil error
+      if old_api.nil? == false
+        old_character = old_api.characters.where("main = true")[0]
+        if old_character.nil? == false
+          old_character.main = false
+          old_character.save!
+        end
+        old_api.main = false
+        old_api.save!
       end
-      old_api.main = false
-      old_api.save!
+      
+
+      #Set it's main to true
+      #@api = Api.where("id = ?", params[:api_id])[0]
+      @character = Character.where("id = ?", params[:character_id])[0]
+
+      @character.main = true
+      if @character.valid? == true
+        @character.save!
+      end
+
+      @api.main = true
+      if @api.valid? == true
+        @api.save!
+      end
+
+      #Point of optimization. This method could take the Api model already had, do its thing, then save it. Thus avoiding a DB access.
+      @api.set_main_entity_name
+
+      current_share_user.set_main_char_name(@character)
+      render nothing: true
+    else
+      render json: false
     end
     
-
-    #Retrieve the new API and set it's main to true
-
-    @api = Api.where("id = ?", params[:api_id])[0]
-    @character = Character.where("id = ?", params[:character_id])[0]
-
-    @character.main = true
-    if @character.valid? == true
-      @character.save!
-    end
-
-    @api.main = true
-    if @api.valid? == true
-      @api.save!
-    end
-
-    #Point of optimization. This method could take the Api model already had, do its thing, then save it. Thus avoiding a DB access.
-    @api.set_main_entity_name
-
-    current_share_user.set_main_char_name(@character)
-    render nothing: true
   end
 
   def begin_whitelist_api_pull

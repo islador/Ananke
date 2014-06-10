@@ -217,25 +217,20 @@ describe ApiController do
       expect(Api.where("id = ?", api2.id)[0].main_entity_name).to match character1.name
     end
 
-    let!(:corporation_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user)
+    describe "with Corp APIs > " do
+      #Corporation APIs may not be used to set mains. This helps avoid character name collisions.
+      let!(:corporation_api) {
+        VCR.use_cassette('workers/api_key_info/corpAPI') do
+          FactoryGirl.create(:corp_api, share_user: share_user)
+        end
+      }
+      let!(:corporation_character) {FactoryGirl.create(:character, api: corporation_api)}
+
+      it "should return false if a corporation API is used" do
+        sign_in user
+        xhr :put, :set_main, :share_user_id => share_user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
+        response.body.should match "false"
       end
-    }
-    let!(:corporation_character) {FactoryGirl.create(:character, api: corporation_api)}
-    it "should set the main_entity_name of a corporation API to the main character's name + the corporation's name" do
-      sign_in user
-      xhr :put, :set_main, :share_user_id => share_user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
-
-      expect(Api.where("id = ?", corporation_api.id)[0].main_entity_name).to match "#{corporation_character.name} - Alaskan Fish"
-    end
-
-    it "should set the user's main_char_name to the new main character's name" do
-      sign_in user
-      xhr :put, :set_main, :share_user_id => share_user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
-
-      shareUserDB = ShareUser.where("id = ?", share_user.id)[0]
-      shareUserDB.main_char_name.should match "#{corporation_character.name}"
     end
   end
 
