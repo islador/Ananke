@@ -7,7 +7,7 @@ describe "whitelist/white_list.haml > " do
 	let!(:user) {FactoryGirl.create(:user)}
 	let!(:share) {FactoryGirl.create(:share)}
 	let!(:share_user) {FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
-	let!(:whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id)}
+	let!(:whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, share_id: share.id)}
 
 	before(:each) do
 		visit share_user_whitelist_white_list_path(share_user)
@@ -39,8 +39,8 @@ describe "whitelist/white_list.haml > " do
 					FactoryGirl.create(:corp_api, share_user: share_user, active: true)
 				end
 			}
-			let!(:whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, source_type: 1)}
-			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_api.id, whitelist_id: whitelist.id)}
+			let!(:whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, source_type: 1, share_id: share.id)}
+			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_api.id, whitelist_id: whitelist.id, share_id: share.id)}
 
 			it "should contain a button 'Begin New API Pull'", js: true do
 				should have_selector('button#begin_new_api_pull', text: "Begin New API Pull")
@@ -109,7 +109,7 @@ describe "whitelist/white_list.haml > " do
 					FactoryGirl.create(:corp_api, share_user: share_user)
 				end
 			}
-			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: api1.id, whitelist_id: whitelist.id)}
+			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: api1.id, whitelist_id: whitelist.id, share_id: share.id)}
 			let!(:api2) {
 				VCR.use_cassette('workers/api_key_info/characterAPI') do
 					FactoryGirl.create(:api, share_user: share_user)
@@ -179,7 +179,7 @@ describe "whitelist/white_list.haml > " do
 			should have_selector('#whitelist_table_wrapper')
 		end
 
-		let!(:whitelist1) {FactoryGirl.create(:whitelist, name: "Jeff")}
+		let!(:whitelist1) {FactoryGirl.create(:whitelist, name: "Jeff", share_id: share.id)}
 		it "should contain items from the database", js: true do
 			visit share_user_whitelist_white_list_path(share_user)
 			within '#whitelist_table' do
@@ -187,7 +187,7 @@ describe "whitelist/white_list.haml > " do
 			end
 		end
 
-		let!(:whitelist2) {FactoryGirl.create(:whitelist)}
+		let!(:whitelist2) {FactoryGirl.create(:whitelist, share_id: share.id)}
 		it "should contain a delete button for each entity", js: true do
 			visit share_user_whitelist_white_list_path(share_user)
 			should have_selector("button#destroy_entity_#{whitelist2.id}", text: "Delete")

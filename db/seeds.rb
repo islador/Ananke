@@ -16,4 +16,4 @@ Share.create(name: "Sadistica Alliance", owner_id: User.first.id, active: true, 
 ShareUser.create(share_id: Share.first.id, user_id: User.first.id, user_role: 0)
 
 #Create a few whitelists
-200.times{Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_user: 2)}
+200.times{Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_share_user: User.first.id, share_id: Share.first.id)}
