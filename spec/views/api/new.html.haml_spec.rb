@@ -82,6 +82,56 @@ describe "api/new.html.haml > " do
 				should have_selector('table#character_list_table')
 			end
 		end
+
+		it "after a main API is submitted, it should load in the character list partial and allow users to immediately set a main character.", js: true do
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				fill_in('key_id', :with => "3255235")
+				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
+				find(:css, "#main_api").set(true)
+			
+				click_button 'Enroll Key'
+
+				should have_selector('div#character_list')
+				should have_selector('div.explanation')
+				should have_selector('table#character_list_table')
+
+				should have_content('button', :text => "Set as Main")
+			end
+		end
+
+		it "after a main API's main character is selected, it should redirect to the share user's api index", js: true do
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				fill_in('key_id', :with => "3255235")
+				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
+				find(:css, "#main_api").set(true)
+			
+				click_button 'Enroll Key'
+
+				should have_selector('div#character_list')
+				should have_selector('div.explanation')
+				should have_selector('table#character_list_table')
+
+				#http://stackoverflow.com/a/2609244
+				page.evaluate_script('window.confirm = function() { return true; }')
+				click_button 'Set as Main'
+				should have_selector('h3', text: "Your APIs")
+			end
+		end
+
+		it "Clicking 'Set as Main' should set that character as the main character", js: true do
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				fill_in('key_id', :with => "3255235")
+				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
+				find(:css, "#main_api").set(true)
+			
+				click_button 'Enroll Key'
+
+				#http://stackoverflow.com/a/2609244
+				page.evaluate_script('window.confirm = function() { return true; }')
+				click_button 'Set as Main'
+				Character.last.main.should be true
+			end
+		end
 	end
 
 	describe "Create > " do

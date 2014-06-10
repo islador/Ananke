@@ -57,13 +57,23 @@ describe "api/show.html.haml" do
 			should have_selector("tr#character_id_#{main_character.id}", text: "Main Character")
 		end
 
+		it "clicking the main character button should redirect to the share user's api index", js: true do
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				visit share_user_api_path(user, api)
+				#http://stackoverflow.com/a/2609244
+				page.evaluate_script('window.confirm = function() { return true; }')
+				find("#set_main_#{character1.id}").click
+				should have_selector('h3', text: "Your APIs")
+			end
+		end
+
 		it "clicking the main character button should set that character as main", js: true do
 			visit share_user_api_path(user, api)
 			#http://stackoverflow.com/a/2609244
 			page.evaluate_script('window.confirm = function() { return true; }')
 
 			find("#set_main_#{character1.id}").click
-			should have_selector("tr#character_id_#{character1.id}", text: "Main Character")
+			Character.find(character1.id).main.should be true
 		end
 	end
 
