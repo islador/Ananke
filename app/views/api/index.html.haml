@@ -30,6 +30,8 @@
 
 				-if api.main == true
 					%td Main API
+				-elsif api.ananke_type == 1
+					%td N/A
 				-else
 					%td
 						%a{:href => "/share_users/#{current_share_user.id}/api/#{api.id}", :id => "link_set_main_api_#{api.id}", :class => "btn btn-xs btn-warning"} Set as Main API

@@ -21,6 +21,8 @@ class Character < ActiveRecord::Base
 	belongs_to :api
 	#The main bool is intended to be used to identify the main character of an account's main API. There doesn't seem to be a way to enforce it being false in other situations inherent in rails.
 
+	#Characters must be unique on a given share. This requires a custom validater to determine that.
+	#Characters on corp APIs create potential conflicts.
 	validates :name, presence: true
 	validates :characterID, presence: true
 	validates :corporationName, presence: true

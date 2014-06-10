@@ -2,7 +2,8 @@
 %p Find me in app/views/api/show.html.haml
 
 %h1=@api.name
-= render :partial => 'shared/character_list', :locals => { :api => @api, :cl => @cl}
+-if @api.ananke_type != 1
+	= render :partial => 'shared/character_list', :locals => { :api => @api, :cl => @cl}
 
 %div{:class => "btn-group"}
 	-if @api.main != true
