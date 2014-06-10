@@ -17,7 +17,7 @@ describe "whitelist/white_list_log.haml >" do
 	end
 
 	describe " Table > " do
-		let!(:whitelistlog) {FactoryGirl.create(:whitelist_log, entity_name: "Jeff")}
+		let!(:whitelistlog) {FactoryGirl.create(:whitelist_log, entity_name: "Jeff", share_id: share.id)}
 
 		it "should render the white_list table", js: true do
 			should have_selector('#whitelist_log_table')
