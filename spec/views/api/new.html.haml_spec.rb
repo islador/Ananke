@@ -134,6 +134,20 @@ describe "api/new.html.haml > " do
 		end
 	end
 
+	describe "Non Main API > " do
+		it "after non-main api is enrolled, it should redirect to the share user's api index", js: true do
+			VCR.use_cassette('workers/api_key_info/characterAPI') do
+				fill_in('key_id', :with => "3255235")
+				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
+				find(:css, "#main_api").set(false)
+			
+				click_button 'Enroll Key'
+
+				should have_selector('h3', text: "Your APIs")
+			end
+		end
+	end
+
 	describe "Create > " do
 		it "should add the API to the database", js: true do
 			VCR.use_cassette('workers/api_key_info/characterAPI') do

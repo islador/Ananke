@@ -77,6 +77,7 @@ jQuery ->
 	$("#enroll_new_api").click ->
 		#Extract necessary data for AJAX from the page.
 		target = $("#" + this.id).attr("data-target-path")
+		share_user_id = $("#" + this.id).attr("data-share-user-id")
 		keyID = $("#key_id").val()
 		vCode = $("#v_code").val()
 		main_checked = $("#main_api").prop('checked')
@@ -99,6 +100,8 @@ jQuery ->
 					setTimeout () ->
 					    retrieve_characters(data)
 					, 6000
+				else
+					window.location.href = "/share_users/" + share_user_id + "/api"
 		})
 
 
