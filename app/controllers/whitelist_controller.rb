@@ -15,8 +15,8 @@ class WhitelistController < ApplicationController
 
 	#Display methods
 	def white_list
-		@wl = Whitelist.all
-		@active_pull_apis = Api.joins(:whitelist_api_connections).uniq
+		@wl = Whitelist.where("share_id = ?", current_share_user.share_id)
+		@active_pull_apis = Api.joins(:whitelist_api_connections).where("share_id = ?", current_share_user.share_id).uniq
 		@user_char_names = []
 		@active_pull_apis.each do |api|
 			@user_char_names.push(api.share_user.main_char_name)
@@ -24,7 +24,7 @@ class WhitelistController < ApplicationController
 	end
 
 	def retrieve_pullable_apis
-		invalid_ids = Api.joins(:whitelist_api_connections).uniq
+		invalid_ids = Api.joins(:whitelist_api_connections).where("share_id = ?", current_share_user.share_id).uniq
 		#http://stackoverflow.com/a/19984066
 		@valid_corp_apis = current_share_user.apis.where.not(id: invalid_ids).where("ananke_type = 1 AND active = true")
 		
@@ -34,6 +34,6 @@ class WhitelistController < ApplicationController
 	end
 
 	def white_list_log
-		@wll = WhitelistLog.all
+		@wll = WhitelistLog.where("share_id = ?", current_share_user.share_id)
 	end
 end
