@@ -56,6 +56,16 @@ describe "api/new.html.haml > " do
 			visit new_share_user_api_path(share_user)
 			find('input#main_api').should_not be_checked
 		end
+
+		it "should redirect to the share user's api index if a corp api is enrolled", js: true do
+			VCR.use_cassette('workers/api_key_info/corpAPI') do
+				fill_in('key_id', :with => "3229801")
+				fill_in('v_code', :with => "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1")
+			
+				click_button 'Enroll Key'
+				should have_selector("h3", text: 'Your APIs')
+			end
+		end
 	end
 
 	describe "Main API > " do

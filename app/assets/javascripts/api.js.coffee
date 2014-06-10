@@ -98,7 +98,7 @@ jQuery ->
 					    unlock_screen()
 					, 5000
 					setTimeout () ->
-					    retrieve_characters(data)
+					    retrieve_characters(data, share_user_id)
 					, 6000
 				else
 					window.location.href = "/share_users/" + share_user_id + "/api"
@@ -126,7 +126,7 @@ jQuery ->
 		#console.log new Date()
 		
 
-	retrieve_characters =(data) ->
+	retrieve_characters =(data, share_user_id) ->
 		api_id = data
 		#Extract necessary data for AJAX from the page.
 		target = $("#enroll_new_api").attr("data-target-path") + "/" + api_id + "/character_list"
@@ -137,4 +137,8 @@ jQuery ->
 			url: target, type: "GET",
 			data: {authenticity_token: authenticity_token},
 			#On success, return code 200, trigger the entity_name field
+			success: (response) ->
+				if response == false
+					#console.log(response)
+					window.location.href = "/share_users/" + share_user_id + "/api"
 		})
