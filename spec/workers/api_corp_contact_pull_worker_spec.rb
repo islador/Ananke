@@ -45,7 +45,7 @@ describe ApiCorpContactPullWorker do
 
 			it "should throw an argument error if the API is not active." do
 				expect{
-					VCR.use_cassette('workers/corpContactList_standingsSpread') do
+					VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
 						work.perform(inactive_api.id)
 					end
 				}.to raise_error ArgumentError
@@ -53,7 +53,7 @@ describe ApiCorpContactPullWorker do
 
 			it "should throw an argument error if the API is not a corp API" do
 				expect{
-					VCR.use_cassette('workers/corpContactList_standingsSpread') do
+					VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
 						work.perform(general_api.id)
 					end
 				}.to raise_error ArgumentError
@@ -61,7 +61,7 @@ describe ApiCorpContactPullWorker do
 		end
 
 		it "Should remove the triggering API's whitelist_api_connection from an entity that is no longer backed by this API but is still backed by another" do
-			VCR.use_cassette('workers/corpContactList_standingsSpread') do
+			VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
 				work.perform(second_api.id)
 			end
 			whitelistConnectionDB = WhitelistApiConnection.where("id = ?", second_whitelist_api_connection.id)[0]
@@ -69,7 +69,7 @@ describe ApiCorpContactPullWorker do
 		end
 
 		it "Should remove existing entities that no longer match standings requirements." do
-			VCR.use_cassette('workers/corpContactList_lowStandings') do
+			VCR.use_cassette('workers/api_corp_contact/alliance_lowStandings') do
 			#This spec tests for situations where the standings requirement has changed or the IG standing of the entity has changed
 				work.perform(corp_api.id)
 			end
@@ -78,17 +78,26 @@ describe ApiCorpContactPullWorker do
 		end
 
 		it "should add new entities to the whitelist that match standings requirements" do
-			count = Whitelist.where("source_type = 1").count
+			Whitelist.where("name = 'PlusSix' AND share_id = ?", share.id)[0].should be_nil
+			Whitelist.where("name = 'PlusSeven' AND share_id = ?", share.id)[0].should be_nil
+			Whitelist.where("name = 'PlusEight' AND share_id = ?", share.id)[0].should be_nil
+			Whitelist.where("name = 'PlusNine' AND share_id = ?", share.id)[0].should be_nil
+			Whitelist.where("name = 'PlusTen' AND share_id = ?", share.id)[0].should be_nil
+
 			#Cassette requires one character of each standing, -10 through +10
-			VCR.use_cassette('workers/corpContactList_standingsSpread') do
+			VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
 				work.perform(corp_api.id)
 			end
-			whitelistDB = Whitelist.where("source_type = 1")
-			(whitelistDB.count - count).should be 5
+			
+			Whitelist.where("name = 'PlusSix' AND share_id = ?", share.id)[0].should_not be_nil
+			Whitelist.where("name = 'PlusSeven' AND share_id = ?", share.id)[0].should_not be_nil
+			Whitelist.where("name = 'PlusEight' AND share_id = ?", share.id)[0].should_not be_nil
+			Whitelist.where("name = 'PlusNine' AND share_id = ?", share.id)[0].should_not be_nil
+			Whitelist.where("name = 'PlusTen' AND share_id = ?", share.id)[0].should_not be_nil
 		end
 
-		it "should correctly apply contact type IDs to whtielist entities" do
-			VCR.use_cassette('workers/corpContactList_contactTypeSpread') do
+		it "should correctly apply contact type IDs to whtitelist entities" do
+			VCR.use_cassette('workers/api_corp_contact/alliance_contactTypeSpread') do
 				work.perform(corp_api.id)
 			end
 			characterType = Whitelist.where("name = ?", "CharacterType")[0].entity_type
@@ -103,31 +112,58 @@ describe ApiCorpContactPullWorker do
 			allianceType = Whitelist.where("name = ?", "AllianceType")[0].entity_type
 			allianceType.should be 1
 		end
-		
-		it "should not add new entities to the whitelist that do not meet or exceed standings requirements" do
-			VCR.use_cassette('workers/corpContactList_standingsSpread') do
+
+		it "should add the input API's alliance to the whitelist, but not its corporation" do
+			Whitelist.where("name = 'Alliance' AND share_id = ?", share.id)[0].should be_nil
+			Whitelist.where("name = 'Corporation' AND share_id = ?", share.id)[0].should be_nil
+			VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
 				work.perform(corp_api.id)
 			end
-			Whitelist.where("name = ?", "NegTen")[0].should be_nil
-			Whitelist.where("name = ?", "NegNine")[0].should be_nil
-			Whitelist.where("name = ?", "NegEight")[0].should be_nil
-			Whitelist.where("name = ?", "NegSeven")[0].should be_nil
-			Whitelist.where("name = ?", "NegSix")[0].should be_nil
-			Whitelist.where("name = ?", "NegFive")[0].should be_nil
-			Whitelist.where("name = ?", "NegFour")[0].should be_nil
-			Whitelist.where("name = ?", "NegThree")[0].should be_nil
-			Whitelist.where("name = ?", "NegTwo")[0].should be_nil
-			Whitelist.where("name = ?", "NegOne")[0].should be_nil
-			Whitelist.where("name = ?", "Zero")[0].should be_nil
-			Whitelist.where("name = ?", "PlusOne")[0].should be_nil
-			Whitelist.where("name = ?", "PlusTwo")[0].should be_nil
-			Whitelist.where("name = ?", "PlusThree")[0].should be_nil
-			Whitelist.where("name = ?", "PlusFour")[0].should be_nil
+			Whitelist.where("name = 'Alliance' AND share_id = ?", share.id)[0].should_not be_nil
+			Whitelist.where("name = 'Alaskan Fish' AND share_id = ?", share.id)[0].should be_nil
+		end
+
+		it "should add the input API's corp to the whitelist if there is no alliance" do
+			Whitelist.where("name = ? AND share_id = ?", corp_api.main_entity_name, share.id)[0].should be_nil
+			Whitelist.where("name = 'Alliance' AND share_id = ?", share.id)[0].should be_nil
+			VCR.use_cassette('workers/api_corp_contact/corporation_standingsSpread') do
+				work.perform(corp_api.id)
+			end
+			Whitelist.where("name = ? AND share_id = ?", corp_api.main_entity_name, share.id)[0].should_not be_nil
+			Whitelist.where("name = 'Alliance' AND share_id = ?", share.id)[0].should be_nil
+		end
+
+		it "should not add new entities to the whitelist that do not meet or exceed standings requirements" do
+			VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
+				work.perform(corp_api.id)
+			end
+			Whitelist.where("name = ? AND share_id = ?", "NegTen", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegNine", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegEight", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegSeven", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegSix", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegFive", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegFour", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegThree", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegTwo", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "NegOne", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "Zero", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusOne", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusTwo", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusThree", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusFour", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusFour", share.id)[0].should be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusFive", share.id)[0].should_not be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusSix", share.id)[0].should_not be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusSeven", share.id)[0].should_not be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusEight", share.id)[0].should_not be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusNine", share.id)[0].should_not be_nil
+			Whitelist.where("name = ? AND share_id = ?", "PlusTen", share.id)[0].should_not be_nil
 		end
 
 		it "should not remove manually added entities" do
 			#Cassette contains a -10 standing 'Jacob Dallen'
-			VCR.use_cassette('workers/corpContactList_manualWhitelist') do
+			VCR.use_cassette('workers/api_corp_contact/alliance_manualWhitelist') do
 				work.perform(corp_api.id)
 			end
 			whitelistDB = Whitelist.where("source_type = 2")
@@ -136,7 +172,7 @@ describe ApiCorpContactPullWorker do
 
 		it "should not remove entities that match or exceed standings requirements." do
 			#Cassette contains a +10 standing 'Alexander Fits'
-			VCR.use_cassette('workers/corpContactList_exceedStandings') do
+			VCR.use_cassette('workers/api_corp_contact/alliance_exceedStandings') do
 				work.perform(corp_api.id)
 			end
 			whitelistDB = Whitelist.where("standing = ?", whitelist_entity_api.standing)
@@ -145,7 +181,7 @@ describe ApiCorpContactPullWorker do
 
 		it "should generate a whitelist_log entry for itself" do
 			#Can use any cassette since this test isn't dependant on the input.
-			VCR.use_cassette('workers/corpContactList_exceedStandings') do
+			VCR.use_cassette('workers/api_corp_contact/alliance_exceedStandings') do
 				work.perform(corp_api.id)
 			end
 			WhitelistLog.where('entity_name = ?', corp_api.main_entity_name).count.should be 1

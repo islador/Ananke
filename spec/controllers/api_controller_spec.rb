@@ -242,21 +242,21 @@ describe ApiController do
     }
 
     it "should return http success" do
-      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+      VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
         xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
       end
       response.should be_success
     end
 
     it "should call ApiCorpContactPullWorker with corp_api.id" do
-      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+      VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
         xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
       end
       response.body.should match "API queued for contact processing"
     end
 
     it "should create a whitelist log indicating a new API Pull has been started" do
-      VCR.use_cassette('workers/corpContactList_standingsSpread') do
+      VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
         xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
       end
       WhitelistLog.where("entity_type = 5 AND addition = true")[0].should_not be_nil

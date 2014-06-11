@@ -82,7 +82,7 @@ describe "whitelist/white_list.haml > " do
 			end
 
 			it "when 'Query API' is clicked it should remove the api from the table", js: true do
-				VCR.use_cassette('workers/corpContactList_standingsSpread') do
+				VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
 					click_button 'Begin New API Pull'
 			        click_button 'Query API'
 			        should_not have_selector("tr#add_api_#{valid_api.id}")
@@ -90,7 +90,7 @@ describe "whitelist/white_list.haml > " do
 			end
 
 			it "When 'Query API' is clicked, it should add the api to the api_pulls_table", js: true do
-				VCR.use_cassette('workers/corpContactList_standingsSpread') do
+				VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
 					click_button 'Begin New API Pull'
 			        click_button 'Query API'
 			        within '#api_pulls_table' do
