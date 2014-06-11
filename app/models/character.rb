@@ -15,6 +15,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  main            :boolean
+#  share_id        :integer
 #
 
 class Character < ActiveRecord::Base
@@ -24,9 +25,10 @@ class Character < ActiveRecord::Base
 	#Characters must be unique on a given share. This requires a custom validater to determine that.
 	#Characters on corp APIs create potential conflicts.
 	validates :name, presence: true
-	validates :characterID, presence: true
+	validates :characterID, presence: true, uniqueness: {scope: :share_id, message: "This character has already been registered"}
 	validates :corporationName, presence: true
 	validates :corporationID, presence: true
+	validates :share_id, presence: true
 
 	#The API can return null values, so validating these presences seems a bit off.
 	#validates :allianceName, presence: true

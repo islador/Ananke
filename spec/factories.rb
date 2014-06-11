@@ -84,9 +84,29 @@ FactoryGirl.define do
 			main_entity_name "Alaskan Fish"
 			whitelist_standings 0
 		end
+
+		factory :corp_api_skip_determine_type do
+			#Islador's corp API
+			key_id "3229801"
+			v_code "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1"
+			#accessmask represents all options ticked
+			accessmask 67108863
+			ccp_type 1
+			ananke_type 1
+			main_entity_name "Alaskan Fish"
+			whitelist_standings 0
+			after(:build) { |api| api.class.skip_callback(:create, :after, :determine_type) }
+		end
+
+		factory :character_api_skip_determine_type do
+			after(:build) { |api| api.class.skip_callback(:create, :after, :determine_type) }
+		end
 	end
 
 	factory :character do
+		ignore do
+			set_share_id {FactoryGirl.create(:basic_share).id}
+		end
 		sequence(:name) {|n| "Character#{n}"}
 		sequence(:characterID) {|n| n}
 		sequence(:corporationName) {|n| "Corporation#{n}"}
@@ -97,6 +117,7 @@ FactoryGirl.define do
 		sequence(:factionID) {|n| n}
 		main false
 		api
+		share_id {set_share_id} #this is poorly stubbed as a share_id value should be inhereted from the API on creation.
 	end
 
 	factory :whitelist do
