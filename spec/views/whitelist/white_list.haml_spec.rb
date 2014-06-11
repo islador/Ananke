@@ -111,7 +111,7 @@ describe "whitelist/white_list.haml > " do
 			}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: api1.id, whitelist_id: whitelist.id, share_id: share.id)}
 			let!(:api2) {
-				VCR.use_cassette('workers/api_key_info/characterAPI') do
+				VCR.use_cassette('workers/api_key_info/0characterAPI') do
 					FactoryGirl.create(:api, share_user: share_user)
 				end
 			}
@@ -138,7 +138,7 @@ describe "whitelist/white_list.haml > " do
 
 			describe "Cancel > " do
 				let!(:api3) {
-					VCR.use_cassette('workers/api_key_info/characterAPI') do
+					VCR.use_cassette('workers/api_key_info/0characterAPI') do
 						FactoryGirl.create(:api, main_entity_name: "Avah", ananke_type: 1)
 					end
 				}

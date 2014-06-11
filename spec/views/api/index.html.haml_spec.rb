@@ -48,11 +48,11 @@ describe "api/index.html.haml > " do
 
 	describe "Api List Table > " do
 		let!(:main) {
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
+			VCR.use_cassette('workers/api_key_info/0characterAPI') do
 				FactoryGirl.create(:api, share_user: share_user, main_entity_name: "Jeff", main: true)
 			end
 		}
-		let!(:character) {FactoryGirl.create(:character, api: main, main: true)}
+		let!(:character) {FactoryGirl.create(:character, api: main, main: true, share_id: share.id)}
 		let!(:general) {
 			VCR.use_cassette('workers/api_key_info/characterAPI') do
 				FactoryGirl.create(:api, share_user: share_user)

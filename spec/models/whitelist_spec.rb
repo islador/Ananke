@@ -32,16 +32,16 @@ describe Whitelist do
 	it {should be_valid}
 
 	describe "Associations > " do
-		let!(:user) {FactoryGirl.create(:user)}
-		let!(:share) {FactoryGirl.create(:share)}
+		let(:user) {FactoryGirl.create(:user)}
+		let(:share) {FactoryGirl.create(:share)}
 		let!(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
 		let!(:api_whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, source_type: 1, share_id: share.id)}
 		let!(:whitelist_api) {
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
+			VCR.use_cassette('workers/api_key_info/0characterAPI') do
 				FactoryGirl.create(:api, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user)
 			end
 		}
-		let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: whitelist_api.id, whitelist_id: api_whitelist.id)}
+		let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: whitelist_api.id, whitelist_id: api_whitelist.id, share_id: share.id)}
 		subject{api_whitelist}
 
 		it {should respond_to(:apis)}

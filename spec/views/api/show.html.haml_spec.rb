@@ -11,12 +11,12 @@ describe "api/show.html.haml" do
 	subject {page}
 
 	let!(:api) {
-		VCR.use_cassette('workers/api_key_info/characterAPI') do
+		VCR.use_cassette('workers/api_key_info/0characterAPI') do
 			FactoryGirl.create(:api, share_user: share_user)
 		end
 	}
 	let!(:main_api) {
-		VCR.use_cassette('workers/api_key_info/characterAPI') do
+		VCR.use_cassette('workers/api_key_info/0characterAPI') do
 			FactoryGirl.create(:api, share_user: share_user, main: true)
 		end
 	}
@@ -36,8 +36,8 @@ describe "api/show.html.haml" do
 	end
 
 	describe " Set as Main > " do
-		let!(:character1) {FactoryGirl.create(:character, api: api)}
-		let!(:main_character) {FactoryGirl.create(:character, api: main_api, main: true)}
+		let!(:character1) {FactoryGirl.create(:character, api: api, share_id: share.id)}
+		let!(:main_character) {FactoryGirl.create(:character, api: main_api, main: true, share_id: share.id)}
 		it "each character should have a button to set that character as the main character", js: true do
 			visit share_user_api_path(user, api)
 			within "tr#character_id_#{character1.id}" do

@@ -8,8 +8,9 @@ describe ApiController do
     controller.stub(:authenticate_user!).and_return true
     controller.stub(:require_share_user).and_return true
   }
-  let!(:user) {FactoryGirl.create(:user)}
-  let!(:share_user) {FactoryGirl.create(:share_user, user_id: user.id)}
+  let(:user) {FactoryGirl.create(:user)}
+  let(:share) {FactoryGirl.create(:share)}
+  let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
 
   describe "CREATE 'create'" do
     it "should return http success" do
@@ -45,12 +46,12 @@ describe ApiController do
     #These tests indicate that the user may destroy APIs not owned by him. This needs to be fixed
     let!(:api) {
       VCR.use_cassette('workers/api_key_info/characterAPI') do
-        FactoryGirl.create(:api)
+        FactoryGirl.create(:character_api_skip_determine_type)
       end
     }
     let!(:main_api) {
       VCR.use_cassette('workers/api_key_info/characterAPI') do
-        FactoryGirl.create(:api, main: true)
+        FactoryGirl.create(:character_api_skip_determine_type, main: true)
       end
     }
 
@@ -118,14 +119,13 @@ describe ApiController do
       end
     }
     let!(:api1) {
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/0characterAPI') do
         FactoryGirl.create(:api, share_user: share_user)
       end
     }
-    let!(:character1){FactoryGirl.create(:character, api: api1)}
-    let!(:character2){FactoryGirl.create(:character, api: api1)}
-    #The current API used in the factory is returning a single character. Thus to get the three max characters we need only build two.
-    #let!(:character3){FactoryGirl.create(:character, api: api1)}
+    let!(:character1){FactoryGirl.create(:character, api: api1, share_id: share.id)}
+    let!(:character2){FactoryGirl.create(:character, api: api1, share_id: share.id)}
+    let!(:character3){FactoryGirl.create(:character, api: api1, share_id: share.id)}
 
     it "should return http success" do
       xhr :get, :character_list, :share_user_id => share_user.id, :api_id => api1.id
@@ -149,13 +149,13 @@ describe ApiController do
 
   describe "PUT 'set_main'" do
     let!(:api2) {
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/0characterAPI') do
         FactoryGirl.create(:api, share_user: share_user)
       end
     }
-    let!(:character1){FactoryGirl.create(:character, api: api2)}
-    let!(:character2){FactoryGirl.create(:character, api: api2)}
-    let!(:character3){FactoryGirl.create(:character, api: api2)}
+    let!(:character1){FactoryGirl.create(:character, api: api2, share_id: share.id)}
+    let!(:character2){FactoryGirl.create(:character, api: api2, share_id: share.id)}
+    let!(:character3){FactoryGirl.create(:character, api: api2, share_id: share.id)}
     
     it "should return http success" do
       sign_in user
@@ -164,11 +164,11 @@ describe ApiController do
     end
 
     let!(:api3) {
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/0characterAPI') do
         FactoryGirl.create(:api, share_user: share_user, main: true)
       end
     }
-    let!(:character4){FactoryGirl.create(:character, api: api3, main: true)}
+    let!(:character4){FactoryGirl.create(:character, api: api3, main: true, share_id: share.id)}
     it "should set the previous main API to not be the main api" do
       sign_in user
       expect(Api.where("id = ?", api3.id)[0].main).to be_true
@@ -187,7 +187,7 @@ describe ApiController do
       expect(assigns(:api)).not_to be_nil
     end
 
-    it "should retrieve the character from the database as 'api'" do
+    it "should retrieve the character from the database as 'character'" do
       sign_in user
       xhr :put, :set_main, :share_user_id => share_user.id, :api_id => api2.id, :character_id => character1.id
       
