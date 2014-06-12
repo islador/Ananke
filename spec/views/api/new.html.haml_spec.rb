@@ -3,6 +3,7 @@ require 'sidekiq/testing'
 Sidekiq::Testing.inline!
 
 describe "api/new.html.haml > " do
+	charCount = 0
 	let(:user) {FactoryGirl.create(:user)}
 	let(:share) {FactoryGirl.create(:share)}
 	let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
@@ -38,28 +39,31 @@ describe "api/new.html.haml > " do
 		end
 
 		it "should uncheck the main api box after a successful enrollment", js: true do
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 			
 				click_button 'Enroll Key'
 				sleep(1)
 				find('input#main_api').should_not be_checked
+				#should have_selector("div.modal-backdrop")
 			end
 		end
-
+		
 		let!(:api) {
-			VCR.use_cassette('workers/api_key_info/0characterAPI') do
+			
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "alex", :charID => charCount += 1}) do
 				FactoryGirl.create(:api, share_user: share_user)
 			end
 		}
+		
 		it "should not have the main api box checked if it is not the user's first API", js: true do
 			visit new_share_user_api_path(share_user)
 			find('input#main_api').should_not be_checked
 		end
 
 		it "should redirect to the share user's api index if a corp api is enrolled", js: true do
-			VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "corpChar1", :charID => 9912}) do
+			VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3229801")
 				fill_in('v_code', :with => "UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1")
 			
@@ -71,7 +75,7 @@ describe "api/new.html.haml > " do
 
 	describe "Main API > " do
 		it "after a main api is submitted, it should lock the screen for five seconds", js: true do
-			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "char1", :charID => 1}) do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 				find(:css, "#main_api").set(true)
@@ -81,7 +85,7 @@ describe "api/new.html.haml > " do
 			end
 		end
 		it "after a main API is submitted, it should load in the character list partial", js: true do
-			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "char2", :charID => 2}) do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 				find(:css, "#main_api").set(true)
@@ -95,7 +99,7 @@ describe "api/new.html.haml > " do
 		end
 
 		it "after a main API is submitted, it should load in the character list partial and allow users to immediately set a main character.", js: true do
-			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "char3", :charID => 3}) do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 				find(:css, "#main_api").set(true)
@@ -111,7 +115,7 @@ describe "api/new.html.haml > " do
 		end
 
 		it "after a main API's main character is selected, it should redirect to the share user's api index", js: true do
-			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "char4", :charID => 4}) do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 				find(:css, "#main_api").set(true)
@@ -130,7 +134,7 @@ describe "api/new.html.haml > " do
 		end
 
 		it "Clicking 'Set as Main' should set that character as the main character", js: true do
-			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "char5", :charID => 5}) do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 				find(:css, "#main_api").set(true)
@@ -147,7 +151,7 @@ describe "api/new.html.haml > " do
 
 	describe "Non Main API > " do
 		it "after non-main api is enrolled, it should redirect to the share user's api index", js: true do
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 				find(:css, "#main_api").set(false)
@@ -161,7 +165,7 @@ describe "api/new.html.haml > " do
 
 	describe "Create > " do
 		it "should add the API to the database", js: true do
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 
@@ -178,7 +182,7 @@ describe "api/new.html.haml > " do
 		end
 
 		it "should clear the v_code and key_id fields after creating an API", js: true do
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
 				fill_in('key_id', :with => "3255235")
 				fill_in('v_code', :with => "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x")
 				click_button 'Enroll Key'
