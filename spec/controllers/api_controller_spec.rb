@@ -8,6 +8,7 @@ describe ApiController do
     controller.stub(:authenticate_user!).and_return true
     controller.stub(:require_share_user).and_return true
   }
+  charCount = 0
   let(:user) {FactoryGirl.create(:user)}
   let(:share) {FactoryGirl.create(:share)}
   let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
@@ -15,7 +16,7 @@ describe ApiController do
   describe "CREATE 'create'" do
     it "should return http success" do
       sign_in user
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         xhr :post, :create, share_user_id: share_user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
       end
       response.should be_success
@@ -24,7 +25,7 @@ describe ApiController do
     it "should enroll a new API" do
       sign_in user
       expect{
-        VCR.use_cassette('workers/api_key_info/characterAPI') do
+        VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
           xhr :post, :create, share_user_id: share_user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
         end
       }.to change(Api, :count).by(+1)
@@ -33,7 +34,7 @@ describe ApiController do
     it "should return the API's ID" do
       #This test could be better. Namely sort out how to access the API itself and compare it's ID against the response.
       sign_in user
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         xhr :post, :create, share_user_id: share_user.id, key_id: "3255235", v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", main_api: false
       end
       expect{
@@ -45,12 +46,12 @@ describe ApiController do
   describe "DELETE 'destroy'" do
     #These tests indicate that the user may destroy APIs not owned by him. This needs to be fixed
     let!(:api) {
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:character_api_skip_determine_type)
       end
     }
     let!(:main_api) {
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:character_api_skip_determine_type, main: true)
       end
     }
@@ -88,7 +89,7 @@ describe ApiController do
     end
 
     let!(:api1) {
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:api, share_user: share_user)
       end
     }
@@ -102,7 +103,7 @@ describe ApiController do
 
   describe "GET 'show'" do
     let!(:api1) {
-      VCR.use_cassette('workers/api_key_info/characterAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:api)
       end
     }
@@ -114,7 +115,7 @@ describe ApiController do
 
   describe "GET 'character_list'" do
     let!(:corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:corp_api, share_user: share_user)
       end
     }
@@ -123,9 +124,9 @@ describe ApiController do
         FactoryGirl.create(:api, share_user: share_user)
       end
     }
-    let!(:character1){FactoryGirl.create(:character, api: api1, share_id: share.id)}
-    let!(:character2){FactoryGirl.create(:character, api: api1, share_id: share.id)}
-    let!(:character3){FactoryGirl.create(:character, api: api1, share_id: share.id)}
+    let!(:character1){FactoryGirl.create(:character, api: api1, share_id: share.id, characterID: charCount+=1)}
+    let!(:character2){FactoryGirl.create(:character, api: api1, share_id: share.id, characterID: charCount+=1)}
+    let!(:character3){FactoryGirl.create(:character, api: api1, share_id: share.id, characterID: charCount+=1)}
 
     it "should return http success" do
       xhr :get, :character_list, :share_user_id => share_user.id, :api_id => api1.id
@@ -153,9 +154,9 @@ describe ApiController do
         FactoryGirl.create(:api, share_user: share_user)
       end
     }
-    let!(:character1){FactoryGirl.create(:character, api: api2, share_id: share.id)}
-    let!(:character2){FactoryGirl.create(:character, api: api2, share_id: share.id)}
-    let!(:character3){FactoryGirl.create(:character, api: api2, share_id: share.id)}
+    let!(:character1){FactoryGirl.create(:character, api: api2, share_id: share.id, characterID: charCount+=1)}
+    let!(:character2){FactoryGirl.create(:character, api: api2, share_id: share.id, characterID: charCount+=1)}
+    let!(:character3){FactoryGirl.create(:character, api: api2, share_id: share.id, characterID: charCount+=1)}
     
     it "should return http success" do
       sign_in user
@@ -164,7 +165,7 @@ describe ApiController do
     end
 
     let!(:api3) {
-      VCR.use_cassette('workers/api_key_info/0characterAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:api, share_user: share_user, main: true)
       end
     }
@@ -220,11 +221,11 @@ describe ApiController do
     describe "with Corp APIs > " do
       #Corporation APIs may not be used to set mains. This helps avoid character name collisions.
       let!(:corporation_api) {
-        VCR.use_cassette('workers/api_key_info/corpAPI') do
+        VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{charCount+1}", :charID => charCount+=1}) do
           FactoryGirl.create(:corp_api, share_user: share_user)
         end
       }
-      let!(:corporation_character) {FactoryGirl.create(:character, api: corporation_api)}
+      let!(:corporation_character) {FactoryGirl.create(:character, api: corporation_api, characterID: charCount+=1)}
 
       it "should return false if a corporation API is used" do
         sign_in user
@@ -236,7 +237,7 @@ describe ApiController do
 
   describe "PUT 'begin_whitelist_api_pull'" do
     let!(:corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:corp_api, share_user: share_user)
       end
     }
@@ -265,7 +266,7 @@ describe ApiController do
 
   describe "PUT 'cancel_whitelist_api_pull'" do
     let!(:corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:corp_api, share_user: share_user)
       end
     }
@@ -309,7 +310,7 @@ describe ApiController do
 
   describe "PUT 'update_api_whitelist_standing'" do
     let!(:corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
+      VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
         FactoryGirl.create(:corp_api, share_user: share_user)
       end
     }
@@ -322,12 +323,12 @@ describe ApiController do
 
     describe "Error Handling > " do
       let!(:inactive_api) {
-        VCR.use_cassette('workers/api_key_info/corpAPI') do
+        VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
           FactoryGirl.create(:corp_api, share_user: share_user, active: false)
         end
       }
       let!(:general_api) {
-        VCR.use_cassette('workers/api_key_info/characterAPI') do
+        VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{charCount+1}", :charID => charCount += 1}) do
           FactoryGirl.create(:api, share_user: share_user)
         end
       }
