@@ -1,3 +1,103 @@
-// Place all the styles related to the Share controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+/*Shares*/
+
+.col-centered{
+    float: none;
+    width: 25%;
+    margin-left: auto;
+	margin-right: auto;
+}
+
+.input-valid-icon-right {
+    position: relative;
+    i.glyphicon-ok{
+    	position: absolute;
+	    right: 90px;
+	    padding: 2px 0px;
+	    color: green;
+	    display: none;
+    }
+    i.glyphicon-remove{
+    	position: absolute;
+	    right: 90px;
+	    padding: 2px 0px;
+	    color: red;
+	    display: none;
+    }
+}
+
+
+#name_taken {
+	position: relative;
+	left: 180px;
+	bottom: 26px;
+	//background-color: pink;
+	width: 160px;
+	height: 25px;
+	
+	.glyphicon-ok {
+		position: relative;
+		bottom: 20px;
+		//display: none;
+		//right: 145px;
+		color: green;
+	}
+
+	.glyphicon-remove {
+		display: none;
+		right: 165px;
+		color: red;
+	}
+}
+
+.indexBox {
+	width: 250px;
+	height: 250px;
+	margin-top: 50px;
+	margin-left: auto;
+	margin-right: auto;
+	border-width: thin;
+	border-style:solid;
+	border-color: #000000;
+	border-radius: 5px;
+	background-color: 	#FAEBD7;
+	//background-color:  #EF6C9A;
+
+	.shareLogo {
+		width: 128px;
+		height: 128px;
+		background-color: #000000;
+		//background-color: #C0C0C0;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 50px;
+	}
+
+	.shareName {
+		width: 128px;
+		text-align: center;
+		//font-size:70px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.joinGroup {
+		position: relative;
+		left: 40px;
+		top: 150px;
+		font-size: 30px;
+	}
+
+	.glyphicon-plus {
+		float: none;
+    	margin: 0 auto;
+		left: 122px;
+		top: 100px;
+		color: green;
+
+		transform:scale(8.0,8.0);
+		    -ms-transform:scale(8.0,8.0); /* IE 9 */
+		    -moz-transform:scale(8.0,8.0); /* Firefox */
+		    -webkit-transform:scale(8.0,8.0); /* Safari and Chrome */
+		    -o-transform:scale(8.0,8.0); /* Opera */
+	}
+}
