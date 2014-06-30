@@ -6,6 +6,9 @@ namespace :scheduling do
   	#Hit each API via sidekiq and validate its main character against the whitelist.
   end
 
+  #Cache time on these APIs is 15 minutes.
+  #https://api.eveonline.com/corp/ContactList.xml.aspx?keyID=3229801&vCode=UyO6KSsDydLrZX7MwU048rqRiHwAexvLmSQgtiUbN0rIrVaUuGUZYmGuW2PkMSg1
+  #Run every hour.
   desc "Validate all shares' whitelist APIs"
   task query_whitelist_apis: :environment do
   	#Retrieve a list of all shares.
