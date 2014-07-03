@@ -39,7 +39,7 @@ jQuery ->
 				success: (data) ->
 					if data != false
 						window.location.href = "/share/" + data
-					if data == false
+					#if data == false
 						#add the alert class to the error_message div
 						#add the text indicating the user's desired group name is available but s/he must login/register to create it the error_message div
 				})

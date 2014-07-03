@@ -23,6 +23,9 @@ Spork.prefork do
 	ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
 	RSpec.configure do |config|
+		#Sourced from https://www.relishapp.com/vcr/vcr/v/2-9-0/docs/test-frameworks/usage-with-rspec-metadata
+		config.treat_symbols_as_metadata_keys_with_true_values = true
+
 		config.run_all_when_everything_filtered = true
 		config.filter_run :focus
 
@@ -35,9 +38,6 @@ Spork.prefork do
 		config.include Capybara::DSL
 		config.include FactoryGirl::Syntax::Methods
 		config.include Devise::TestHelpers, type: :controller
-
-		#Sourced from https://www.relishapp.com/vcr/vcr/v/2-9-0/docs/test-frameworks/usage-with-rspec-metadata
-		config.treat_symbols_as_metadata_keys_with_true_values = true
 
 		# For selenium according to: https://groups.google.com/d/msg/ruby-capybara/2lFnQvMFGxs/YvOvebpctFcJ
 		config.use_transactional_fixtures = false

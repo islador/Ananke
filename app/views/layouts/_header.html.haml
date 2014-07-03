@@ -1,7 +1,7 @@
 %header{:class => "navbar navbar-fixed-top navbar-inverse", :role =>"navigation"}
   %div{:class => "navbar-inner"}
     %div{:class => "container"}
-      =link_to "Ananke", root_path, :id => "logo", :class => 'navbar-brand'
+      =link_to "#{image_tag('logover3-50nostroke.png')} Ananke".html_safe, root_path, :id => "logo", :class => 'navbar-brand'
       %nav
         %ul{:class => "nav pull-right"}
           -if user_signed_in? == true

@@ -12,17 +12,17 @@ describe WhitelistUpdateWorker do
 		work = WhitelistUpdateWorker.new
 
 		describe "Error Handling > " do
-			let(:inactive_api) {
+			let!(:inactive_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
 					FactoryGirl.create(:corp_api, share_user: share_user, active: false)
 				end
 			}
-			let(:general_api) {
+			let!(:general_api) {
 				VCR.use_cassette('workers/api_key_info/characterAPI') do
 					FactoryGirl.create(:api, share_user: share_user)
 				end
 			}
-			let(:error_handling_whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 5, name: "PlusFive", share_id: share.id)}
+			let!(:error_handling_whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 5, name: "PlusFive", share_id: share.id)}
 			let!(:wac_non_corp_api) {FactoryGirl.create(:whitelist_api_connection, api_id: general_api.id, whitelist_id: error_handling_whitelist.id, share_id: share.id)}
 			let!(:wac_inactive_corp_api) {FactoryGirl.create(:whitelist_api_connection, api_id: inactive_api.id, whitelist_id: error_handling_whitelist.id, share_id: share.id)}
 

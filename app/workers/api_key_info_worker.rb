@@ -37,6 +37,7 @@ class ApiKeyInfoWorker
 				#Insert each into the database.
 				toon = ananke_api.characters.build(name: c.characterName, characterID: c.characterID, corporationName: c.corporationName, corporationID: c.corporationID, allianceName: allianceName, allianceID: c.allianceID, factionName: factionName, factionID: c.factionID, share_id: ananke_api.share_user.share_id)
 				if toon.valid? == true
+					#puts "Saving: " + toon.characterID.to_s
 					toon.save!
 				else
 					puts toon.errors.messages
@@ -45,6 +46,6 @@ class ApiKeyInfoWorker
 		end
 
 		#Save the API after all changes have been made
-		ananke_api.save!		
+		ananke_api.save!
 	end
 end
