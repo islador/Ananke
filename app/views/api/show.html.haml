@@ -1,9 +1,16 @@
-%h1 Api#show
-%p Find me in app/views/api/show.html.haml
+%div.api-info-box
+	%h2.name-box=@api.name
+	
+	-if @api.active == true
+		%h2.active-api Active
+	-else
+		%h2.inactive-api Inactive
+	-if @api.main == true
+		%h2.main-api Main API
 
-%h1=@api.name
--if @api.ananke_type != 1
-	= render :partial => 'shared/character_list', :locals => { :api => @api, :cl => @cl}
+%div.character-list
+	-if @api.ananke_type != 1
+		= render :partial => 'shared/character_list', :locals => { :api => @api, :cl => @cl}
 
 %div{:class => "btn-group"}
 	-if @api.main != true

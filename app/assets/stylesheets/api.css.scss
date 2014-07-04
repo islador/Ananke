@@ -27,3 +27,35 @@
     background:black;
     /*add what you want here*/
 }
+
+.api-info-box{
+    float:left;
+    width: 450px;
+    text-align: center;
+    overflow:hidden;
+
+    .name-box{
+        width:150px;
+        float:left;
+        overflow:hidden;
+    }
+    .active-api{
+        float:left;
+        width:150px;
+        color:green;
+    }
+    .inactive-api{
+        float:left;
+        width:150px;
+        color:red;
+    }
+    .main-api{
+        float: left;
+        width:150px;
+        color:green;
+    }
+}
+
+.character-list{
+    margin-top:65px;
+}
