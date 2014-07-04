@@ -25,6 +25,13 @@ describe ApiKeyInfoWorker do
 			FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689")
 		end
 	}
+
+	#islador - Expired Account API
+	let!(:expired_account_api) {
+		VCR.use_cassette('workers/api_key_info/auth_errors/expired_accountAPI') do
+			FactoryGirl.create(:api,share_user: share_user, v_code: "eV8hp7bVaNmiBGf3aNOFrPDqGLOaqQYCIiSiVAtUrp5u3AfeIc8EQMvtPjOCqxFr", key_id: "3499527")
+		end
+	}
 	work = ApiKeyInfoWorker.new
 
 	
@@ -82,4 +89,11 @@ describe ApiKeyInfoWorker do
 		apiDB.characters.empty?.should be_false
 	end
 
+	it "should return an inactive API if the API call returns an error" do
+		VCR.use_cassette('workers/api_key_info/auth_errors/expired_accountAPI') do
+			work.perform(expired_account_api.key_id, expired_account_api.v_code)
+		end
+
+		expect(Api.where("id = ?", expired_account_api.id)[0].active).to be false
+	end
 end
