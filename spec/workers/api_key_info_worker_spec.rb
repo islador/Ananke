@@ -43,61 +43,61 @@ describe ApiKeyInfoWorker do
 	
 	it "Should set the API's main entity name to the corporation of the character if the API is a corp API" do
 		VCR.use_cassette('workers/api_key_info/corpAPI') do
-			work.perform(api.key_id, api.v_code)
+			work.perform(api.id)
 		end
 		
-		apiDB = Api.where("key_id = ?", api.key_id)[0]
+		apiDB = Api.where("id=?", api.id)[0]
 		apiDB.main_entity_name.should match "Alaskan Fish"
 	end
 
 	it "Should set the API's ananke_type to 'corporation' if the api is a corporation type api" do
 		VCR.use_cassette('workers/api_key_info/corpAPI') do
-			work.perform(api.key_id, api.v_code)
+			work.perform(api.id)
 		end
 
-		apiDB = Api.where("key_id = ?", api.key_id)[0]
+		apiDB = Api.where("id = ?", api.id)[0]
 		apiDB.ananke_type.should be 1
 	end
 
 	it "Should set the API's ananke_type to 'general' if the api is an account type api" do
 		VCR.use_cassette('workers/api_key_info/characterAPI') do
-			work.perform(api_character.key_id, api_character.v_code)
+			work.perform(api_character.id)
 		end
 
-		apiDB = Api.where("key_id = ?", api_character.key_id)[0]
+		apiDB = Api.where("id = ?", api_character.id)[0]
 		apiDB.ananke_type.should be 2
 	end
 
 	it "Should set the API's ananke_type to 'general' if the api is a character type api" do
 		VCR.use_cassette('workers/api_key_info/accountAPI') do
-			work.perform(api_account.key_id, api_account.v_code)
+			work.perform(api_account.id)
 		end
 		
-		apiDB = Api.where("key_id = ?", api_account.key_id)[0]
+		apiDB = Api.where("id = ?", api_account.id)[0]
 		apiDB.ananke_type.should be 2
 	end
 
 	it "Should populate an API's characters if it is a character API." do
 		VCR.use_cassette('workers/api_key_info/characterAPI') do
-			work.perform(api_character.key_id, api_character.v_code)
+			work.perform(api_character.id)
 		end
 
-		apiDB = Api.where("key_id = ?", api_character.key_id)[0]
+		apiDB = Api.where("id = ?", api_character.id)[0]
 		apiDB.characters.empty?.should be_false
 	end
 
 	it "Should populate an API's characters if it is an account API." do
 		VCR.use_cassette('workers/api_key_info/accountAPI') do
-			work.perform(api_account.key_id, api_account.v_code)
+			work.perform(api_account.id)
 		end
 
-		apiDB = Api.where("key_id = ?", api_account.key_id)[0]
+		apiDB = Api.where("id = ?", api_account.id)[0]
 		apiDB.characters.empty?.should be_false
 	end
 
 	it "should return an inactive API if the API call returns an expired error" do
 		VCR.use_cassette('workers/api_key_info/auth_errors/expired_accountAPI') do
-			work.perform(expired_account_api.key_id, expired_account_api.v_code)
+			work.perform(expired_account_api.id)
 		end
 
 		expect(Api.where("id = ?", expired_account_api.id)[0].active).to be false
@@ -105,7 +105,7 @@ describe ApiKeyInfoWorker do
 
 	it "should return an inactive API if the API call returns an authorization error" do
 		VCR.use_cassette('workers/api_key_info/auth_errors/failedAuth_accountAPI') do
-			work.perform(auth_failed_api.key_id, auth_failed_api.v_code)
+			work.perform(auth_failed_api.id)
 		end
 
 		expect(Api.where("id = ?", auth_failed_api.id)[0].active).to be false

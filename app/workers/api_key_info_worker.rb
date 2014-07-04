@@ -1,12 +1,12 @@
 class ApiKeyInfoWorker
 	include Sidekiq::Worker
 
-	def perform(keyID, vCode)
+	def perform(id)
 		#We want this to hit the API and then hit the database directly. That means it will likely need to be controller fired, not API model fired.
 		#retrieve the current API record from the database, this assumes key_id is unique and is stupid because key_id is share scoped, this should be using api ids directly like everything else.
-		ananke_api = Api.where("key_id = ?", keyID)[0]
+		ananke_api = Api.where("id = ?", id)[0]
 		#Build the API object
-		eve_api = Eve::API.new(:key_id => keyID, :v_code => vCode)
+		eve_api = Eve::API.new(:key_id => ananke_api.key_id, :v_code => ananke_api.v_code)
 
 		begin
 			#Query the API

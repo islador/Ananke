@@ -48,7 +48,7 @@ class Api < ActiveRecord::Base
 	end
 
 	def determine_type
-		ApiKeyInfoWorker.perform_async(self.key_id, self.v_code)
+		ApiKeyInfoWorker.perform_async(self.id)
 	end
 
 	#Point of optimization. This method could take the Api model as an arguemtn, do its thing, then save it. Thus avoiding a DB access in certain situations.
