@@ -17,6 +17,7 @@
 			%th Main Entity
 			%th Key ID
 			%th Verification Code
+			%th Active
 			%th
 	%tbody
 		- @apis.each do |api|
@@ -43,6 +44,10 @@
 
 				%td= api.key_id
 				%td= api.v_code
+				-if api.active == true
+					%td Active
+				-else
+					%td Inactive
 				
 				-if api.main == true
 					%td 

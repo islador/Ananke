@@ -95,19 +95,29 @@ describe ApiKeyInfoWorker do
 		apiDB.characters.empty?.should be_false
 	end
 
-	it "should return an inactive API if the API call returns an expired error" do
-		VCR.use_cassette('workers/api_key_info/auth_errors/expired_accountAPI') do
-			work.perform(expired_account_api.id)
+	describe "Active/Inactive > " do
+		it "should return an active API if the API call does not return an error" do
+			VCR.use_cassette('workers/api_key_info/accountAPI') do
+				work.perform(api_account.id)
+			end
+
+			expect(Api.where("id = ?", api_account.id)[0].active).to be true
 		end
 
-		expect(Api.where("id = ?", expired_account_api.id)[0].active).to be false
-	end
+		it "should return an inactive API if the API call returns an expired error" do
+			VCR.use_cassette('workers/api_key_info/auth_errors/expired_accountAPI') do
+				work.perform(expired_account_api.id)
+			end
 
-	it "should return an inactive API if the API call returns an authorization error" do
-		VCR.use_cassette('workers/api_key_info/auth_errors/failedAuth_accountAPI') do
-			work.perform(auth_failed_api.id)
+			expect(Api.where("id = ?", expired_account_api.id)[0].active).to be false
 		end
 
-		expect(Api.where("id = ?", auth_failed_api.id)[0].active).to be false
+		it "should return an inactive API if the API call returns an authorization error" do
+			VCR.use_cassette('workers/api_key_info/auth_errors/failedAuth_accountAPI') do
+				work.perform(auth_failed_api.id)
+			end
+
+			expect(Api.where("id = ?", auth_failed_api.id)[0].active).to be false
+		end
 	end
 end

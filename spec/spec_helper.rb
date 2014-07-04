@@ -13,6 +13,7 @@ Spork.prefork do
 	require 'rspec/autorun'
 	require 'database_cleaner'
 	require 'webmock/rspec'
+	require 'sidekiq/testing'
 
 	# Requires supporting ruby files with custom matchers and macros, etc,
 	# in spec/support/ and its subdirectories.
@@ -25,6 +26,8 @@ Spork.prefork do
 	RSpec.configure do |config|
 		#Sourced from https://www.relishapp.com/vcr/vcr/v/2-9-0/docs/test-frameworks/usage-with-rspec-metadata
 		config.treat_symbols_as_metadata_keys_with_true_values = true
+
+		Sidekiq::Testing.inline!
 
 		config.run_all_when_everything_filtered = true
 		config.filter_run :focus

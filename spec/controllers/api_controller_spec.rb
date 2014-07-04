@@ -1,6 +1,5 @@
 require 'spec_helper'
-require 'sidekiq/testing'
-Sidekiq::Testing.inline!
+
 
 describe ApiController do
   # http://stackoverflow.com/questions/8819343/rails-rspec-devise-undefined-method-authenticate-user
@@ -239,53 +238,53 @@ describe ApiController do
   end
 
   describe "PUT 'begin_whitelist_api_pull'" do
-    let!(:corp_api) {
+    let!(:corp_api_2) {
       VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:corp_api, share_user: share_user)
+        FactoryGirl.create(:corp_api, share_user: share_user, active: true)
       end
     }
 
     it "should return http success" do
       VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
-        xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+        xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_2.id
       end
       response.should be_success
     end
 
     it "should call ApiCorpContactPullWorker with corp_api.id" do
       VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
-        xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+        xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_2.id
       end
       response.body.should match "API queued for contact processing"
     end
 
     it "should create a whitelist log indicating a new API Pull has been started" do
       VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
-        xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+        xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_2.id
       end
       WhitelistLog.where("entity_type = 5 AND addition = true")[0].should_not be_nil
     end
   end
 
   describe "PUT 'cancel_whitelist_api_pull'" do
-    let!(:corp_api) {
+    let!(:corp_api_3) {
       VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
         FactoryGirl.create(:corp_api, share_user: share_user)
       end
     }
     let!(:whitelist) {FactoryGirl.create(:whitelist)}
-    let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist.id)}
+    let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api_3.id, whitelist_id: whitelist.id)}
 
     it "should return http success" do
       VCR.use_cassette('workers/corpContactList_standingsSpread') do
-        xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+        xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
       end
       response.should be_success
     end
 
     it "should return json 'API removed from contact processing' for a successful request" do
       VCR.use_cassette('workers/corpContactList_standingsSpread') do
-        xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+        xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
       end
       response.should be_success
       response.body.should match "API removed from contact processing"
@@ -301,33 +300,43 @@ describe ApiController do
     it "should remove the api from the pull schedule" do
       #The pull schedule is defined in scheduling.rake as any API that has a whitelist api connection.
       #So delete the connection to remove it from the pull schedule.
-      xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+      xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
       WhitelistApiConnection.where("id = ?", whitelist_api_connection.id).count.should be 0
     end
 
     it "should create a whitelist log indicating the API Pull has been cancelled" do
-      xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+      xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
       WhitelistLog.where("entity_type = 5 AND addition = false")[0].should_not be_nil
     end
   end
 
   describe "PUT 'update_api_whitelist_standing'" do
-    let!(:corp_api) {
+    let!(:corp_api_4) {
       VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:corp_api, share_user: share_user)
+        FactoryGirl.create(:corp_api, share_user: share_user, active: true)
       end
     }
     it "should return http success" do
       #VCR.use_cassette('workers/corpContactList_standingsSpread') do
-        xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: corp_api.id, standing: 2
+        xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: corp_api_4.id, standing: 2
       #end
       response.should be_success
     end
 
+    it "should output json confirming the API was updated" do
+      xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: corp_api_4.id, standing: 2
+      response.body.should match "true"
+    end
+
+    it "should set the API's whitelist_standings to the value sent it" do
+      xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: corp_api_4.id, standing: 2
+      Api.where("id = ?", corp_api_4.id)[0].whitelist_standings.should be 2
+    end
+
     describe "Error Handling > " do
       let!(:inactive_api) {
-        VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-          FactoryGirl.create(:corp_api, share_user: share_user, active: false)
+        VCR.use_cassette('workers/api_key_info/CorpAPI') do
+          FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: false)
         end
       }
       let!(:general_api) {
@@ -349,16 +358,6 @@ describe ApiController do
         }.to raise_error ArgumentError
         response.body.should match "API must be active"
       end
-    end
-
-    it "should output json confirming the API was updated" do
-      xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: corp_api.id, standing: 2
-      response.body.should match "true"
-    end
-
-    it "should set the API's whitelist_standings to the value sent it" do
-      xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: corp_api.id, standing: 2
-      Api.where("id = ?", corp_api.id)[0].whitelist_standings.should be 2
     end
   end
 end

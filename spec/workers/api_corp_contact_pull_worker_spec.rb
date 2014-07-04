@@ -9,7 +9,7 @@ describe ApiCorpContactPullWorker do
 		let!(:share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
 		let!(:corp_api) {
 			VCR.use_cassette('workers/api_key_info/corpAPI') do
-				FactoryGirl.create(:corp_api, share_user: share_user, whitelist_standings: 5)
+				FactoryGirl.create(:corp_api, share_user: share_user, whitelist_standings: 5, active: true)
 			end
 		}
 		let!(:whitelist_entity_api) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 10, name: "Alexander Fits", share_id: share.id)}
@@ -21,7 +21,7 @@ describe ApiCorpContactPullWorker do
 		#Second API, a whitelist entity, and two connections, one to corp_api and one to second_api
 		let!(:second_api) {
 			VCR.use_cassette('workers/api_key_info/corpAPI') do
-				FactoryGirl.create(:corp_api, share_user: share_user, whitelist_standings: 10)
+				FactoryGirl.create(:corp_api, share_user: share_user, whitelist_standings: 10, active: true)
 			end
 		}
 		let!(:second_whitelist_entity) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 5, name: "PlusFive", share_id: share.id)}
@@ -34,12 +34,12 @@ describe ApiCorpContactPullWorker do
 		describe "Error Handling > " do
 			let!(:inactive_api) {
 				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, share_user: share_user, active: false)
+					FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: false)
 				end
 			}
 			let!(:general_api) {
 				VCR.use_cassette('workers/api_key_info/characterAPI') do
-					FactoryGirl.create(:api, share_user: share_user)
+					FactoryGirl.create(:api, share_user: share_user, active: true)
 				end
 			}
 

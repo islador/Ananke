@@ -11,6 +11,7 @@ class ApiKeyInfoWorker
 		begin
 			#Query the API
 			result = eve_api.account.apikeyinfo
+			ananke_api.active = true
 			#Check for Corporation status
 			if(result.key.type == "Corporation")
 				#If found, extract the corporation name from the only character in the list.
