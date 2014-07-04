@@ -54,7 +54,7 @@ end
 
 # EVE Gems
 # This instance is used because it has been modified to support rails 4, the new CCP domain and the corp contact list api.
-gem 'eve',			:git => "https://github.com/islador/eve", :branch => "AddCorpContactList"
+gem 'eve',			:git => "https://github.com/islador/eve", :branch => "UpdateErrors"
 
 group :development do
 	gem 'annotate'

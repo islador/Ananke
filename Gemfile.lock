@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/islador/eve
-  revision: 6e340c255be1fbfc5a762ed5a3b20f99116c4a5e
-  branch: AddCorpContactList
+  revision: f1c4e698cf64e07e29c835fb36d915e47c36e7db
+  branch: UpdateErrors
   specs:
     eve (2.0.1)
       activesupport (~> 4)
@@ -40,7 +40,6 @@ GEM
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     arel (4.0.2)
-    atomic (1.1.16)
     bcrypt (3.1.7)
     bootstrap-sass (3.1.1.0)
       sass (~> 3.2)
@@ -131,12 +130,12 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.2)
     mime-types (1.25.1)
-    mini_portile (0.5.3)
+    mini_portile (0.6.0)
     minitest (4.7.5)
-    multi_json (1.9.2)
+    multi_json (1.10.1)
     nio4r (1.0.0)
-    nokogiri (1.6.1)
-      mini_portile (~> 0.5.0)
+    nokogiri (1.6.2.1)
+      mini_portile (= 0.6.0)
     orm_adapter (0.5.0)
     pg (0.17.1)
     polyglot (0.3.4)
@@ -230,8 +229,7 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     thor (0.19.1)
-    thread_safe (0.3.1)
-      atomic (>= 1.1.7, < 2)
+    thread_safe (0.3.4)
     tilt (1.4.1)
     timers (1.1.0)
     treetop (1.4.15)
