@@ -32,6 +32,12 @@ describe ApiKeyInfoWorker do
 			FactoryGirl.create(:api,share_user: share_user, v_code: "eV8hp7bVaNmiBGf3aNOFrPDqGLOaqQYCIiSiVAtUrp5u3AfeIc8EQMvtPjOCqxFr", key_id: "3499527")
 		end
 	}
+	#random key_id & v_code
+	let!(:auth_failed_api) {
+		VCR.use_cassette('workers/api_key_info/auth_errors/failedAuth_accountAPI') do
+			FactoryGirl.create(:api,share_user: share_user, v_code: "eV8hp7bVaNmiBGf3aNOFrPDqGLOaqQYCIiSiVAtUrp5u3AfeIc8EQMvtPjOChtG2", key_id: "3422527")
+		end
+	}
 	work = ApiKeyInfoWorker.new
 
 	
@@ -89,11 +95,19 @@ describe ApiKeyInfoWorker do
 		apiDB.characters.empty?.should be_false
 	end
 
-	it "should return an inactive API if the API call returns an error" do
+	it "should return an inactive API if the API call returns an expired error" do
 		VCR.use_cassette('workers/api_key_info/auth_errors/expired_accountAPI') do
 			work.perform(expired_account_api.key_id, expired_account_api.v_code)
 		end
 
 		expect(Api.where("id = ?", expired_account_api.id)[0].active).to be false
+	end
+
+	it "should return an inactive API if the API call returns an authorization error" do
+		VCR.use_cassette('workers/api_key_info/auth_errors/failedAuth_accountAPI') do
+			work.perform(auth_failed_api.key_id, auth_failed_api.v_code)
+		end
+
+		expect(Api.where("id = ?", auth_failed_api.id)[0].active).to be false
 	end
 end
