@@ -18,28 +18,20 @@ describe WhitelistController do
 
   describe "GET 'white_list' > " do
     let!(:pulled_corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user)
-      end
+      FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
     }
     let!(:valid_corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user)
-      end
+      FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
     }
     let!(:inactive_corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user, active: false)
-      end
+      FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: false)
     }
     #Share 1
     let!(:whitelist) {FactoryGirl.create(:whitelist, share_id: share.id)}
     let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_corp_api.id, whitelist_id: whitelist.id, share_id: share.id)}
     #Share 2
     let!(:pulled_corp_api2) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user2)
-      end
+      FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user2, active: true)
     }
     let!(:whitelist2) {FactoryGirl.create(:whitelist, share_id: share2.id)}
     let!(:whitelist_api_connection2) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_corp_api2.id, whitelist_id: whitelist2.id)}
@@ -110,33 +102,23 @@ describe WhitelistController do
 
   describe "GET 'retrieve_pullable_apis'" do
     let!(:pulled_corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user)
-      end
+      FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
     }
     let!(:valid_corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user)
-      end
+      FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
     }
     let!(:inactive_corp_api) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user, active: false)
-      end
+      FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: false)
     }
     let!(:whitelist) {FactoryGirl.create(:whitelist, share_id: share.id)}
     let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_corp_api.id, whitelist_id: whitelist.id, share_id: share.id)}
 
     #Share 2
     let!(:valid_corp_api2) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user2)
-      end
+      FactoryGirl.create(:corp_api, share_user: share_user2, active: true)
     }
     let!(:pulled_corp_api2) {
-      VCR.use_cassette('workers/api_key_info/corpAPI') do
-        FactoryGirl.create(:corp_api, share_user: share_user2)
-      end
+      FactoryGirl.create(:corp_api, share_user: share_user2, active: true)
     }
     let!(:whitelist2) {FactoryGirl.create(:whitelist, share_id: share2.id)}
     let!(:whitelist_api_connection2) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_corp_api2.id, whitelist_id: whitelist.id, share_id: share2.id)}
