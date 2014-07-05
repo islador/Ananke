@@ -23,9 +23,9 @@ jQuery ->
 			$.ajax({
 				url: "/share_users/" + share_user_id + "/api/" + raw_id + "/update_api_whitelist_standing", type: "PUT",
 				data: { authenticity_token: authenticity_token, standing: standing},
-				success: (data) ->
-					console.log data
-					if data is true
+				success: (data, textStatus) ->
+					console.log textStatus
+					if textStatus is "success"
 						$.ajax({
 							#A post with a method data attribute is used to preserve cross browser compability.
 							url: target, type: "PUT",

@@ -29,15 +29,18 @@ describe "whitelist/white_list.haml > " do
 		end
 
 		describe "API based whitelist entity population > " do
+			before(:all) do
+				VCR.insert_cassette('workers/api_corp_contact/alliance_standingsSpread', :allow_playback_repeats => true)
+			end
+			after(:all) do
+				VCR.eject_cassette
+			end
+
 			let!(:valid_api) {
-				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, share_user: share_user, active: true)
-				end
+				FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
 			}
 			let!(:pulled_api) {
-				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, share_user: share_user, active: true)
-				end
+				FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
 			}
 			let!(:whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, source_type: 1, share_id: share.id)}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_api.id, whitelist_id: whitelist.id, share_id: share.id)}
@@ -82,38 +85,30 @@ describe "whitelist/white_list.haml > " do
 			end
 
 			it "when 'Query API' is clicked it should remove the api from the table", js: true do
-				VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
-					click_button 'Begin New API Pull'
-			        click_button 'Query API'
-			        should_not have_selector("tr#add_api_#{valid_api.id}")
-				end
+				click_button 'Begin New API Pull'
+		        click_button 'Query API'
+		        should_not have_selector("tr#add_api_#{valid_api.id}")
 			end
 
 			it "When 'Query API' is clicked, it should add the api to the api_pulls_table", js: true do
-				VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
-					click_button 'Begin New API Pull'
-			        click_button 'Query API'
-			        within '#api_pulls_table' do
-						should have_selector("tr td", text: "You")
-						should have_selector("tr td", text: valid_api.main_entity_name)
-						should have_selector("tr td", text: "10")
-						should have_selector("tr td", text: valid_api.key_id)
-					end
+				click_button 'Begin New API Pull'
+		        click_button 'Query API'
+		        within '#api_pulls_table' do
+					should have_selector("tr td", text: "You")
+					should have_selector("tr td", text: valid_api.main_entity_name)
+					should have_selector("tr td", text: "10")
+					should have_selector("tr td", text: valid_api.key_id)
 				end
 			end
 		end
 
 		describe "API Pull Table > " do
 			let!(:api1) {
-				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, share_user: share_user)
-				end
+				FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
 			}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: api1.id, whitelist_id: whitelist.id, share_id: share.id)}
 			let!(:api2) {
-				VCR.use_cassette('workers/api_key_info/0characterAPI') do
-					FactoryGirl.create(:api, share_user: share_user)
-				end
+				FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)
 			}
 			it "should render the api pulls table", js: true do
 				should have_selector('#api_pulls_table')
@@ -138,9 +133,7 @@ describe "whitelist/white_list.haml > " do
 
 			describe "Cancel > " do
 				let!(:api3) {
-					VCR.use_cassette('workers/api_key_info/0characterAPI') do
-						FactoryGirl.create(:api, main_entity_name: "Avah", ananke_type: 1)
-					end
+					FactoryGirl.create(:corp_api_skip_determine_type, main_entity_name: "Avah")
 				}
 				it "should remove the item from the datatable when clicked", js: true do
 					visit share_user_whitelist_white_list_path(share_user)
