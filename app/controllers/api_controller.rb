@@ -46,7 +46,7 @@ class ApiController < ApplicationController
   def set_main
     #Retrieve the new API
     @api = Api.where("id = ?", params[:api_id])[0]
-    if @api.ananke_type !=1
+    if @api.ananke_type !=1 && @api.active == true
       #Point of possible optimization
       #Retrieve the old API and set it's main to false
       old_api = current_share_user.apis.where("main = true")[0]
@@ -82,18 +82,21 @@ class ApiController < ApplicationController
       current_share_user.set_main_char_name(@character)
       render nothing: true
     else
-      render json: false
+      #render json: false
+      render nothing: true, status: 400
     end
     
   end
 
   def begin_whitelist_api_pull
     api = Api.where("id = ?", params[:api_id])[0]
-    if api.nil? == false
+    if api.nil? == false && api.active == true && api.ananke_type == 1
       ApiCorpContactPullWorker.perform_async(api.id)
-      render :json => "API queued for contact processing"
+      render nothing: true, status: 200
+      #render :json => "API queued for contact processing"
     else
-      render :json => "Invalid API"
+      render nothing: true, status: 304
+      #render :json => "Invalid API"
     end
   end
 
@@ -110,9 +113,11 @@ class ApiController < ApplicationController
       whitelist_connections.each do |wc|
         wc.destroy
       end
-      render :json => "API removed from contact processing"
+      render nothing: true
+      #render :json => "API removed from contact processing"
     else
-      render :json => "Invalid API or API is not a pulling API"
+      render nothing: true, status: 400
+      #render :json => "Invalid API or API is not a pulling API"
     end
   end
 
@@ -120,21 +125,25 @@ class ApiController < ApplicationController
     api = Api.where("id = ?", params[:api_id])[0]
 
     if api.ananke_type != 1
-      render :text => "API must be a corporation API"
+      render nothing: true, status: 304
+      #render :text => "API must be a corporation API"
       raise ArgumentError, "Api must be a corporation API."
     end
 
     if api.active != true
-      render :text => "API must be active"
+      render nothing: true, status: 304
+      #render :text => "API must be active"
       raise ArgumentError, "Api must be active."
     end
 
     api.whitelist_standings = params[:standing]
     if api.valid? == true
       api.save!
-      render :json => true
+      render nothing: true, status: 200
+      #render :json => true
     else
-      render :json => api.errors.messages
+      #Untested behavior. Should be fixed, but is out of scope for the current project.
+      render :json => api.errors.messages, status: 406
     end
   end
 end

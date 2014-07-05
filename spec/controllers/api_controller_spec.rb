@@ -8,9 +8,6 @@ describe ApiController do
     controller.stub(:require_share_user).and_return true
   }
 
-  after(:all) {
-    DatabaseCleaner.clean
-  }
   let(:user) {FactoryGirl.create(:user)}
   let(:share) {FactoryGirl.create(:share)}
   let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
@@ -48,14 +45,10 @@ describe ApiController do
   describe "DELETE 'destroy'" do
     #These tests indicate that the user may destroy APIs not owned by him. This needs to be fixed
     let!(:api) {
-      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
         FactoryGirl.create(:character_api_skip_determine_type)
-      end
     }
     let!(:main_api) {
-      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
         FactoryGirl.create(:character_api_skip_determine_type, main: true)
-      end
     }
 
     it "should destroy the api identified" do
@@ -91,9 +84,9 @@ describe ApiController do
     end
 
     let!(:api1) {
-      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:api, share_user: share_user)
-      end
+      #VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+        FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)
+      #end
     }
     it "should build an object containing all of the current user's enrolled APIs" do
       sign_in user
@@ -105,26 +98,40 @@ describe ApiController do
 
   describe "GET 'show'" do
     let!(:api1) {
-      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:api)
-      end
+      #VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+        FactoryGirl.create(:character_api_skip_determine_type)
+      #end
     }
+    let!(:character1){FactoryGirl.create(:character, api: api1, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
+    let!(:character2){FactoryGirl.create(:character, api: api1, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
+    let!(:character3){FactoryGirl.create(:character, api: api1, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
+
     it "returns http success" do
       get 'show', :share_user_id => share_user.id, :id => api1.id
       response.should be_success
+    end
+
+    it "should retrieve the API from the database" do
+      get 'show', share_user_id: share_user.id, id: api1.id
+      expect(assigns(:api).id).to be api1.id
+    end
+
+    it "should collect all of the api's characters" do
+      get 'show', share_user_id: share_user.id, id: api1.id
+      expect(assigns(:cl)).to match_array([character2,character3,character1])
     end
   end
 
   describe "GET 'character_list'" do
     let!(:corp_api) {
-      VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:corp_api, share_user: share_user)
-      end
+      #VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+        FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
+      #end
     }
     let!(:api1) {
-      VCR.use_cassette('workers/api_key_info/0characterAPI') do
-        FactoryGirl.create(:api, share_user: share_user)
-      end
+      #VCR.use_cassette('workers/api_key_info/0characterAPI') do
+        FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)
+      #end
     }
     let!(:character1){FactoryGirl.create(:character, api: api1, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
     let!(:character2){FactoryGirl.create(:character, api: api1, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
@@ -140,7 +147,7 @@ describe ApiController do
 
       xhr :get, :character_list, share_user_id: share_user.id, api_id: api1.id
       
-      expect(assigns(:cl).count).to be 3
+      expect(assigns(:cl)).to match_array([character2,character3,character1])
     end
 
     it "should return 'false' when called on a corp api" do
@@ -152,26 +159,40 @@ describe ApiController do
 
   describe "PUT 'set_main'" do
     let!(:api2) {
-      VCR.use_cassette('workers/api_key_info/0characterAPI') do
-        FactoryGirl.create(:api, share_user: share_user)
-      end
+      #VCR.use_cassette('workers/api_key_info/0characterAPI') do
+        FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true)
+      #end
     }
     let!(:character1){FactoryGirl.create(:character, api: api2, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
     let!(:character2){FactoryGirl.create(:character, api: api2, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
     let!(:character3){FactoryGirl.create(:character, api: api2, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
-    
+
+    let!(:api3) {
+      #VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+        FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, main: true)
+      #end
+    }
+    let!(:character4){FactoryGirl.create(:character, api: api3, main: true, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
+
+    let!(:inactive_api) {
+      #VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+        FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)
+      #end
+    }
+    let!(:character5){FactoryGirl.create(:character, api: inactive_api, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
+
+    it "should return http 400 for inactive APIs" do
+      sign_in user
+      xhr :put, :set_main, :share_user_id => share_user.id, :api_id => inactive_api.id, :character_id => character5.id
+      response.status.should be 400
+    end
+
     it "should return http success" do
       sign_in user
       xhr :put, :set_main, :share_user_id => share_user.id, :api_id => api2.id, :character_id => character1.id
       response.should be_success
     end
 
-    let!(:api3) {
-      VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:api, share_user: share_user, main: true)
-      end
-    }
-    let!(:character4){FactoryGirl.create(:character, api: api3, main: true, share_id: share.id, characterID: Rails.configuration.charCount+=1)}
     it "should set the previous main API to not be the main api" do
       sign_in user
       expect(Api.where("id = ?", api3.id)[0].main).to be_true
@@ -223,25 +244,26 @@ describe ApiController do
     describe "with Corp APIs > " do
       #Corporation APIs may not be used to set mains. This helps avoid character name collisions.
       let!(:corporation_api) {
-        VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount+=1}) do
-          FactoryGirl.create(:corp_api, share_user: share_user)
-        end
+        #VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount+=1}) do
+          FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
+        #end
       }
-      let!(:corporation_character) {FactoryGirl.create(:character, api: corporation_api, characterID: Rails.configuration.charCount+=1)}
+      #let!(:corporation_character) {FactoryGirl.create(:character, api: corporation_api, characterID: Rails.configuration.charCount+=1)}
 
       it "should return false if a corporation API is used" do
         sign_in user
-        xhr :put, :set_main, :share_user_id => share_user.id, :api_id => corporation_api.id, :character_id => corporation_character.id
-        response.body.should match "false"
+        xhr :put, :set_main, :share_user_id => share_user.id, :api_id => corporation_api.id#, :character_id => corporation_character.id
+        response.status.should be 400
+        #response.body.should match "false"
       end
     end
   end
 
-  describe "PUT 'begin_whitelist_api_pull'" do
+  describe "PUT 'begin_whitelist_api_pull' > " do
     let!(:corp_api_2) {
-      VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:corp_api, share_user: share_user, active: true)
-      end
+      #VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+        FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
+      #end
     }
 
     it "should return http success" do
@@ -255,7 +277,7 @@ describe ApiController do
       VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
         xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_2.id
       end
-      response.body.should match "API queued for contact processing"
+      response.should be_success
     end
 
     it "should create a whitelist log indicating a new API Pull has been started" do
@@ -264,13 +286,40 @@ describe ApiController do
       end
       WhitelistLog.where("entity_type = 5 AND addition = true")[0].should_not be_nil
     end
+
+    describe "Invalid APIs > " do
+      let!(:inactive_corp_api) {
+        #VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+          FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
+        #end
+      }
+      let!(:character_api) {
+        #VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+          FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true)
+        #end
+      }
+
+      it "should respond with a 304 if the API is inactive" do
+        VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
+          xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: inactive_corp_api.id
+        end
+        response.status.should be 304
+      end
+
+      it "should respond with a 304 if the API is the incorrect type" do
+        VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
+          xhr :put, :begin_whitelist_api_pull, share_user_id: share_user.id, api_id: character_api.id
+        end
+        response.status.should be 304
+      end
+    end
   end
 
   describe "PUT 'cancel_whitelist_api_pull'" do
     let!(:corp_api_3) {
-      VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:corp_api, share_user: share_user)
-      end
+      #VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+        FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
+      #end
     }
     let!(:whitelist) {FactoryGirl.create(:whitelist)}
     let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api_3.id, whitelist_id: whitelist.id)}
@@ -282,19 +331,19 @@ describe ApiController do
       response.should be_success
     end
 
-    it "should return json 'API removed from contact processing' for a successful request" do
+    it "should return http 200 for a successful request" do
       VCR.use_cassette('workers/corpContactList_standingsSpread') do
         xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
       end
       response.should be_success
-      response.body.should match "API removed from contact processing"
+      #response.body.should match "API removed from contact processing"
     end
 
-    it "should return json 'Invalid API or API is not a pulling API'" do
+    it "should return http 400 for an invalid api" do
       VCR.use_cassette('workers/corpContactList_standingsSpread') do
         xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: 3000
       end
-      response.body.should match "Invalid API or API is not a pulling API"
+      response.status.should be 400
     end
 
     it "should remove the api from the pull schedule" do
@@ -312,9 +361,9 @@ describe ApiController do
 
   describe "PUT 'update_api_whitelist_standing'" do
     let!(:corp_api_4) {
-      VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-        FactoryGirl.create(:corp_api, share_user: share_user, active: true)
-      end
+      #VCR.use_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+        FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
+      #end
     }
     it "should return http success" do
       #VCR.use_cassette('workers/corpContactList_standingsSpread') do
@@ -323,9 +372,10 @@ describe ApiController do
       response.should be_success
     end
 
-    it "should output json confirming the API was updated" do
+    it "should return http 200 if the API was updated" do
       xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: corp_api_4.id, standing: 2
-      response.body.should match "true"
+      response.status.should be 200
+      #response.body.should match "true"
     end
 
     it "should set the API's whitelist_standings to the value sent it" do
@@ -335,28 +385,30 @@ describe ApiController do
 
     describe "Error Handling > " do
       let!(:inactive_api) {
-        VCR.use_cassette('workers/api_key_info/CorpAPI') do
-          FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: false)
-        end
+        #VCR.use_cassette('workers/api_key_info/CorpAPI') do
+          FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
+        #end
       }
       let!(:general_api) {
-        VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
-          FactoryGirl.create(:api, share_user: share_user)
-        end
+        #VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1}) do
+          FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)
+        #end
       }
 
       it "should throw an argument error if the API is not active." do
         expect{
           xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: general_api.id, standing: 2
         }.to raise_error ArgumentError
-        response.body.should match "API must be a corporation API"
+        response.status.should be 304
+        #response.body.should match "API must be a corporation API"
       end
 
       it "should throw an argument error if the API is not a corp API" do
         expect{
           xhr :put, :update_api_whitelist_standing, share_user_id: share_user.id, api_id: inactive_api.id, standing: 2
         }.to raise_error ArgumentError
-        response.body.should match "API must be active"
+        response.status.should be 304
+        #response.body.should match "API must be active"
       end
     end
   end
