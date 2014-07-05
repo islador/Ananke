@@ -13,14 +13,10 @@ describe WhitelistUpdateWorker do
 
 		describe "Error Handling > " do
 			let!(:inactive_api) {
-				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, share_user: share_user, active: false)
-				end
+				FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
 			}
 			let!(:general_api) {
-				VCR.use_cassette('workers/api_key_info/characterAPI') do
-					FactoryGirl.create(:api, share_user: share_user)
-				end
+				FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true)
 			}
 			let!(:error_handling_whitelist) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 5, name: "PlusFive", share_id: share.id)}
 			let!(:wac_non_corp_api) {FactoryGirl.create(:whitelist_api_connection, api_id: general_api.id, whitelist_id: error_handling_whitelist.id, share_id: share.id)}
@@ -46,9 +42,7 @@ describe WhitelistUpdateWorker do
 		describe "With a single standings 5 API" do
 			#Test Prep
 			let!(:standings_5_corp_api) {
-				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, share_user: share_user, whitelist_standings: 5)
-				end
+				FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, whitelist_standings: 5, active: true)
 			}
 			let(:plus4_whitelist_entity) {FactoryGirl.create(:whitelist, source_share_user: share_user.id, standing: 4, name: "PlusFour", share_id: share.id)}
 			let!(:plus4_standings5_wac) {FactoryGirl.create(:whitelist_api_connection, api_id: standings_5_corp_api.id, whitelist_id: plus4_whitelist_entity.id, share_id: share.id)}
