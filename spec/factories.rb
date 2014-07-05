@@ -52,6 +52,7 @@ FactoryGirl.define do
 		user_id {set_user_id}
 		user_role 0
 		sequence(:main_char_name) {|n| "Main Char #{n}"}
+		approved true
 	end
 
 	factory :api do

@@ -34,9 +34,9 @@ http_interactions:
         \ <currentTime>2014-04-18 16:20:39</currentTime>\r\n  <result>\r\n    <key
         accessMask=\"268435455\" type=\"Character\" expires=\"\">\r\n      <rowset
         name=\"characters\" key=\"characterID\" columns=\"characterID,characterName,corporationID,corporationName,allianceID,allianceName,factionID,factionName\">\r\n
-        \       <row characterID=\"<%=charID%>\" characterName=\"<%=charName%>\" corporationID=\"1416434476\"
-        corporationName=\"Frontier Explorer's League\" allianceID=\"0\" allianceName=\"\"
-        factionID=\"0\" factionName=\"\" />\r\n      </rowset>\r\n    </key>\r\n  </result>\r\n
+        \       <row characterID=\"<%=charID%>\" characterName=\"<%=charName%>\" corporationID=\"<%=corpID%>\"
+        corporationName=\"<%=corpName%>\" allianceID=\"<%=allianceID%>\" allianceName=\"<%=allianceName%>\"
+        factionID=\"<%=factionID%>\" factionName=\"<%=factionName%>\" />\r\n      </rowset>\r\n    </key>\r\n  </result>\r\n
         \ <cachedUntil>2014-04-18 16:25:39</cachedUntil>\r\n</eveapi>"
     http_version: 
   recorded_at: Fri, 18 Apr 2014 16:20:39 GMT
