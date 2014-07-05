@@ -11,14 +11,10 @@ describe "api/show.html.haml" do
 	subject {page}
 
 	let!(:api) {
-		VCR.use_cassette('workers/api_key_info/0characterAPI') do
-			FactoryGirl.create(:api, share_user: share_user)
-		end
+		FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true)
 	}
 	let!(:main_api) {
-		VCR.use_cassette('workers/api_key_info/0characterAPI') do
-			FactoryGirl.create(:api, share_user: share_user, main: true)
-		end
+		FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, main: true, active: true)
 	}
 	before(:each) do
 		visit new_share_user_api_path(user)
@@ -58,13 +54,11 @@ describe "api/show.html.haml" do
 		end
 
 		it "clicking the main character button should redirect to the share user's api index", js: true do
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				visit share_user_api_path(user, api)
-				#http://stackoverflow.com/a/2609244
-				page.evaluate_script('window.confirm = function() { return true; }')
-				find("#set_main_#{character1.id}").click
-				should have_selector('h3', text: "Your APIs")
-			end
+			visit share_user_api_path(user, api)
+			#http://stackoverflow.com/a/2609244
+			page.evaluate_script('window.confirm = function() { return true; }')
+			find("#set_main_#{character1.id}").click
+			should have_selector('h3', text: "Your APIs")
 		end
 
 		it "clicking the main character button should set that character as main", js: true do
