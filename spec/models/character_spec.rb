@@ -51,63 +51,71 @@ describe Character do
 	end
 
 	describe "Public API > " do
-		describe "is_approved? > " do
-			describe " true" do
+		describe "approve_character > " do
+			describe "Whitelisted Characters > " do
 				let!(:whitelistAlliance) {FactoryGirl.create(:whitelist, name: "Alliance", share_id: share.id)}
 				let!(:characterAlliance) {FactoryGirl.create(:character, api: api, allianceName: "Alliance", share_id: share.id)}
 				
-				it "should return true if the character is in a whitelisted alliance" do
-					characterAlliance.is_approved?.should be_true
+				it "should approve the share user if the character is in a whitelisted alliance" do
+					characterAlliance.approve_character
+					expect(share_user.approved).to be true
 				end
 
 				let!(:whitelistCorporation) {FactoryGirl.create(:whitelist, name: "Corporation", share_id: share.id)}
 				let!(:characterCorporation) {FactoryGirl.create(:character, api: api, corporationName: "Corporation", share_id: share.id)}
 				
 				it "should return true if the character is in a whitelisted corporation" do
-					characterCorporation.is_approved?.should be_true
+					characterCorporation.approve_character
+					expect(share_user.approved).to be true
 				end
 
 				let!(:whitelistFaction) {FactoryGirl.create(:whitelist, name: "Faction", share_id: share.id)}
 				let!(:characterFaction) {FactoryGirl.create(:character, api: api, factionName: "Faction", share_id: share.id)}
 				
 				it "should return true if the character is in a whitelisted faction" do
-					characterFaction.is_approved?.should be_true
+					characterFaction.approve_character
+					expect(share_user.approved).to be true
 				end
 
 				let!(:whitelistCharacter) {FactoryGirl.create(:whitelist, name: "Character", share_id: share.id)}
 				let!(:characterCharacter) {FactoryGirl.create(:character, api: api, name: "Character", share_id: share.id)}
 				
 				it "should return true if the character is in a whitelisted character" do
-					characterCharacter.is_approved?.should be_true
+					characterCharacter.approve_character
+					expect(share_user.approved).to be true
 				end
 			end
-			describe "false" do
+			describe "Non-Whitelisted Characters > " do
 				let!(:whitelistAlliance) {FactoryGirl.create(:whitelist, name: "Alliance", share_id: share.id)}
 				let!(:characterAlliance) {FactoryGirl.create(:character, api: api, allianceName: "NotAlliance", share_id: share.id)}
 				
 				it "should return false if the character is in a whitelisted alliance" do
-					characterAlliance.is_approved?.should be_false
+					characterAlliance.approve_character
+					expect(share_user.approved).to be false
 				end
 
 				let!(:whitelistCorporation) {FactoryGirl.create(:whitelist, name: "Corporation", share_id: share.id)}
 				let!(:characterCorporation) {FactoryGirl.create(:character, api: api, corporationName: "NotCorporation", share_id: share.id)}
 				
 				it "should return false if the character is in a whitelisted corporation" do
-					characterCorporation.is_approved?.should be_false
+					characterCorporation.approve_character
+					expect(share_user.approved).to be false
 				end
 
 				let!(:whitelistFaction) {FactoryGirl.create(:whitelist, name: "Faction", share_id: share.id)}
 				let!(:characterFaction) {FactoryGirl.create(:character, api: api, factionName: "NotFaction", share_id: share.id)}
 				
 				it "should return false if the character is in a whitelisted faction" do
-					characterFaction.is_approved?.should be_false
+					characterFaction.approve_character
+					expect(share_user.approved).to be false
 				end
 
 				let!(:whitelistCharacter) {FactoryGirl.create(:whitelist, name: "Character", share_id: share.id)}
 				let!(:characterCharacter) {FactoryGirl.create(:character, api: api, name: "NotCharacter", share_id: share.id)}
 				
 				it "should return false if the character is in a whitelisted character" do
-					characterCharacter.is_approved?.should be_false
+					characterCharacter.approve_character
+					expect(share_user.approved).to be false
 				end
 			end
 		end
