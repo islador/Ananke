@@ -5,11 +5,11 @@ describe ShareUserApprovalWorker do
 		let!(:user) {FactoryGirl.create(:user)}
 		let!(:share) {FactoryGirl.create(:share)}
 		let!(:share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id, approved: false)}
-		let!(:api){FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true)}
+		let!(:api){FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true, main: true)}
 		let!(:main_character){FactoryGirl.create(:character, main:true, characterID: 2202)}
 
 		let!(:approved_share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id, approved: true)}
-		let!(:approved_api){FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true)}
+		let!(:approved_api){FactoryGirl.create(:character_api_skip_determine_type, share_user: approved_share_user, active: true, main: true)}
 		let!(:approved_main_character){FactoryGirl.create(:character, main:true, characterID: 9765, allianceName: "Alliance")}
 		
 		let!(:alliance_whitelist) {FactoryGirl.create(:whitelist, share_id: share.id, name: "Alliance")}
