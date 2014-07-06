@@ -2,20 +2,20 @@
 #
 # Table name: characters
 #
-#  id              :integer          not null, primary key
-#  api_id          :integer
-#  name            :string(255)
-#  characterID     :integer
-#  corporationName :string(255)
-#  corporationID   :integer
-#  allianceName    :string(255)
-#  allianceID      :integer
-#  factionName     :string(255)
-#  factionID       :integer
-#  created_at      :datetime
-#  updated_at      :datetime
-#  main            :boolean
-#  share_id        :integer
+#  id                 :integer          not null, primary key
+#  api_id             :integer
+#  name               :string(255)
+#  ccp_character_id   :integer
+#  corporationName    :string(255)
+#  ccp_corporation_id :integer
+#  allianceName       :string(255)
+#  ccp_alliance_id    :integer
+#  factionName        :string(255)
+#  ccp_faction_id     :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  main               :boolean
+#  share_id           :integer
 #
 
 require 'spec_helper'
@@ -26,23 +26,20 @@ describe Character do
 	let(:share) {FactoryGirl.create(:share)}
 	let(:share_user) {FactoryGirl.create(:share_user, share_id: share.id)}
 	let!(:api) {
-		VCR.use_cassette('workers/api_key_info/0characterAPI') do
-			FactoryGirl.create(:api, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user)
-		end
+		FactoryGirl.create(:character_api_skip_determine_type, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user)
 	}
-	#FactoryGirl.create(:api)}
 	let!(:character) {FactoryGirl.create(:character, api: api, name: "Zeke", share_id: share.id)}
 
 	subject {character}
 
 	it {should respond_to(:name)}
-	it {should respond_to(:characterID)}
+	it {should respond_to(:ccp_character_id)}
 	it {should respond_to(:corporationName)}
-	it {should respond_to(:corporationID)}
+	it {should respond_to(:ccp_corporation_id)}
 	it {should respond_to(:allianceName)}
-	it {should respond_to(:allianceID)}
+	it {should respond_to(:ccp_alliance_id)}
 	it {should respond_to(:factionName)}
-	it {should respond_to(:factionID)}
+	it {should respond_to(:ccp_faction_id)}
 	it {should respond_to(:share_id)}
 
 	it {should be_valid}
@@ -123,7 +120,7 @@ describe Character do
 		end
 
 		describe "should validate presence of characterID" do
-			before {character.characterID = nil}
+			before {character.ccp_character_id = nil}
 			it {should_not be_valid}
 		end
 
@@ -133,7 +130,7 @@ describe Character do
 		end
 
 		describe "should validate presence of corporationID" do
-			before {character.corporationID = nil}
+			before {character.ccp_corporation_id = nil}
 			it {should_not be_valid}
 		end
 
@@ -147,42 +144,36 @@ describe Character do
 			let(:share_1) {FactoryGirl.create(:share)}
 			let(:share_user_11) {FactoryGirl.create(:share_user, share_id: share_1.id)}
 			let!(:api_11) {
-				VCR.use_cassette('workers/api_key_info/0characterAPI') do
-					FactoryGirl.create(:api, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user_11)
-				end
+				FactoryGirl.create(:character_api_skip_determine_type, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user_11)
 			}
 			let(:share_user_12) {FactoryGirl.create(:share_user, share_id: share_1.id)}
 			let!(:api_12) {
-				VCR.use_cassette('workers/api_key_info/0characterAPI') do
-					FactoryGirl.create(:api, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user_12)
-				end
+				FactoryGirl.create(:character_api_skip_determine_type, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user_12)
 			}
 
 			let(:share_2) {FactoryGirl.create(:share)}
 			let(:share_user_21) {FactoryGirl.create(:share_user, share_id: share_2.id)}
 			let!(:api_21) {
-				VCR.use_cassette('workers/api_key_info/0characterAPI') do
-					FactoryGirl.create(:api, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user_21)
-				end
+				FactoryGirl.create(:character_api_skip_determine_type, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235", share_user: share_user_21)
 			}
 			it "should not allow two characters with the same characterID (easier to compare then name strings) on the same share" do
-				char_1 = api_11.characters.build(name: "Jeffrey", characterID: 1234567890, corporationName: "Jeffrey Inc.", corporationID: 987654321, share_id: share_1.id)
+				char_1 = api_11.characters.build(name: "Jeffrey", ccp_character_id: 1234567890, corporationName: "Jeffrey Inc.", ccp_corporation_id: 987654321, share_id: share_1.id)
 				char_1.valid?.should be true
 				if char_1.valid? == true
 					char_1.save!
 				end
-				char_2 = api_12.characters.build(name: "Jeffrey", characterID: 1234567890, corporationName: "Jeffrey Inc.", corporationID: 987654321, share_id: share_1.id)
+				char_2 = api_12.characters.build(name: "Jeffrey", ccp_character_id: 1234567890, corporationName: "Jeffrey Inc.", ccp_corporation_id: 987654321, share_id: share_1.id)
 				char_2.valid?.should be false
-				char_2.errors.messages[:characterID][0].should match "This character has already been registered"
+				char_2.errors.messages[:ccp_character_id][0].should match "This character has already been registered"
 			end
 
 			it "should allow two characters with the same characterID (easier to compare then name strings) on two different shares" do
-				char_1 = api_11.characters.build(name: "Jeffrey", characterID: 1234567890, corporationName: "Jeffrey Inc.", corporationID: 987654321, share_id: share_1.id)
+				char_1 = api_11.characters.build(name: "Jeffrey", ccp_character_id: 1234567890, corporationName: "Jeffrey Inc.", ccp_corporation_id: 987654321, share_id: share_1.id)
 				char_1.valid?.should be true
 				if char_1.valid? == true
 					char_1.save!
 				end
-				char_2 = api_21.characters.build(name: "Jeffrey", characterID: 1234567890, corporationName: "Jeffrey Inc.", corporationID: 987654321, share_id: share_2.id)
+				char_2 = api_21.characters.build(name: "Jeffrey", ccp_character_id: 1234567890, corporationName: "Jeffrey Inc.", ccp_corporation_id: 987654321, share_id: share_2.id)
 				char_2.valid?.should be true
 			end
 		end
