@@ -109,13 +109,13 @@ FactoryGirl.define do
 			set_share_id {FactoryGirl.create(:basic_share).id}
 		end
 		sequence(:name) {|n| "Character#{n}"}
-		sequence(:characterID) {|n| n}
+		sequence(:ccp_character_id) {|n| n}
 		sequence(:corporationName) {|n| "Corporation#{n}"}
-		sequence(:corporationID) {|n| n}
+		sequence(:ccp_corporation_id) {|n| n}
 		sequence(:allianceName) {|n| "Alliance#{n}"}
-		sequence(:allianceID) {|n| n}
+		sequence(:ccp_alliance_id) {|n| n}
 		sequence(:factionName) {|n| "Faction#{n}"}
-		sequence(:factionID) {|n| n}
+		sequence(:ccp_faction_id) {|n| n}
 		main false
 		api
 		share_id {set_share_id} #this is poorly stubbed as a share_id value should be inhereted from the API on creation.

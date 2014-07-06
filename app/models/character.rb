@@ -2,20 +2,20 @@
 #
 # Table name: characters
 #
-#  id              :integer          not null, primary key
-#  api_id          :integer
-#  name            :string(255)
-#  characterID     :integer
-#  corporationName :string(255)
-#  corporationID   :integer
-#  allianceName    :string(255)
-#  allianceID      :integer
-#  factionName     :string(255)
-#  factionID       :integer
-#  created_at      :datetime
-#  updated_at      :datetime
-#  main            :boolean
-#  share_id        :integer
+#  id                 :integer          not null, primary key
+#  api_id             :integer
+#  name               :string(255)
+#  ccp_character_id   :integer
+#  corporationName    :string(255)
+#  ccp_corporation_id :integer
+#  allianceName       :string(255)
+#  ccp_alliance_id    :integer
+#  factionName        :string(255)
+#  ccp_faction_id     :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  main               :boolean
+#  share_id           :integer
 #
 
 class Character < ActiveRecord::Base
@@ -25,9 +25,9 @@ class Character < ActiveRecord::Base
 	#Characters must be unique on a given share. This requires a custom validater to determine that.
 	#Characters on corp APIs create potential conflicts.
 	validates :name, presence: true
-	validates :characterID, presence: true, uniqueness: {scope: :share_id, message: "This character has already been registered"}
+	validates :ccp_character_id, presence: true, uniqueness: {scope: :share_id, message: "This character has already been registered"}
 	validates :corporationName, presence: true
-	validates :corporationID, presence: true
+	validates :ccp_corporation_id, presence: true
 	validates :share_id, presence: true
 
 	#The API can return null values, so validating these presences seems a bit off.
