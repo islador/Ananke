@@ -220,6 +220,13 @@ describe ApiController do
       expect(Character.where("id = ?", character1.id)[0].main).to be_true
     end
 
+    it "should trigger approval of the share user via the main character" do
+      sign_in user
+      xhr :put, :set_main, :share_user_id => share_user.id, :api_id => api2.id, :character_id => character1.id
+
+      expect(ShareUser.find(share_user.id).approved).to be false
+    end
+
     it "should set the main_entity_name of a general API to the main character's name" do
       sign_in user
       xhr :put, :set_main, :share_user_id => share_user.id, :api_id => api2.id, :character_id => character1.id

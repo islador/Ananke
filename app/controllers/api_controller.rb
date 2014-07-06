@@ -68,12 +68,13 @@ class ApiController < ApplicationController
 
       @character.main = true
       if @character.valid? == true
-        @character.save!
+        @character.approve_character
+        @character.save
       end
 
       @api.main = true
       if @api.valid? == true
-        @api.save!
+        @api.save
       end
 
       #Point of optimization. This method could take the Api model already had, do its thing, then save it. Thus avoiding a DB access.
