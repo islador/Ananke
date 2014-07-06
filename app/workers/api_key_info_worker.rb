@@ -30,9 +30,13 @@ class ApiKeyInfoWorker
 				result.key.characters.each do |c|
 					if(c.allianceName == false)
 						allianceName = nil
+					else
+						allianceName = c.allianceName
 					end
 					if(c.factionName == false)
 						factionName = nil
+					else
+						factionName = c.factionName
 					end
 					#puts "allianceName: #{c.allianceName}"
 					#puts "factionName: #{c.factionName}"
