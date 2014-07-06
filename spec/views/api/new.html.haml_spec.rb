@@ -32,7 +32,7 @@ describe "api/new.html.haml > " do
 
 	describe "First API > " do
 		before(:each) do
-			VCR.insert_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1})
+			VCR.insert_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1, :corpID => 12345, :corpName => "VCRCorp", :allianceID => 54321, :allianceName => "VCRAlliance", :factionID=>98765, :factionName=>"VCRFaction"})
 		end
 		after(:each) do
 			VCR.eject_cassette()
@@ -65,7 +65,7 @@ describe "api/new.html.haml > " do
 
 	describe "Corp APIs > " do
 		before(:each) do
-			VCR.insert_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1})
+			VCR.insert_cassette('workers/api_key_info/dynamicCorpAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1, :corpID => 12345, :corpName => "VCRCorp", :allianceID => 54321, :allianceName => "VCRAlliance", :factionID=>98765, :factionName=>"VCRFaction"})
 		end
 		after(:each) do
 			VCR.eject_cassette()
@@ -84,7 +84,7 @@ describe "api/new.html.haml > " do
 	describe "Main API > " do
 
 		before(:each) do
-			VCR.insert_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1})
+			VCR.insert_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1, :corpID => 12345, :corpName => "VCRCorp", :allianceID => 54321, :allianceName => "VCRAlliance", :factionID=>98765, :factionName=>"VCRFaction"})
 		end
 		after(:each) do
 			VCR.eject_cassette()
@@ -158,7 +158,7 @@ describe "api/new.html.haml > " do
 
 	describe "Non Main API > " do
 		before(:each) do
-			VCR.insert_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1})
+			VCR.insert_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1, :corpID => 12345, :corpName => "VCRCorp", :allianceID => 54321, :allianceName => "VCRAlliance", :factionID=>98765, :factionName=>"VCRFaction"})
 		end
 		after(:each) do
 			VCR.eject_cassette()
@@ -176,7 +176,7 @@ describe "api/new.html.haml > " do
 
 	describe "Create > " do
 		before(:each) do
-			VCR.insert_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1})
+			VCR.insert_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "#{Rails.configuration.charCount+1}", :charID => Rails.configuration.charCount += 1, :corpID => 12345, :corpName => "VCRCorp", :allianceID => 54321, :allianceName => "VCRAlliance", :factionID=>98765, :factionName=>"VCRFaction"})
 		end
 		after(:each) do
 			VCR.eject_cassette()
