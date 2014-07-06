@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140611055046) do
+ActiveRecord::Schema.define(version: 20140706005041) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20140611055046) do
   create_table "characters", force: true do |t|
     t.integer  "api_id"
     t.string   "name"
-    t.integer  "characterID"
+    t.integer  "character_id"
     t.string   "corporationName"
     t.integer  "corporationID"
     t.string   "allianceName"
