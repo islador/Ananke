@@ -6,11 +6,12 @@ describe ShareUserApprovalWorker do
 		let!(:share) {FactoryGirl.create(:share)}
 		let!(:share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id, approved: false)}
 		let!(:api){FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true, main: true)}
-		let!(:main_character){FactoryGirl.create(:character, main:true, characterID: 2202)}
+		let!(:main_character){FactoryGirl.create(:character, main:true, ccp_character_id: 2202, api: api)}
 
 		let!(:approved_share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id, approved: true)}
 		let!(:approved_api){FactoryGirl.create(:character_api_skip_determine_type, share_user: approved_share_user, active: true, main: true)}
-		let!(:approved_main_character){FactoryGirl.create(:character, main:true, characterID: 9765, allianceName: "Alliance")}
+		let!(:approved_main_character){FactoryGirl.create(:character, main:true, ccp_character_id: 9765, allianceName: "Alliance", api: approved_api)}
+		let!(:off_character){FactoryGirl.create(:character, main:false, ccp_character_id: 567890, api: approved_api)}
 		
 		let!(:alliance_whitelist) {FactoryGirl.create(:whitelist, share_id: share.id, name: "Alliance")}
 		let!(:corp_whitelist) {FactoryGirl.create(:whitelist, share_id: share.id, name: "Corporation", entity_type: 2)}
@@ -26,12 +27,19 @@ describe ShareUserApprovalWorker do
 			end
 			char = Character.find(main_character.id)
 			expect(char.name).to match "VCRCharacter"
-			expect(char.corporationID).to be 12345
+			expect(char.ccp_corporation_id).to be 12345
 			expect(char.corporationName).to match "VCRCorp"
-			expect(char.allianceID).to be 54321
+			expect(char.ccp_alliance_id).to be 54321
 			expect(char.allianceName).to match "VCRAlliance"
-			expect(char.factionID).to be 98765
+			expect(char.ccp_faction_id).to be 98765
 			expect(char.factionName).to match "VCRFaction"
+		end
+
+		it "should create a new character for the API if one does not already exist" do
+			VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "VCRCharacter", :charID => 567890, :corpID => 12345, :corpName => "VCRCorp", :allianceID => 54321, :allianceName => "VCRAlliance", :factionID=>98765, :factionName=>"VCRFaction"}, :allow_playback_repeats => true) do
+				work.perform(share.id)
+			end
+			expect(Character.where("ccp_character_id = ?", 567890)[0]).to_not be_nil
 		end
 
 		describe "Approvals > " do
@@ -66,7 +74,7 @@ describe ShareUserApprovalWorker do
 
 		describe "Disapprovals > " do
 			it "should disapprove a share user if it's main character is no longer a whitelisted entity or a member of one" do
-				VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "VCRCharacter", :charID => 2202, :corpID => 12345, :corpName => "VCRCorp", :allianceID => 54321, :allianceName => "VCRAlliance", :factionID=>98765, :factionName=>"VCRFaction"}, :allow_playback_repeats => true) do
+				VCR.use_cassette('workers/api_key_info/dynamicCharacterAPI', erb: {:charName => "VCRCharacter", :charID => 9765, :corpID => 12345, :corpName => "VCRCorp", :allianceID => 54321, :allianceName => "VCRAlliance", :factionID=>98765, :factionName=>"VCRFaction"}, :allow_playback_repeats => true) do
 					work.perform(share.id)
 				end
 				expect(ShareUser.find(approved_share_user.id).approved).to be false

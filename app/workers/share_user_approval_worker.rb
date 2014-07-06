@@ -14,6 +14,72 @@ class ShareUserApprovalWorker
 			#Query the API
 			begin
 				result = eve_api.account.apikeyinfo
+
+				#Update the character's affiliations
+
+				if(result.key.type == "Corporation")
+					raise ArgumentError "Corporation APIs not allowed."
+				else
+					allianceName = ""
+					factionName = ""
+
+					result.key.characters.each do |c|
+						if(c.allianceName == false)
+							allianceName = nil
+						else
+							allianceName = c.allianceName
+						end
+
+						if(c.factionName == false)
+							factionName = nil
+						else
+							factionName = c.factionName
+						end
+
+						#Retrieve the character from the database
+						character = ananke_api.characters.where("ccp_character_id = ?", c.characterID)[0]
+
+						#If the character cannot be found
+						if character.nil? == true
+							#Insert it into the database
+							toon = ananke_api.characters.build(name: c.characterName, ccp_character_id: c.characterID, corporationName: c.corporationName, ccp_corporation_id: c.corporationID, allianceName: allianceName, ccp_alliance_id: c.allianceID, factionName: factionName, ccp_faction_id: c.factionID, share_id: ananke_api.share_user.share_id)
+							if toon.valid? == true
+								#puts "Saving: " + toon.ccp_character_id.to_s
+								toon.save
+							else
+								#puts toon.ccp_character_id
+								puts toon.errors.messages
+							end
+						#Otherwise
+						else
+							#Update the character's affiliations
+							if character.name != c.characterName
+								character.name = c.characterName
+							end
+							if character.ccp_corporation_id != c.corporationID
+								character.ccp_corporation_id = c.corporationID
+								character.corporationName = c.corporationName
+							end
+							if character.ccp_alliance_id != c.allianceID
+								character.ccp_alliance_id = c.allianceID
+								character.allianceName = allianceName
+							end
+							if character.ccp_faction_id != c.factionID
+								character.ccp_faction_id = c.factionID
+								character.factionName = factionName
+							end
+
+							#If the character is the main, attempt to approve the share_user
+							if character.main == true
+								character.approve_character
+							end
+							#Don't forget to save the character.
+							character.save
+						end
+					end
+				end
+
+			
 			#If authentication error
 			rescue Eve::Errors::AuthenticationError => e
 				#Set the API to inactive
@@ -21,9 +87,9 @@ class ShareUserApprovalWorker
 
 				#Disapprove the API's share_user.
 				ananke_api.share_user.approved = false
-				ananke_api.share_user.save!
+				ananke_api.share_user.save
 			end
-			ananke_api.save!
+			ananke_api.save
 		end
 	end
 end
