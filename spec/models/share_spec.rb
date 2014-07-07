@@ -44,6 +44,19 @@ describe Share do
 		end
 	end
 
+	describe "Public Methods > " do
+		describe "respect_share?(share_user)" do
+			let!(:user_limit_share) {FactoryGirl.create(:share, user_limit: 1)}
+			let!(:approved_share_user) {FactoryGirl.create(:share_user, approved: true, share_id: user_limit_share.id)}
+			let!(:disapproved_share_user) {FactoryGirl.create(:share_user, approved: false, share_id: user_limit_share.id)}
+
+			it "should return false if the share's user_limit would be exceeded by saving the passed in share_user" do
+				disapproved_share_user.approved = true
+				expect(user_limit_share.respect_share?(disapproved_share_user)).to be false
+			end
+		end
+	end
+
 	describe "Validations > " do
 		describe "should validate presence of 'name'" do
 			before {share.name = nil}
