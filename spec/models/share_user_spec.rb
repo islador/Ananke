@@ -20,7 +20,7 @@ describe ShareUser do
 	let(:owner) {FactoryGirl.create(:user)}
 	let(:user) {FactoryGirl.create(:user)}
 	let(:share) {FactoryGirl.create(:basic_share, owner_id: owner.id)}
-	let!(:share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
+	let!(:share_user){FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id, approved: false)}
 
 	subject{share_user}
 
@@ -71,7 +71,7 @@ describe ShareUser do
 			share_userDB.main_char_name.should match "#{corp_character.name}"
 		end
 	end
-
+	
 	describe "Validations > " do
 		describe "should validate presence of 'share_id'" do
 			before {share_user.share_id = nil}
@@ -86,6 +86,18 @@ describe ShareUser do
 		describe "should validate presence of 'user_role'" do
 			before {share_user.user_role = nil}
 			it {should_not be_valid}
+		end
+
+		describe "RespectShareValidator" do
+			let!(:user_limit_share) {FactoryGirl.create(:share, user_limit: 1)}
+			let!(:approved_share_user) {FactoryGirl.create(:share_user, approved: true, share_id: user_limit_share.id)}
+			let!(:disapproved_share_user) {FactoryGirl.create(:share_user, approved: false, share_id: user_limit_share.id)}
+
+			it "should not be valid if approving it would exceed the share's user_limit" do
+				disapproved_share_user.approved = true
+
+				expect(disapproved_share_user.valid?).to_not be_true
+			end
 		end
 	end
 end
