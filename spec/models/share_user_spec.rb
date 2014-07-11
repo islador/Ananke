@@ -50,25 +50,40 @@ describe ShareUser do
 		end
 	end
 
-	describe "set_main_char_name" do
-		it {should respond_to :main_char_name}
+	describe "Public Methods > " do
+		describe "set_main_char_name" do
+			it {should respond_to :main_char_name}
 
-		let(:share){FactoryGirl.create(:basic_share)}
-		let!(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
-		
-		let!(:corp_api) {
-			VCR.use_cassette('workers/api_key_info/corpAPI') do
-				FactoryGirl.create(:corp_api, share_user: share_user, main: true)
+			let(:share){FactoryGirl.create(:basic_share)}
+			let!(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
+			
+			let!(:corp_api) {
+				VCR.use_cassette('workers/api_key_info/corpAPI') do
+					FactoryGirl.create(:corp_api, share_user: share_user, main: true)
+				end
+			}
+			let!(:corp_character) {FactoryGirl.create(:character, api: corp_api, main: true, corporationName: "Alaskan Fish")}
+			
+			it "should set the user's main_char_name to the main character of the API's name" do
+				share_user.set_main_char_name(corp_character)
+
+				share_userDB = ShareUser.where("id = ?", share_user.id)[0]
+				share_userDB.should_not be_nil
+				share_userDB.main_char_name.should match "#{corp_character.name}"
 			end
-		}
-		let!(:corp_character) {FactoryGirl.create(:character, api: corp_api, main: true, corporationName: "Alaskan Fish")}
-		
-		it "should set the user's main_char_name to the main character of the API's name" do
-			share_user.set_main_char_name(corp_character)
+		end
 
-			share_userDB = ShareUser.where("id = ?", share_user.id)[0]
-			share_userDB.should_not be_nil
-			share_userDB.main_char_name.should match "#{corp_character.name}"
+		describe "maintain_share_user(api)" do
+			let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id, approved: true)}
+
+			let!(:api) {FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, main: true, active: true)}
+
+			it "should set the share_user to disapproved if the API passed in is an inactive main API" do
+				api.active=false
+				
+				share_user.maintain_share_user(api)
+				expect(ShareUser.find(share_user.id).approved).to be false
+			end
 		end
 	end
 	
@@ -98,6 +113,6 @@ describe ShareUser do
 
 				expect(disapproved_share_user.valid?).to_not be_true
 			end
-		end
+		end			
 	end
 end
