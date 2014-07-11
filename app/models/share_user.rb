@@ -28,4 +28,11 @@ class ShareUser < ActiveRecord::Base
 		self.main_char_name = character.name
 		self.save!
 	end
+
+	def maintain_share_user(api)
+		if api.main == true && api.active == false
+			self.approved = false
+			self.save
+		end
+	end
 end
