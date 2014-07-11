@@ -88,6 +88,21 @@ describe Api do
 		end
 	end
 
+	describe "Callbacks > " do
+		describe "after_save :inform_share_user > " do
+			let(:share_user) {FactoryGirl.create(:share_user, user_id: user.id)}
+			let!(:api) {
+				FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689", main: true)
+			}
+
+			it "should disapprove the share_user if the api is an inactive main api" do
+				api.active = false
+				api.save
+				expect(ShareUser.find(share_user.id).approved).to be false
+			end
+		end
+	end
+
 	describe "Validations > " do
 		#describe "should validate presence of entity" do
 		#	before {api.entity = nil}

@@ -30,7 +30,8 @@ class Api < ActiveRecord::Base
 	has_many :whitelists, through: :whitelist_api_connections
 
 	after_create :determine_type
-	
+	after_save :inform_share_user
+
 	validates :key_id, presence: true#, uniqueness: true
 	validates :v_code, presence: true
 
@@ -47,10 +48,6 @@ class Api < ActiveRecord::Base
 		end
 	end
 
-	def determine_type
-		ApiKeyInfoWorker.perform_async(self.id)
-	end
-
 	#Point of optimization. This method could take the Api model as an arguemtn, do its thing, then save it. Thus avoiding a DB access in certain situations.
 	def set_main_entity_name
 		#Throw an error if the API is not a main API
@@ -61,5 +58,14 @@ class Api < ActiveRecord::Base
 			self.main_entity_name = self.characters.where("main = true")[0].name
 		end
 		self.save
+	end
+
+	private 
+	def determine_type
+		ApiKeyInfoWorker.perform_async(self.id)
+	end
+
+	def inform_share_user
+		self.share_user.maintain_share_user(self)
 	end
 end
