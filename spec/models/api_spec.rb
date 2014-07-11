@@ -26,9 +26,7 @@ describe Api do
 	let(:user) {FactoryGirl.create(:user, :email => "user@example.com")}
 	let(:share_user) {FactoryGirl.create(:share_user, user_id: user.id)}
 	let!(:api) {
-		VCR.use_cassette('workers/api_key_info/accountAPI') do
-			FactoryGirl.create(:api, share_user: share_user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689", main: true)
-		end
+		FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, v_code: "thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI", key_id: "2564689", main: true)
 	}
 	let!(:api_character) {FactoryGirl.create(:character, api: api, main: true)}
 
@@ -70,9 +68,7 @@ describe Api do
 
 		describe "Corp API >" do
 			let!(:corp_api) {
-				VCR.use_cassette('workers/api_key_info/corpAPI') do
-					FactoryGirl.create(:corp_api, share_user: share_user)
-				end
+				FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
 			}
 			let!(:whitelist) {FactoryGirl.create(:whitelist)}
 			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist.id)}
@@ -123,16 +119,12 @@ describe Api do
 		it {should respond_to(:set_main_entity_name)}
 
 		let!(:corporation_api) {
-			VCR.use_cassette('workers/api_key_info/corpAPI') do
-				FactoryGirl.create(:corp_api, share_user: share_user, main: true)
-			end
+			FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, main: true)
 		}
 		let!(:corp_character) {FactoryGirl.create(:character, api: corporation_api, main: true)}
 
 		let!(:general_api) {
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				FactoryGirl.create(:api, share_user: share_user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")
-			end
+			FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")
 		}
 		let!(:general_character) {FactoryGirl.create(:character, api: api)}
 
