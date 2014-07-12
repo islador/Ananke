@@ -10,6 +10,7 @@ Ananke::Application.routes.draw do
   devise_for :users
   resources :share
     get "/name_available", to: "share#name_available"
+    get "/join", to: "share#join"
 
   resources :share_users do
     resources :api do

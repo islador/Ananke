@@ -21,6 +21,7 @@ FactoryGirl.define do
 		active true
 		user_limit 10
 		grade 1
+		join_link nil
 
 		factory :trial_share do
 			grade 1
