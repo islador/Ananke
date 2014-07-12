@@ -63,6 +63,12 @@ describe ShareController do
       xhr :post, :create, :plan => "basic"
       response.body.should match "false"
     end
+
+    it "should assign a variable new_join_link to act as the public join link" do
+      sign_in user
+      xhr :post, :create, :plan => "basic", :share_name => "test_share"
+      expect(Share.last.join_link).not_to be_nil
+    end
   end
 
   describe "GET 'destroy'" do
