@@ -10,6 +10,7 @@
 #  grade      :integer
 #  created_at :datetime
 #  updated_at :datetime
+#  join_link  :string(255)
 #
 
 class Share < ActiveRecord::Base

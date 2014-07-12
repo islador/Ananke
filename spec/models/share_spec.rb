@@ -10,6 +10,7 @@
 #  grade      :integer
 #  created_at :datetime
 #  updated_at :datetime
+#  join_link  :string(255)
 #
 
 require 'spec_helper'
@@ -24,6 +25,7 @@ describe Share do
 	it {should respond_to(:active)}
 	it {should respond_to(:user_limit)}
 	it {should respond_to(:grade)}
+	it {should respond_to(:join_link)}
 
 	it {should be_valid}
 
