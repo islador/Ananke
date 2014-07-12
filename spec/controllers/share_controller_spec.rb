@@ -114,4 +114,61 @@ describe ShareController do
     end
   end
 
+  describe "GET 'join' > " do
+    let!(:share) {FactoryGirl.create(:basic_share, join_link: "abcdefg")}
+
+    it "should return http 404 if the join_id is not valid" do
+      sign_in user
+      get 'join', :join_id => "123123"
+      response.status.should be 404
+    end
+
+    it "should retrieve the specified share from the database" do
+      sign_in user
+      get 'join', :join_id => share.join_link
+      expect(assigns(:share)).to eq share
+    end
+
+    describe "existing user > " do
+      let!(:share2) {FactoryGirl.create(:share, join_link: "thgrfe")}
+      let!(:user2) {FactoryGirl.create(:user)}
+      let!(:share_user) {FactoryGirl.create(:share_user, user_id: user2.id, share_id: share2.id)}
+
+      it "should not create a new share_user if the user already has one" do
+        sign_in user2
+        expect{
+          get 'join', :join_id => share2.join_link
+        }.to_not change(ShareUser, :count)
+      end
+
+      it "should redirect the user to the share's page if the user is already a member of the share" do
+        sign_in user2
+        get 'join', :join_id => share2.join_link
+        expect(response).to redirect_to share_path(id: share2.id)
+      end
+    end
+
+    describe "new user > " do
+      it "should return http success if the join_id is valid" do
+        sign_in user
+        get 'join', :join_id => share.join_link
+        response.should be_redirect
+      end
+
+      it "should create a new share_user if the user does not have one with the share" do
+        sign_in user
+        expect{
+          get 'join', :join_id => share.join_link
+        }.to change(ShareUser, :count).by(+1)
+      end
+
+      it "should redirect to the new api page if the user is not already a member of the share" do
+        sign_in user
+        get 'join', :join_id => share.join_link
+        expect(response).to be_redirect
+        expect(response).not_to redirect_to share_path(id: share.id)
+      end
+    end
+        
+  end
 end
