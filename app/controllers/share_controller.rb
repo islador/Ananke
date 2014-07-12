@@ -17,7 +17,7 @@ class ShareController < ApplicationController
         @new_share = Share.new(name: params[:share_name], grade: 2, active: true, owner_id: current_user.id, user_limit: 50)
         #Create a custom join link for the share
         @new_share.join_link = Base64.encode64("#{params[:share_name]}"+"#{Time.now}").chomp.reverse
-        
+
         if @new_share.valid? == true
             @new_share.save!
             render :json => @new_share.id
@@ -44,9 +44,30 @@ class ShareController < ApplicationController
     end
 
     def join
-        #A user should be able to join a share by API
-        #A user should be able to join a share by typing in the group's name
-            #Group name should filter from Alliance, to Corporation, and return the first match
         #A user should be able to join a share by invite link <-optimal solution
+        @share = Share.where("join_link = ?", params[:join_id])[0]
+        if @share.nil? == false
+            #@share_user = ShareUser.where("share_id = ? AND user_id = ?", @share.id, current_user.id)[0]
+            #@current_share_user = ShareUser.where("id = ? AND user_id = ?", share_id, current_user.id)[0]
+            #puts current_share_user(@share.id).nil?
+            #puts @share_user.nil?
+            if current_share_user(@share.id).nil? == false
+            #if @share_user.nil? == false
+                redirect_to share_path(@share.id)
+            else
+            #    puts "sup"
+                @share_user = @share.share_users.new(user_id: current_user.id, user_role: 0, approved: false)
+                if @share_user.valid? == true
+                    @share_user.save
+
+                    redirect_to new_share_user_api_path(share_user_id: @share_user.id)
+                end
+            end#lse
+                #redirect_to share_path(@share.id)
+            #end
+        else
+            render nothing: true, status: 404
+        end
+        
     end
 end
