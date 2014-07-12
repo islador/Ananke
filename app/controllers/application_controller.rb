@@ -11,23 +11,23 @@ class ApplicationController < ActionController::Base
 
 	def current_share_user
 		#This currently offers no security. Any user may change URLs to view another's data.
-		@current_share_user = ShareUser.where("id = ?", params[:share_user_id])[0]
-		#puts "CurrentShareUser: " + @current_share_user.apis.count.to_s
+		#@current_share_user = ShareUser.where("id = ?", params[:share_user_id])[0]
+		
+		#This implementation locks the return to a given user, which prevents other users from seeing another's data
+		@current_share_user = ShareUser.where("id = ? AND user_id = ?", params[:share_user_id], current_user.id)[0]
+		
 		#The below may not be needed; more research is required to determine this.
 		if @current_share_user.nil? == true
 			#Using this method as the primary adds security by returning nil if the user does not actually possess the share_user given as a param.
 			@current_share_user = ShareUser.where("share_id = ? AND user_id = ?", params[:id], current_user.id)[0]
 		end
-		#This implementation locks the return to a user, which prevents other users from seeing another's data
-		#@current_share_user = ShareUser.where("id = ? AND user_id = ?", params[:share_user_id], current_user.id)[0]
 
 		return @current_share_user
-		#@current_share_user = ShareUser.where("share_id = ? AND user_id = ?", session[:share_id], current_user.id)[0]
 	end
 
 	def require_share_user
 		if session[:share_user_id] == nil
-			flash[:error] = "You either lack permission to view that page, or have not selected a gropu yet. Please select a group before continuing."
+			flash[:error] = "You either lack permission to view that page, or have not selected a group yet. Please select a group before continuing."
 			redirect_to share_index_path
 		end
 	end

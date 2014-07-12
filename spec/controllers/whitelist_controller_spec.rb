@@ -69,6 +69,7 @@ describe WhitelistController do
 
   describe "GET 'white_list_log'" do
     it "returns http success" do
+      sign_in user
       get 'white_list_log', share_user_id: share_user.id
       response.should be_success
     end
@@ -76,6 +77,7 @@ describe WhitelistController do
     let!(:whitelistLog) {FactoryGirl.create(:whitelist_log, share_id: share.id)}
     let!(:whitelistLog2) {FactoryGirl.create(:whitelist_log, share_id: share2.id)}
     it "should build an @wll object containing all whitelists in the current share" do
+      sign_in user
       get 'white_list_log', share_user_id: share_user.id
       expect(assigns(:wll)).to include(whitelistLog)
       expect(assigns(:wll)).to_not include(whitelistLog2)
