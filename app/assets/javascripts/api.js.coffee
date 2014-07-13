@@ -32,13 +32,22 @@ jQuery ->
 			$.ajax({
 				url: target, type: "PUT",
 				data: {character_id: character_id, authenticity_token: authenticity_token},
-				success: remove_main_button(character_id, share_user_id)
+				success: (data) ->
+					if data[0] is true
+						redirect_to_api_list(share_user_id)
+					else
+						remove_main_button(character_id)
+						display_alert(data)
 			})
 
-	#Function to remove an entire row from the volunteer index table.
-	remove_main_button = (character_id, share_user_id) ->
+	remove_main_button = (character_id) ->
 		$("#column_set_main_" + character_id).empty().append("Main Character")
-		window.location.href = "/share_users/" + share_user_id + "/api"
+
+	redirect_to_api_list = (share_user_id) ->
+		$(location).attr('href',"/share_users/#{share_user_id}/api")
+
+	display_alert=(alert)->
+		$(".inner-center").prepend("<div class='alert js-alert'>#{alert[0]}</div>")
 
 
 	#API Index
