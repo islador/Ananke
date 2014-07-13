@@ -12,8 +12,6 @@ describe "whitelist/white_list_log.haml >" do
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
-		find("#share_#{share.id}").click
-		visit share_user_whitelist_white_list_log_path(share_user)
 	end
 
 	describe " Table > " do

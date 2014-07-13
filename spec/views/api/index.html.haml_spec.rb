@@ -15,8 +15,6 @@ describe "api/index.html.haml > " do
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
-		find("#share_#{share.id}").click
-		visit share_user_api_index_path(share_user)
 	end
 
 	it "should contain an explanation of terms", js: true do
@@ -48,15 +46,11 @@ describe "api/index.html.haml > " do
 
 	describe "Api List Table > " do
 		let!(:main) {
-			VCR.use_cassette('workers/api_key_info/0characterAPI') do
-				FactoryGirl.create(:api, share_user: share_user, main_entity_name: "Jeff", main: true)
-			end
+			FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, main_entity_name: "Jeff", main: true)
 		}
 		let!(:character) {FactoryGirl.create(:character, api: main, main: true, share_id: share.id)}
 		let!(:general) {
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				FactoryGirl.create(:api, share_user: share_user)
-			end
+			FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)
 		}
 
 		it "should contain items from the database", js: true do
@@ -97,9 +91,7 @@ describe "api/index.html.haml > " do
 
 	describe "Delete > " do
 		let!(:api) {
-			VCR.use_cassette('workers/api_key_info/characterAPI') do
-				FactoryGirl.create(:api, share_user: share_user)
-			end
+			FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)
 		}
 		it "should remove the api from the datatable when clicked", js: true do
 			visit share_user_api_index_path(share_user)

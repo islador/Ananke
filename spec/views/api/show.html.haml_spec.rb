@@ -17,12 +17,10 @@ describe "api/show.html.haml" do
 		FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, main: true, active: true)
 	}
 	before(:each) do
-		visit new_share_user_api_path(user)
+		visit share_user_api_path(share_user, api)
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
-		find("#share_#{share.id}").click
-		visit share_user_api_path(share_user, api)
 	end
 	
 	it "should load in the character list partial", js: true do
@@ -42,14 +40,14 @@ describe "api/show.html.haml" do
 		end
 
 		it "the main character should not have a button to set it as a main character", js: true do
-			visit share_user_api_path(user, main_api)
+			visit share_user_api_path(share_user, main_api)
 			within "tr#character_id_#{main_character.id}" do
 				should_not have_selector("button#set_main_#{main_character.id}")
 			end
 		end
 
 		it "the main character should be marked as such", js: true do
-			visit share_user_api_path(user, main_api)
+			visit share_user_api_path(share_user, main_api)
 			should have_selector("tr#character_id_#{main_character.id}", text: "Main Character")
 		end
 

@@ -15,7 +15,6 @@ describe "share/index.html.haml" do
 				fill_in('user_email', :with => user.email)
 				fill_in('user_password', :with => user.password)
 				click_button 'Sign in'
-				visit share_index_path
 			end
 			
 			it "should contain an indexBox with that share's ID" do
@@ -46,7 +45,6 @@ describe "share/index.html.haml" do
 				fill_in('user_email', :with => user.email)
 				fill_in('user_password', :with => user.password)
 				click_button 'Sign in'
-				visit share_index_path
 			end
 
 			it "should contain a centered indexBox" do

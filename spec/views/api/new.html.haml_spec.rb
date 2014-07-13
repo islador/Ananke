@@ -15,8 +15,6 @@ describe "api/new.html.haml > " do
 		fill_in('user_email', :with => user.email)
 		fill_in('user_password', :with => user.password)
 		click_button 'Sign in'
-		find("#share_#{share.id}").click
-		visit new_share_user_api_path(share_user)
 	end
 
 	it "should contain a link to generate a prefab key from", js: true do
