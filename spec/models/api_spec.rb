@@ -129,37 +129,4 @@ describe Api do
 		#	it {should_not be_valid}
 		#end
 	end
-
-	describe "set_main_entity_name" do
-		it {should respond_to(:set_main_entity_name)}
-
-		let!(:corporation_api) {
-			FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, main: true)
-		}
-		let!(:corp_character) {FactoryGirl.create(:character, api: corporation_api, main: true)}
-
-		let!(:general_api) {
-			FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, v_code: "P4IZDKR0BqaFVZdvy24QVnFmkmsNjcicEocwvTdpxtTz7YhF2tPNigeVhr3Y8l5x", key_id: "3255235")
-		}
-		let!(:general_character) {FactoryGirl.create(:character, api: api)}
-
-		it "should set the main character's name as the api's main entity name" do
-			api.set_main_entity_name()
-
-			apiDB = Api.where("id = ?", api.id)[0]
-			apiDB.main_entity_name.should match "#{api_character.name}"
-		end
-
-		it "should not work on a non-main API" do
-			expect{
-				general_api.set_main_entity_name()
-				}.to raise_error ArgumentError
-		end
-
-		it "should not work with a corp API" do
-			expect{
-				corporation_api.set_main_entity_name()
-				}.to raise_error ArgumentError
-		end
-	end
 end
