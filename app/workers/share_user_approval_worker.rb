@@ -71,7 +71,13 @@ class ShareUserApprovalWorker
 
 							#If the character is the main, attempt to approve the share_user
 							if character.main == true
-								character.approve_character
+								share_user = ananke_api.share_user
+								if character.approve_character? == true
+									share_user.approved = true
+								else
+									share_user.approved = false
+								end
+								share_user.save
 							end
 							#Don't forget to save the character.
 							character.save
