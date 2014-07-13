@@ -38,7 +38,6 @@ header {
 	width: 200px;
 	margin-left: auto;
 	margin-right: auto;
-	
 }
 
 .forgotten_password {
@@ -51,6 +50,32 @@ header {
 	width: 300px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.outer-center {
+    float: right;
+    right: 50%;
+    position: relative;
+}
+.inner-center {
+    float: right;
+    right: -50%;
+    position: relative;
+}
+.clear{
+	clear:both;
+}
+
+/* Alerts/Flash */
+.alert {
+	display: inline-block;
+	border-color: black;
+	border-radius: 5px;
+	text-align:center;
+	background-color: #FFFF66;
+	//.alert-alert{
+	//	background-color: #FFFF66;
+	//}
 }
 
 /*APIs*/
