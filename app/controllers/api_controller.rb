@@ -77,15 +77,20 @@ class ApiController < ApplicationController
 
       @api.main = true
       if @api.valid? == true
+        @api.main_entity_name = @character.name
         @api.save
       end
-
-      #Point of optimization. This method could take the Api model already had, do its thing, then save it. Thus avoiding a DB access.
-      @api.set_main_entity_name
 
       share_user.main_char_name = @character.name
 
       share_user.save
+      #check if the share_user is valid
+      #if not, check the error
+      #if it is an approval error, set the approved attribute to false
+      #save the share user
+      #send the user a message explaining the problem
+      #else
+      #render nothing as normal
       render nothing: true
     else
       #render json: false
