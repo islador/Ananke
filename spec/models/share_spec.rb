@@ -56,6 +56,10 @@ describe Share do
 				disapproved_share_user.approved = true
 				expect(user_limit_share.respect_share?(disapproved_share_user)).to be false
 			end
+
+			it "should return true if the share_user was approved, and will remain approved" do
+				expect(user_limit_share.respect_share?(approved_share_user)).to be true
+			end
 		end
 	end
 
