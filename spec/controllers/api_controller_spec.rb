@@ -234,6 +234,12 @@ describe ApiController do
       expect(Api.where("id = ?", api2.id)[0].main_entity_name).to match character1.name
     end
 
+    it "should set the share_user's main_char_name to the main character's name" do
+      sign_in user
+      xhr :put, :set_main, share_user_id: share_user.id, api_id: api2.id, character_id: character1.id
+      expect(ShareUser.where("id = ?", share_user.id)[0].main_char_name).to match character1.name
+    end
+
     describe "with Corp APIs > " do
       #Corporation APIs may not be used to set mains. This helps avoid character name collisions.
       let!(:corporation_api) {
