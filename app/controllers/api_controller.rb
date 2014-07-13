@@ -63,12 +63,17 @@ class ApiController < ApplicationController
       
 
       #Set it's main to true
-      #@api = Api.where("id = ?", params[:api_id])[0]
       @character = Character.where("id = ?", params[:character_id])[0]
 
       @character.main = true
       if @character.valid? == true
-        @character.approve_character
+        share_user = current_share_user
+        if @character.approve_character? == true
+          share_user.approved = true
+        else
+          share_user.approved = false
+        end
+        share_user.save
         @character.save
       end
 
