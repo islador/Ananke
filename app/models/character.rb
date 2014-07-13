@@ -37,23 +37,28 @@ class Character < ActiveRecord::Base
 	#validates :factionID, presence: true
 
 	#Check the whitelist to see if the character is on the list in one capacity or another.
-	def approve_character
+	def approve_character?
 		share_id = self.api.share_user.share_id
 		#Check the alliance, as it is most likely to be true.
 		if(Whitelist.where("name = ? AND share_id = ?", self.allianceName, share_id)[0].nil? == false)
-			self.api.share_user.approved = true
+			#self.api.share_user.approved = true
+			return true
 			#Check the corporation next
 		elsif(Whitelist.where("name = ? AND share_id = ?", self.corporationName, share_id)[0].nil? == false)
-			self.api.share_user.approved = true
+			#self.api.share_user.approved = true
+			return true
 			#Check the Faction next
 		elsif(Whitelist.where("name = ? AND share_id = ?", self.factionName, share_id)[0].nil? == false)
-			self.api.share_user.approved = true
+			#self.api.share_user.approved = true
+			return true
 			#Check the character name last
 		elsif Whitelist.where("name = ? AND share_id = ?", self.name, share_id)[0].nil? == false
-			self.api.share_user.approved = true
+			#self.api.share_user.approved = true
+			return true
 		else
 			self.api.share_user.approved = false
+			return false
 		end
-		self.api.share_user.save
+		#self.api.share_user.save
 	end
 end
