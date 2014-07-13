@@ -15,7 +15,7 @@ class ApiController < ApplicationController
     api = Api.where("id = ?", params[:id])[0]
     if api.nil? == false
       if api.main.nil? == true || api.main == false
-        api.destroy!
+        api.destroy
       end
     end
     render nothing: true
@@ -59,7 +59,7 @@ class ApiController < ApplicationController
           old_character.save!
         end
         old_api.main = false
-        old_api.save!
+        old_api.save
       end
 
       #Set it's main to true
@@ -83,7 +83,16 @@ class ApiController < ApplicationController
 
       share_user.main_char_name = @character.name
 
-      share_user.save
+      if share_user.valid? == false && share_user.errors.messages[:share_users].nil? == false
+        #Queue an email to the share owner/admins explaining who's just joined, but couldn't be approved, and why.
+        render :json => share_user.errors.messages[:share_users]
+        share_user.approved = false
+        share_user.save
+      else
+        share_user.save
+        #render nothing: true
+        render :json => [true]
+      end
       #check if the share_user is valid
       #if not, check the error
       #if it is an approval error, set the approved attribute to false
@@ -91,7 +100,7 @@ class ApiController < ApplicationController
       #send the user a message explaining the problem
       #else
       #render nothing as normal
-      render nothing: true
+      
     else
       #render json: false
       render nothing: true, status: 400
