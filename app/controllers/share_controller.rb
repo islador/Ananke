@@ -1,5 +1,5 @@
 class ShareController < ApplicationController
-    before_action :authenticate_user!, only: [:create, :destroy, :index, :show]
+    before_action :authenticate_user!, only: [:create, :destroy, :index, :show, :join]
 
     def new
     end
@@ -36,35 +36,21 @@ class ShareController < ApplicationController
 
     def show
         @share = Share.where("id = ?", params[:id])[0]
-        #session[:share_id] = @share.id
-        shareUser = ShareUser.where("share_id = ? AND user_id = ?", @share.id, current_user.id)[0]
-        if shareUser.nil? == false
-            session[:share_user_id] = shareUser.id
-        end
     end
 
     def join
         #A user should be able to join a share by invite link <-optimal solution
         @share = Share.where("join_link = ?", params[:join_id])[0]
         if @share.nil? == false
-            #@share_user = ShareUser.where("share_id = ? AND user_id = ?", @share.id, current_user.id)[0]
-            #@current_share_user = ShareUser.where("id = ? AND user_id = ?", share_id, current_user.id)[0]
-            #puts current_share_user(@share.id).nil?
-            #puts @share_user.nil?
             if current_share_user(@share.id).nil? == false
-            #if @share_user.nil? == false
                 redirect_to share_path(@share.id)
             else
-            #    puts "sup"
                 @share_user = @share.share_users.new(user_id: current_user.id, user_role: 0, approved: false)
                 if @share_user.valid? == true
                     @share_user.save
-
                     redirect_to new_share_user_api_path(share_user_id: @share_user.id)
                 end
-            end#lse
-                #redirect_to share_path(@share.id)
-            #end
+            end
         else
             render nothing: true, status: 404
         end

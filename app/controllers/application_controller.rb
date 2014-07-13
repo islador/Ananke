@@ -5,9 +5,28 @@ class ApplicationController < ActionController::Base
 
 	helper_method :current_share_user
 
-	def after_sign_in_path_for(user)
-		share_index_path(current_user)
+	before_filter :store_location
+
+	def store_location
+		# store last url - this is needed for post-login redirect to whatever the user last visited.
+		return unless request.get? 
+			if (request.path != "/users/sign_in" &&
+				request.path != "/users/sign_up" &&
+				request.path != "/users/password/new" &&
+				request.path != "/users/sign_out" &&
+				!request.xhr?) # don't store ajax calls
+			session[:previous_url] = request.fullpath
+		end
 	end
+
+	def after_sign_in_path_for(user)
+		session[:previous_url] || share_index_path(current_user)
+	end
+
+	#def after_sign_in_path_for(user)
+	#	current_user_path
+		#share_index_path(current_user)
+	#end
 
 	#I dislike this implementation. I would prefer to use two seperate functions with the same name and different args.
 	#However, that throws errors on some specs.
@@ -34,7 +53,8 @@ class ApplicationController < ActionController::Base
 	end
 
 	def require_share_user
-		if session[:share_user_id] == nil
+		if current_share_user == nil
+		#if session[:share_user_id] == nil
 			flash[:error] = "You either lack permission to view that page, or have not selected a group yet. Please select a group before continuing."
 			redirect_to share_index_path
 		end
