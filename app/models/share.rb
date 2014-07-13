@@ -28,13 +28,19 @@ class Share < ActiveRecord::Base
 	def respect_share?(share_user)
 		#Ensure the share's user_limit is respected.
 		if share_user.approved == true
-			count = self.share_users.where("approved = true").count
-			#This assumes that in the event this returns true, the share_user will be added to the share.
-			#Thus it must count up, so that a share with 10 users and a 10 user limit will return false.
-			if count+1<=self.user_limit
+			#if the share_user is not new and was previously approved
+			if share_user.id != nil && ShareUser.find(share_user.id).approved == true
+				#Edge Case: If the ShareUser started approved, and the new save would also leave it approved, the approved share_user count would not increase. Thus we return true.
 				return true
 			else
-				return false
+				count = self.share_users.where("approved = true").count
+				#This assumes that in the event this returns true, the share_user will be added to the share.
+				#Thus it must count up, so that a share with 10 users and a 10 user limit will return false.
+				if count+1<=self.user_limit
+					return true
+				else
+					return false
+				end
 			end
 		end
 		#This method can be expanded as the share grows.
