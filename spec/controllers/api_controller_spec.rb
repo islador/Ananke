@@ -167,13 +167,6 @@ describe ApiController do
     }
     let!(:character5){FactoryGirl.create(:character, api: inactive_api, share_id: share.id, ccp_character_id: Rails.configuration.charCount+=1)}
 
-    let!(:user_2) {FactoryGirl.create(:user)}
-    let!(:share_user_2) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user_2.id, approved: false)}
-    let!(:su2_api) {FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user_2, active: true)}
-    let!(:su2_character) {FactoryGirl.create(:character, api: su2_api, main: false, share_id: share.id)}
-
-    let!(:whitelist) {FactoryGirl.create(:whitelist, share_id: share.id, name: su2_character.name)}
-
     it "should return http 400 for inactive APIs" do
       sign_in user
       xhr :put, :set_main, :share_user_id => share_user.id, :api_id => inactive_api.id, :character_id => character5.id
@@ -247,12 +240,27 @@ describe ApiController do
       expect(ShareUser.where("id = ?", share_user.id)[0].main_char_name).to match character1.name
     end
 
-    it "if the share_user is invalid with a :share_users error it should return an error array." do
-      expected = {:share_users=>["The share has reached its user limit, please contact your CEO or Tech Admin about this issue."]}.to_json
+    describe " share_user invalid with a :share_users error" do
+      let!(:user_2) {FactoryGirl.create(:user)}
+      let!(:share_user_2) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user_2.id, approved: false)}
+      let!(:su2_api) {FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user_2, active: true)}
+      let!(:su2_character) {FactoryGirl.create(:character, api: su2_api, main: false, share_id: share.id, ccp_character_id: Rails.configuration.charCount+=1)}
 
-      sign_in user_2
-      xhr :put, :set_main, share_user_id: share_user_2.id, api_id: su2_api.id, character_id: su2_character.id
-      expect(response.body).to match expected
+      let!(:whitelist) {FactoryGirl.create(:whitelist, share_id: share.id, name: su2_character.name)}
+      
+      it "if the share_user is invalid with a :share_users error it should return an error array." do
+        expected = ["This uses regexp matching, not string comparison matching. Cute"].to_json
+
+        sign_in user_2
+        xhr :put, :set_main, share_user_id: share_user_2.id, api_id: su2_api.id, character_id: su2_character.id
+        expect(response.body).to match expected
+      end
+
+      it "if the share_user is invalid with a :share_users error, it should still set the share_user's main_char_name to the new main character's name" do
+        sign_in user_2
+        xhr :put, :set_main, share_user_id: share_user_2.id, api_id: su2_api.id, character_id: su2_character.id
+        expect(ShareUser.where("id = ?", share_user_2.id)[0].main_char_name).to match su2_character.name
+      end
     end
 
     describe "with Corp APIs > " do
