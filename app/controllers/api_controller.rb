@@ -46,10 +46,11 @@ class ApiController < ApplicationController
   def set_main
     #Retrieve the new API
     @api = Api.where("id = ?", params[:api_id])[0]
+    share_user = current_share_user
     if @api.ananke_type !=1 && @api.active == true
       #Point of possible optimization
       #Retrieve the old API and set it's main to false
-      old_api = current_share_user.apis.where("main = true")[0]
+      old_api = share_user.apis.where("main = true")[0]
       #Nil check first to avoid empty on nil error
       if old_api.nil? == false
         old_character = old_api.characters.where("main = true")[0]
@@ -60,20 +61,17 @@ class ApiController < ApplicationController
         old_api.main = false
         old_api.save!
       end
-      
 
       #Set it's main to true
       @character = Character.where("id = ?", params[:character_id])[0]
 
       @character.main = true
       if @character.valid? == true
-        share_user = current_share_user
         if @character.approve_character? == true
           share_user.approved = true
         else
           share_user.approved = false
         end
-        share_user.save
         @character.save
       end
 
@@ -85,7 +83,9 @@ class ApiController < ApplicationController
       #Point of optimization. This method could take the Api model already had, do its thing, then save it. Thus avoiding a DB access.
       @api.set_main_entity_name
 
-      current_share_user.set_main_char_name(@character)
+      share_user.main_char_name = @character.name
+
+      share_user.save
       render nothing: true
     else
       #render json: false
