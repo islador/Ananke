@@ -25,16 +25,6 @@ Ananke::Application.configure do
     :password => "hkLx52qKlEi7pNZDOOrrgQ",
     :authentication => "plain"
   }
-  #Development settings for action mailer
-  #ActionMailer::Base.smtp_settings = {
-  #  :address    => "smtp.gmail.com",
-  #  :port       => 587,
-  #  :domain     => "gmail.com",
-  #  :user_name  => "luke.isla@gmail.com",
-  #  :password   => "xojmeyuftghcsbvo",
-  #  :authentication => "plain",
-  #  :enable_starttls_auto => true
-  #}
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
