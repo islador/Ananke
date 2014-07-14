@@ -20,8 +20,7 @@ class ShareController < ApplicationController
 
         if @new_share.valid? == true
             @new_share.save
-            #@new_share_user = @new_share.share_users.create()
-            #redirect_to join_path(@new_share.join_link)
+
             render :json => [@new_share.join_link]
         else
             render :json => [false]
