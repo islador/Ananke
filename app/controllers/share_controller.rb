@@ -19,10 +19,12 @@ class ShareController < ApplicationController
         @new_share.join_link = Base64.encode64("#{params[:share_name]}"+"#{Time.now}").chomp.reverse
 
         if @new_share.valid? == true
-            @new_share.save!
-            render :json => @new_share.id
+            @new_share.save
+            #@new_share_user = @new_share.share_users.create()
+            #redirect_to join_path(@new_share.join_link)
+            render :json => [@new_share.join_link]
         else
-            render :json => false
+            render :json => [false]
         end
     end
 
