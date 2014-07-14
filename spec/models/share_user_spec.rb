@@ -82,8 +82,9 @@ describe ShareUser do
 		end
 
 		describe "RespectShareValidator" do
-			let!(:user_limit_share) {FactoryGirl.create(:share, user_limit: 1)}
-			let!(:approved_share_user) {FactoryGirl.create(:share_user, approved: true, share_id: user_limit_share.id)}
+			let(:owner) {FactoryGirl.create(:user)}
+			let!(:user_limit_share) {FactoryGirl.create(:share, owner_id: owner.id, user_limit: 1)}
+			let!(:owner_su) {FactoryGirl.create(:share_user, share_id: user_limit_share.id, user_id: owner.id, approved: true)}
 			let!(:disapproved_share_user) {FactoryGirl.create(:share_user, approved: false, share_id: user_limit_share.id)}
 
 			it "should not be valid if approving it would exceed the share's user_limit" do
