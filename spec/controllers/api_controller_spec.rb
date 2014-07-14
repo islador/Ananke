@@ -9,7 +9,7 @@ describe ApiController do
   }
 
   let(:user) {FactoryGirl.create(:user)}
-  let(:share) {FactoryGirl.create(:share, user_limit:1)}
+  let(:share) {FactoryGirl.create(:share, user_limit: 2)}
   let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id, approved: true)}
 
   describe "CREATE 'create'" do

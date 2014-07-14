@@ -51,13 +51,6 @@ describe ShareController do
       Share.where("name = ?", "Available")[0].nil?.should be false
     end
 
-    it "should return the ID of the new share when successfully created" do
-      sign_in user
-      xhr :post, :create, :share_name => "Available", :plan => "basic"
-      share_id = Share.where("name = ?", "Available")[0].id
-      response.body.should match "#{share_id}"
-    end
-
     it "should return false if the share is not successfully created" do
       sign_in user
       xhr :post, :create, :plan => "basic"
@@ -68,6 +61,12 @@ describe ShareController do
       sign_in user
       xhr :post, :create, :plan => "basic", :share_name => "test_share"
       expect(Share.last.join_link).not_to be_nil
+    end
+
+    it "should not return '[false]' after a share is successfully created" do
+      sign_in user
+      xhr :post, :create, :plan => "basic", :share_name => "test_share"
+      expect(response.body).not_to eq [false].to_s
     end
   end
 

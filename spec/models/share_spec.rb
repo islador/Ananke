@@ -36,19 +36,19 @@ describe Share do
 		it {should respond_to(:share_users)}
 
 		it "should have user as a share_user" do
-			share.share_users[0].user_id.should be user.id
+			share.share_users.where("id = ?", share_user.id)[0].should_not be_nil
 		end
 
 		it {should respond_to :users}
 
-		it "should have a share" do
-			share.users[0].id.should be user.id
+		it "should have a user" do
+			share.users.where("user_id = ?", user.id)[0].should_not be_nil
 		end
 	end
 
 	describe "Public Methods > " do
 		describe "respect_share?(share_user)" do
-			let!(:user_limit_share) {FactoryGirl.create(:share, user_limit: 1)}
+			let!(:user_limit_share) {FactoryGirl.create(:share, user_limit: 2)}
 			let!(:approved_share_user) {FactoryGirl.create(:share_user, approved: true, share_id: user_limit_share.id)}
 			let!(:disapproved_share_user) {FactoryGirl.create(:share_user, approved: false, share_id: user_limit_share.id)}
 
