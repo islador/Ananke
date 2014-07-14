@@ -65,6 +65,7 @@ describe "api/show.html.haml" do
 			page.evaluate_script('window.confirm = function() { return true; }')
 
 			find("#set_main_#{character1.id}").click
+			sleep(1)
 			Character.find(character1.id).main.should be true
 		end
 	end

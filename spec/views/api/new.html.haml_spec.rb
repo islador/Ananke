@@ -150,6 +150,7 @@ describe "api/new.html.haml > " do
 			#http://stackoverflow.com/a/2609244
 			page.evaluate_script('window.confirm = function() { return true; }')
 			click_button 'Set as Main'
+			sleep(2)
 			Character.last.main.should be true
 		end
 	end
