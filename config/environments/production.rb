@@ -17,15 +17,14 @@ Ananke::Application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
 
-  #Development settings for action mailer, production will need to be changed to a proper mail server.
+  #production mailer setups
   ActionMailer::Base.smtp_settings = {
-    :address    => "smtp.gmail.com",
-    :port       => 587,
-    :domain     => "gmail.com",
-    :user_name  => "luke.isla@gmail.com",
-    :password   => "xojmeyuftghcsbvo",
-    :authentication => "plain",
-    :enable_starttls_auto => true
+    :address => "smtp.mandrillapp.com",
+    :port => 587,
+    :domain => "ananke.pw",
+    :user_name => ENV['MANDRILL_USERNAME'],
+    :password => ENV['MANDRILL_APIKEY'],
+    :authentication => "plain"
   }
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application

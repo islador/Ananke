@@ -17,16 +17,24 @@ Ananke::Application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
 
-  #Development settings for action mailer
   ActionMailer::Base.smtp_settings = {
-    :address    => "smtp.gmail.com",
-    :port       => 587,
-    :domain     => "gmail.com",
-    :user_name  => "luke.isla@gmail.com",
-    :password   => "xojmeyuftghcsbvo",
-    :authentication => "plain",
-    :enable_starttls_auto => true
+    :address => "smtp.mandrillapp.com",
+    :port => 587,
+    :domain => "ananke.pw",
+    :user_name => "luke.isla@gmail.com",
+    :password => "hkLx52qKlEi7pNZDOOrrgQ",
+    :authentication => "plain"
   }
+  #Development settings for action mailer
+  #ActionMailer::Base.smtp_settings = {
+  #  :address    => "smtp.gmail.com",
+  #  :port       => 587,
+  #  :domain     => "gmail.com",
+  #  :user_name  => "luke.isla@gmail.com",
+  #  :password   => "xojmeyuftghcsbvo",
+  #  :authentication => "plain",
+  #  :enable_starttls_auto => true
+  #}
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
