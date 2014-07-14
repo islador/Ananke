@@ -90,20 +90,10 @@ class ApiController < ApplicationController
         share_user.save
       else
         share_user.save
-        #render nothing: true
         render :json => [true]
       end
-      #check if the share_user is valid
-      #if not, check the error
-      #if it is an approval error, set the approved attribute to false
-      #save the share user
-      #send the user a message explaining the problem
-      #else
-      #render nothing as normal
-      
     else
-      #render json: false
-      render nothing: true, status: 400
+      render :json => ["Something broke, why not try again?"], status: 400
     end
     
   end
