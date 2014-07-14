@@ -13,7 +13,7 @@ FactoryGirl.define do
 
 	factory :share do
 		ignore do
-			set_owner_id {FactoryGirl.create(:user).id}
+			set_owner_id 1
 		end
 
 		sequence(:name){|n| "Share #{n}"}
@@ -22,6 +22,7 @@ FactoryGirl.define do
 		user_limit 10
 		grade 1
 		join_link nil
+		after(:create) { |instance| instance.owner_id = FactoryGirl.create(:share_user, share_id: instance.id).user_id; instance.save! }
 
 		factory :trial_share do
 			grade 1
