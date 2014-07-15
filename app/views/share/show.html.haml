@@ -1,6 +1,8 @@
 %h1= @share.name
 /%h1= current_share.id
 %h1= current_share_user.id
+%h2=link_to "Join Link", "/join?join_id=#{@share.join_link}"
+
 %h1 Share#show
 %p Find me in app/views/share/show.html.haml
 
