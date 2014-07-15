@@ -27,13 +27,13 @@ describe WhitelistController do
       FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: false)
     }
     #Share 1
-    let!(:whitelist) {FactoryGirl.create(:whitelist, share_id: share.id)}
+    let!(:whitelist) {FactoryGirl.create(:whitelist, share_id: share.id, source_share_user: share_user.id)}
     let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_corp_api.id, whitelist_id: whitelist.id, share_id: share.id)}
     #Share 2
     let!(:pulled_corp_api2) {
       FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user2, active: true)
     }
-    let!(:whitelist2) {FactoryGirl.create(:whitelist, share_id: share2.id)}
+    let!(:whitelist2) {FactoryGirl.create(:whitelist, share_id: share2.id, source_share_user: share_user2.id)}
     let!(:whitelist_api_connection2) {FactoryGirl.create(:whitelist_api_connection, api_id: pulled_corp_api2.id, whitelist_id: whitelist2.id)}
     
 
@@ -48,6 +48,15 @@ describe WhitelistController do
       get 'white_list', share_user_id: share_user.id
       expect(assigns(:wl)).to include(whitelist)
       expect(assigns(:wl)).to_not include(whitelist2)
+    end
+
+    it "should build an @source_share_user_names object containing all of the main_char_names responsible for creating a whitelist entity." do
+      sign_in user
+      get 'white_list', share_user_id: share_user.id
+
+      #expect(assigns(:source_share_user_names).has_value?(whitelist.source_share_user)).to be true
+      expect(assigns(:source_share_user_names).key(whitelist.source_share_user).to_s).to match share_user.main_char_name
+      expect(assigns(:source_share_user_names).key(whitelist2.source_share_user).to_s).not_to match share_user2.main_char_name
     end
 
     it "should build an @active_pull_apis object containing all of the APIs currently being pulled from on the given share" do
