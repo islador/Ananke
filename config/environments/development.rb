@@ -7,14 +7,24 @@ Ananke::Application.configure do
   config.cache_classes = false
 
   # Do not eager load code on boot.
-  config.eager_load = false
+  # Swapped from false to true to ensure sidekiq workers are loaded. May not be necessary when sidekiq is fully implemented.
+  config.eager_load = true
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+
+  ActionMailer::Base.smtp_settings = {
+    :address => "smtp.mandrillapp.com",
+    :port => 587,
+    :domain => "ananke.pw",
+    :user_name => "luke.isla@gmail.com",
+    :password => "hkLx52qKlEi7pNZDOOrrgQ",
+    :authentication => "plain"
+  }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

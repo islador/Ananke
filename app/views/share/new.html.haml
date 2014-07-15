@@ -1,0 +1,21 @@
+%div{:class => "container-fluid"}
+	%div{:class => "row"}
+		%div{:class=>"col-centered"}
+			%div{:id=>"error_message"}
+			%div{:class => "input-valid-icon-right"}
+				%i{:id => "name_name_valid", :class => "glyphicon glyphicon-ok"}
+				%i{:id => "name_name_invalid", :class => "glyphicon glyphicon-remove"}
+				=text_field(:name, :name, :placeholder => "Group Name (Required)")
+			%button{:id =>"register_new_group", :class => "btn btn-l btn-danger", :data => {:target_path => "/share"}} Register Group
+
+%h1 Share#new
+
+%h3 Basic Concept
+A page displaying the form necessary to create a new Share
+%ul
+	%li If not logged in, inform user they must create an account/login to enroll a new group
+	%li Name Form - Name must be unique, so do some AJAX to validate that before submission
+	%li Plan Select - Display limits of plans
+	%li Requires the owner already be logged in - Devise Logged in that is
+	%li Question about displaying the share publicly
+	%Li Upload Logo Graphic - Pulls Alliance/Corp logos from provided APIs, this is only needed for other groups such as coalitions.

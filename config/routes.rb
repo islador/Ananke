@@ -1,7 +1,40 @@
 Ananke::Application.routes.draw do
 
+  
+
+  #resources :whitelist,  only: [:create, :destroy]
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   devise_for :users
-  root to: 'static_pages#home'
+  resources :share
+    get "/name_available", to: "share#name_available"
+    get "/join", to: "share#join"
+
+  resources :share_users do
+    resources :api do
+      get "/character_list", to: "api#character_list"
+      put "/set_main", to: "api#set_main"
+      put "/cancel_whitelist_api_pull", to: "api#cancel_whitelist_api_pull"
+      put "/begin_whitelist_api_pull", to: "api#begin_whitelist_api_pull"
+      put "/update_api_whitelist_standing", to: "api#update_api_whitelist_standing"
+    end
+
+    resources :whitelist,  only: [:create, :destroy]
+    get "whitelist/white_list"
+    get "whitelist/white_list_log"
+    get "whitelist/retrieve_pullable_apis", to: "whitelist#retrieve_pullable_apis"
+  end
+  
+  #Set root to the sign_in page.
+  #http://stackoverflow.com/questions/4954876/setting-devise-login-to-be-root-page
+  devise_scope :user do
+    root to: "share#index"
+    #root to: "devise/sessions#new"
+  end
+
+  #root to: 'static_pages#home'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

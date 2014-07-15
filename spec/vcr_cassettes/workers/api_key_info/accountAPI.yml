@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.eveonline.com/account/Apikeyinfo.xml.aspx
+    body:
+      encoding: US-ASCII
+      string: Submodules&KeyId=2564689&VCode=thHJr2qQrhLog2u3REUn6RZLk89QXJUJD4I0cJoI12vJ9BMbJ79sySG4oo4xWLSI&Includes=account
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/xml; charset=utf-8
+      Vary:
+      - Accept-Encoding
+      Date:
+      - Fri, 18 Apr 2014 16:20:40 GMT
+    body:
+      encoding: UTF-8
+      string: "<?xml version='1.0' encoding='UTF-8'?>\r\n<eveapi version=\"2\">\r\n
+        \ <currentTime>2014-04-18 16:20:40</currentTime>\r\n  <result>\r\n    <key
+        accessMask=\"268431871\" type=\"Account\" expires=\"\">\r\n      <rowset name=\"characters\"
+        key=\"characterID\" columns=\"characterID,characterName,corporationID,corporationName,allianceID,allianceName,factionID,factionName\">\r\n
+        \       <row characterID=\"92302697\" characterName=\"Skurks\" corporationID=\"1000060\"
+        corporationName=\"Native Freshfood\" allianceID=\"0\" allianceName=\"\" factionID=\"0\"
+        factionName=\"\" />\r\n        <row characterID=\"93248586\" characterName=\"Dakin
+        Foral\" corporationID=\"98130165\" corporationName=\"Unending Fires\" allianceID=\"0\"
+        allianceName=\"\" factionID=\"0\" factionName=\"\" />\r\n        <row characterID=\"1806847019\"
+        characterName=\"Teradosh\" corporationID=\"1416434476\" corporationName=\"Frontier
+        Explorer's League\" allianceID=\"0\" allianceName=\"\" factionID=\"0\" factionName=\"\"
+        />\r\n      </rowset>\r\n    </key>\r\n  </result>\r\n  <cachedUntil>2014-04-18
+        16:25:40</cachedUntil>\r\n</eveapi>"
+    http_version: 
+  recorded_at: Fri, 18 Apr 2014 16:20:40 GMT
+recorded_with: VCR 2.9.0

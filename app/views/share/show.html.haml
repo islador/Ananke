@@ -1,0 +1,23 @@
+%h1= @share.name
+/%h1= current_share.id
+%h1= current_share_user.id
+%h2=link_to "Join Link", "/join?join_id=#{@share.join_link}"
+
+%h1 Share#show
+%p Find me in app/views/share/show.html.haml
+
+%h3 Basic Concept
+A share's default landing page, from here all else takes shape
+%ul
+	%li Should be accessible by Name, not ID, this forces uniqueness on Share Names.
+	%li When a user is not authorized as part of this group, display a 'Join <Group Name>' button and nothing else
+	%li When a user is authorized
+	%ul	
+		%li TS Access buttons
+		%li Delete your account on this share button
+		%li If roles permit:
+		%ul
+			%li Whitelist Access buttons - CEO/Director ?
+			%li Blacklist Access buttons - admin?
+			%li ShareUser index access buttons - Admin, Owner
+			%li TS Management/Moderation access buttons

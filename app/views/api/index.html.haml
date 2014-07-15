@@ -1,0 +1,64 @@
+%h3 Your APIs
+%div{:class => "explanation"}
+	%p= session[:share_id]
+	%p Below is a list of all APIs you've enrolled with this organization.
+	%ul
+		%li APIs may be used to authorize yourself for access to coms
+
+%div{:class => "btn-group"}
+	%a{:href => "/share_users/#{current_share_user.id}/api/new", :id => "enroll_new_api_1", :class => "btn btn-l btn-primary enroll-api"} Enroll New API
+
+%table.table.table-condensed{:id => "api_list_table"}
+	%thead
+		%tr
+			%th Name
+			%th Type
+			%th Main
+			%th Main Entity
+			%th Key ID
+			%th Verification Code
+			%th Active
+			%th
+	%tbody
+		- @apis.each do |api|
+			%tr{:id => "api_#{api.id}"}
+				%td= api.name
+				
+				- if api.ananke_type == 1
+					%td Corporation
+				- else
+					%td General
+
+				-if api.main == true
+					%td Main API
+				-elsif api.ananke_type == 1
+					%td N/A
+				-else
+					%td
+						%a{:href => "/share_users/#{current_share_user.id}/api/#{api.id}", :id => "link_set_main_api_#{api.id}", :class => "btn btn-xs btn-warning"} Set as Main API
+
+				-if api.main == true
+					%td= api.main_entity_name
+				-else
+					%td
+
+				%td= api.key_id
+				%td= api.v_code
+				-if api.active == true
+					%td Active
+				-else
+					%td Inactive
+				
+				-if api.main == true
+					%td 
+				-else
+					%td
+						%button{:id => "destroy_api_#{api.id}", :class => "btn btn-xs btn-danger", :data => {:target_path => "/share_users/#{current_share_user.id}/api/#{api.id}", :api_id => "api_#{api.id}"}} Delete
+
+%div{:class => "btn-group"}
+	%a{:href => "/share_users/#{current_share_user.id}/api/new", :id => "enroll_new_api_2", :class => "btn btn-l btn-primary enroll-api"} Enroll New API
+
+%h3 Basic Concept
+An index page comprised of a datatable displaying all the APIs currently owned by this user.
+%ul
+	%li A flash should be added after registering and being directed here; "Please enroll an API to get authorized".

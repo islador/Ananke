@@ -1,0 +1,102 @@
+body {
+	padding-top: 51px;
+}
+
+/* Header */
+
+header {
+	.navbar-brand {
+		padding-top:0px;
+	}
+	ul.nav.pull-right {
+		float: right;
+		list-style: none;
+		li {
+			float: left;
+			margin-left: 10px;
+			margin-top: 5px;
+			a:hover {
+				background-color: transparent;
+			}
+		}
+		.dropdown{
+			//background-color: red;
+			.open {
+				background-color: red;
+			}
+			.open:focus {
+				background-color: red;
+			}
+			.open:active {
+				background-color: red;
+			}
+			.open:hover {
+				background-color: red;
+			}
+		}
+		.dropdown-menu {
+			float: none;
+			list-style: none;
+			background-color: #222222;
+		}
+	}
+	
+}
+
+/*Devise*/
+.sign_in {
+	width: 200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.forgotten_password {
+	width: 310px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.resend_confirmation {
+	width: 300px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.outer-center {
+    float: right;
+    right: 50%;
+    position: relative;
+}
+.inner-center {
+    float: right;
+    right: -50%;
+    position: relative;
+}
+.clear{
+	clear:both;
+}
+
+/* Alerts/Flash */
+.alert {
+	display: inline-block;
+	border-color: black;
+	border-radius: 5px;
+	text-align:center;
+	background-color: #FFFF66;
+	.js-alert {
+		background-color: #FF3300;
+	}
+}
+
+.alert.alert-information{
+	background-color: #37E31E;
+	a {
+		color: #0046DE;
+	}
+}
+
+/*APIs*/
+
+.btn-group {
+	float: right;
+}

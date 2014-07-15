@@ -1,0 +1,56 @@
+%h3 White list log
+
+
+%ul 
+	%li Should contain any changes to the whitelist <3 months old
+	%li
+		%ul
+			%li the source type of the change
+			%li the source (user) that made the change
+			%li whether it was an addition/removal of an entity
+			%li the name(s) of the entities added
+			%li the type of entity added
+			%li the date of the change
+			%li the time of then change
+	%li Just a straight log displayed with data tables https://datatables.net/
+	%li Maybe make clicking a row in the table link to the user that done it?
+
+%table.table.table-condensed{:id => "whitelist_log_table"}
+	%thead
+		%tr
+			%th Entity Name
+			%th Entity Type
+			%th Source User
+			%th Source Type
+			%th Addition
+			%th Date
+			%th Time
+	%tbody
+		- @wll.each do |log|
+			%tr{:id => "entity_#{log.id}"}
+				%td= log.entity_name
+				- if log.entity_type == 1
+					%td Alliance
+				- elsif log.entity_type == 2
+					%td Corporation
+				- elsif log.entity_type == 3
+					%td Faction
+				- elsif log.entity_type == 5
+					%td API Pull
+				- else
+					%td Character
+
+				%td= log.source_share_user
+
+				-if log.source_type == 1
+					%td API
+				-else
+					%td Manual
+
+				-if log.addition == true
+					%td Addition
+				-else
+					%td Removal
+
+				%td= log.date
+				%td= log.time

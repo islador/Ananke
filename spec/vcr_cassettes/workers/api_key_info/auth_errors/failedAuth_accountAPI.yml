@@ -1,0 +1,36 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.eveonline.com/account/Apikeyinfo.xml.aspx
+    body:
+      encoding: US-ASCII
+      string: Submodules&KeyId=3422527&VCode=eV8hp7bVaNmiBGf3aNOFrPDqGLOaqQYCIiSiVAtUrp5u3AfeIc8EQMvtPjOChtG2&Includes=account
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 04 Jul 2014 02:02:23 GMT
+      Content-Length:
+      - '224'
+    body:
+      encoding: UTF-8
+      string: "<?xml version='1.0' encoding='UTF-8'?>\r\n<eveapi version=\"2\">\r\n
+        \ <currentTime>2014-07-04 02:02:24</currentTime>\r\n  <error code=\"203\">Authentication
+        failure.</error>\r\n  <cachedUntil>2014-07-05 02:02:24</cachedUntil>\r\n</eveapi>"
+    http_version: 
+  recorded_at: Fri, 04 Jul 2014 02:02:23 GMT
+recorded_with: VCR 2.9.0

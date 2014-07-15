@@ -1,0 +1,27 @@
+%div.api-info-box
+	%h2.name-box=@api.name
+	
+	-if @api.active == true
+		%h2.active-api Active
+	-else
+		%h2.inactive-api Inactive
+	-if @api.main == true
+		%h2.main-api Main API
+
+%div.character-list
+	-if @api.ananke_type != 1
+		= render :partial => 'shared/character_list', :locals => { :api => @api, :cl => @cl}
+
+%div{:class => "btn-group"}
+	-if @api.main != true
+		%a{:href => "/share_users/#{current_share_user.id}/api", :id => "show_destroy_api_#{@api.id}",:class => "btn btn-xs btn-danger", :data => {:target_path => "/share_users/#{current_share_user.id}/api/#{@api.id}", :api_id => "api_#{@api.id}"}} Delete API
+
+%h3 Basic Concept
+A page displaying the details of a single API
+%ul
+	%li When the API was added
+	%li When it was last queried?
+	%li Its characters
+	%li Whether it is the main API or not
+	%li If it is the main API, the main Character.
+	%li A delete button

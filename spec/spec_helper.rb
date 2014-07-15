@@ -11,6 +11,9 @@ Spork.prefork do
 	require File.expand_path("../../config/environment", __FILE__)
 	require 'rspec/rails'
 	require 'rspec/autorun'
+	require 'database_cleaner'
+	require 'webmock/rspec'
+	require 'sidekiq/testing'
 
 	# Requires supporting ruby files with custom matchers and macros, etc,
 	# in spec/support/ and its subdirectories.
@@ -21,7 +24,11 @@ Spork.prefork do
 	ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
 	RSpec.configure do |config|
+		#Sourced from https://www.relishapp.com/vcr/vcr/v/2-9-0/docs/test-frameworks/usage-with-rspec-metadata
 		config.treat_symbols_as_metadata_keys_with_true_values = true
+
+		Sidekiq::Testing.inline!
+
 		config.run_all_when_everything_filtered = true
 		config.filter_run :focus
 
@@ -33,6 +40,7 @@ Spork.prefork do
 
 		config.include Capybara::DSL
 		config.include FactoryGirl::Syntax::Methods
+		config.include Devise::TestHelpers, type: :controller
 
 		# For selenium according to: https://groups.google.com/d/msg/ruby-capybara/2lFnQvMFGxs/YvOvebpctFcJ
 		config.use_transactional_fixtures = false
@@ -41,9 +49,9 @@ Spork.prefork do
 			DatabaseCleaner.clean_with(:truncation)
 		end
 
-		config.before(:each) do
-			DatabaseCleaner.strategy = :truncation
-		end
+		#config.before(:each) do
+		#	DatabaseCleaner.strategy = :truncation
+		#end
 
 		config.before(:each, :js => true) do
 			DatabaseCleaner.strategy = :truncation

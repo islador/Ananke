@@ -1,0 +1,24 @@
+%div{:id => "character_list", :data => {:api_id => "#{@api.id}"}}
+	%div{:class => "explanation"}
+		%p By selecting a main character you tell Ananke what name to use for you. This name will be your account's public face within the system.
+		%p For example, if you select a main character by the name of "Tom", "Tom" is the name you and others will see for you in TeamSpeak.
+
+	%table.table.table-condensed{:id => "character_list_table"}
+		%thead
+			%tr
+				%th Name
+				%th Corporation
+				%th Alliance
+				%th Main
+		%tbody
+			- @cl.each do |character|
+				%tr{:id => "character_id_#{character.id}"}
+					%td= character.name
+					%td= character.corporationName
+					%td= character.allianceName
+
+					-if character.main == true
+						%td Main Character
+					-else
+						%td{:id => "column_set_main_#{character.id}"}
+							%button{:id => "set_main_#{character.id}", :class => "btn btn-xs btn-warning", :data => {:target_path => "/share_users/#{current_share_user.id}/api/#{@api.id}/set_main", :character_id => "#{character.id}", :share_user_id => "#{current_share_user.id}"}} Set as Main
