@@ -1,9 +1,10 @@
 %div{:class => "container-fluid"}
 	%div{:class => "row"}
 		-if @user_shares.empty? == true
-			%div{ :class=>"indexBox"}
-				%div{:class=>"glyphicon glyphicon-plus"}
-				%div{:class=>"joinGroup"}Join a Group
+			%div.outer-center
+				%div.inner-center
+					%div.alert.alert-information
+						You don't seem to be a member of any groups. Why don't you ask your leaders for the join link or <b><a href="#{new_share_path}">make your own group?</a></b>
 		-else
 			-@user_shares.each do |share|
 				%div{:class=>"col-md-4"}
