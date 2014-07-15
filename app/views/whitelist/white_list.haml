@@ -67,7 +67,7 @@
 				- else
 					%td Character
 
-				%td= entity.source_share_user
+				%td= @source_share_user_names.key(entity.source_share_user)
 
 				-if entity.source_type == 1
 					%td API
