@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140716043413) do
+ActiveRecord::Schema.define(version: 20140716193038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,19 @@ ActiveRecord::Schema.define(version: 20140716043413) do
     t.integer  "entity_type"
     t.integer  "source_type"
     t.integer  "source_share_user_id"
+    t.integer  "share_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "black_list_entity_logs", force: true do |t|
+    t.string   "entity_name"
+    t.integer  "source_share_user_id"
+    t.integer  "source_type"
+    t.boolean  "addition"
+    t.integer  "entity_type"
+    t.date     "date"
+    t.datetime "time"
     t.integer  "share_id"
     t.datetime "created_at"
     t.datetime "updated_at"
