@@ -15,18 +15,19 @@ class WhitelistController < ApplicationController
 
 	#Display methods
 	def white_list
-		@wl = Whitelist.where("share_id = ?", current_share_user.share_id)
+		csu = current_share_user
+		@wl = Whitelist.where("share_id = ?", csu.share_id)
 
 		#Build the source_share_user names
 		@source_share_user_names = {}
 
-		#This is an N+2 query. How do we fix it?
-		values = Whitelist.where("share_id =?", current_share_user.share_id).pluck("source_share_user").uniq
+		values = Whitelist.where("share_id =?", csu.share_id).pluck("source_share_user").uniq
+		names = ShareUser.where(id: values).pluck("main_char_name")
 		values.each do |val|
-			@source_share_user_names.store(ShareUser.where("id = ?", val)[0].main_char_name.to_sym, val)
+			@source_share_user_names.store(names[values.index(val)].to_sym, val)
 		end
 
-		@active_pull_apis = Api.joins(:whitelist_api_connections).where("share_id = ?", current_share_user.share_id).uniq
+		@active_pull_apis = Api.joins(:whitelist_api_connections).where("share_id = ?", csu.share_id).uniq
 		@user_char_names = []
 		@active_pull_apis.each do |api|
 			@user_char_names.push(api.share_user.main_char_name)
