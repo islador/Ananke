@@ -185,4 +185,10 @@ FactoryGirl.define do
 		time Time.new(2014)
 		share_id {FactoryGirl.create(:basic_share).id}
 	end
+
+	factory :black_list_entity_api_connection do		
+		api_id {FactoryGirl.create(:character_api_skip_determine_type).id}
+		black_list_entity_id {FactoryGirl.create(:black_list_entity).id}
+		share_id {FactoryGirl.create(:basic_share).id}
+	end
 end
