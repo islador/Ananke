@@ -86,6 +86,7 @@ FactoryGirl.define do
 			ananke_type 1
 			main_entity_name "Alaskan Fish"
 			whitelist_standings 0
+			black_list_standings 0
 		end
 
 		factory :corp_api_skip_determine_type do
@@ -98,6 +99,7 @@ FactoryGirl.define do
 			ananke_type 1
 			main_entity_name "Alaskan Fish"
 			whitelist_standings 0
+			black_list_standings 0
 			after(:build) { |api| api.class.skip_callback(:create, :after, :determine_type) }
 		end
 

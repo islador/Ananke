@@ -2,20 +2,21 @@
 #
 # Table name: apis
 #
-#  id                  :integer          not null, primary key
-#  share_user_id       :integer
-#  ccp_type            :integer
-#  key_id              :string(255)
-#  v_code              :string(255)
-#  accessmask          :integer
-#  active              :boolean
-#  created_at          :datetime
-#  updated_at          :datetime
-#  main_entity_name    :string(255)
-#  ananke_type         :integer
-#  main                :boolean
-#  name                :string(255)
-#  whitelist_standings :integer
+#  id                   :integer          not null, primary key
+#  share_user_id        :integer
+#  ccp_type             :integer
+#  key_id               :string(255)
+#  v_code               :string(255)
+#  accessmask           :integer
+#  active               :boolean
+#  created_at           :datetime
+#  updated_at           :datetime
+#  main_entity_name     :string(255)
+#  ananke_type          :integer
+#  main                 :boolean
+#  name                 :string(255)
+#  whitelist_standings  :integer
+#  black_list_standings :integer
 #
 
 require 'spec_helper'
@@ -42,6 +43,7 @@ describe Api do
 	it {should respond_to(:main)}
 	it {should respond_to(:characters)}
 	it {should respond_to(:whitelist_standings)}
+	it {should respond_to(:black_list_standings)}
 
 	it {should be_valid}
 
