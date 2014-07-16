@@ -47,9 +47,9 @@ describe "share/index.html.haml" do
 				click_button 'Sign in'
 			end
 
-			it "should contain a centered indexBox" do
-				should have_selector(".indexBox .joinGroup")
-				should_not have_selector(".col-md-4 .indexBox .joinGroup")
+			it "should contain a centered alert" do
+				should have_selector(".alert.alert-information")
+				should_not have_selector(".col-md-4 .indexBox")
 			end
 		end
 	end
