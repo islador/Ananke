@@ -28,6 +28,28 @@ describe BlackListEntity do
 
 	it {should be_valid}
 
+	describe "Associations > " do
+		let(:user) {FactoryGirl.create(:user)}
+		let(:share) {FactoryGirl.create(:share)}
+		let!(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
+		let!(:black_list_entity) {FactoryGirl.create(:black_list_entity, source_share_user_id: share_user.id, source_type: 1, share_id: share.id)}
+		let!(:api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
+		let!(:black_list_entity_api_connection) {FactoryGirl.create(:black_list_entity_api_connection, api_id: api.id, black_list_entity_id: black_list_entity.id, share_id: share.id)}
+		
+		subject{black_list_entity}
+
+		it {should respond_to(:black_list_entity_api_connections)}
+		it {should respond_to(:apis)}
+
+		it "black_list_entity.apis should yield the associated api" do
+			expect(BlackListEntity.find(black_list_entity.id).apis).to eq([api])
+		end
+
+		it "should destroy its black_list_entity_api_connections when destroyed" do
+			expect(black_list_entity.destroy).to change(BlackListEntityApiConnection, :count).by(-1)
+		end	
+	end
+
 	describe "Callbacks > " do
 		let!(:user) {FactoryGirl.create(:user)}
 		let!(:share) {FactoryGirl.create(:share)}
