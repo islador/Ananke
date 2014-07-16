@@ -69,11 +69,20 @@ describe Whitelist do
 				}.to change(WhitelistLog, :count).by(+1)
 		end
 
-		xit "on save, should create the correct log item" do
+		it "on save, should create the correct log item" do
+			expected = WhitelistLog.new(entity_name: "Jack", addition: true, entity_type: 1, source_type: 2, source_share_user: share_user.id, date: Date.today, time: Time.new(2014), share_id: share.id)
 			Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_share_user: share_user.id, share_id: share.id)
-			expect{
-				WhitelistLog.last
-				}.to eq(WhitelistLog.new(entity_name: "Jack", addition: true, entity_type: 1, source_type: 2, source_share_user: share_user.id, date: Date.today, time: Time.new(2014), share_id: share.id))
+			log = WhitelistLog.last
+			
+			expect(log.entity_name).to eq(expected.entity_name)
+			expect(log.addition).to eq(expected.addition)
+			expect(log.entity_type).to eq(expected.entity_type)
+			expect(log.source_type).to eq(expected.source_type)
+			expect(log.source_share_user).to eq(expected.source_share_user)
+			expect(log.date).to eq(expected.date)
+			expect(log.share_id).to eq(expected.share_id)
+			#Not comparing on time, not worth stubbing.
+			#expect(log.time).to eq(expected.time)
 		end
 
 		it "on destroy it should create a whitelist log item" do
@@ -83,12 +92,21 @@ describe Whitelist do
 				}.to change(WhitelistLog, :count).by(+1)
 		end
 
-		xit "on destroy it should create the correct whitelist log item" do
-			Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_share_user: share_user.id, share_id: share.id)
-			Whitelist.last.destroy
-			expect{
-				WhitelistLog.last
-				}.to eq(WhitelistLog.new(entity_name: "Jack", addition: false, entity_type: 1, source_type: 2, source_share_user: share_user.id, date: Date.today, time: Time.new(2014), share_id: share.id))
+		it "on destroy it should create the correct whitelist log item" do
+			expected = WhitelistLog.new(entity_name: "Jack", addition: false, entity_type: 1, source_type: 2, source_share_user: share_user.id, date: Date.today, time: Time.new(2014), share_id: share.id)
+			target = Whitelist.create(name: "Jack", standing: 5, entity_type: 1, source_type: 2, source_share_user: share_user.id, share_id: share.id)
+			target.destroy
+
+			log = WhitelistLog.last
+			expect(log.entity_name).to eq(expected.entity_name)
+			expect(log.addition).to eq(expected.addition)
+			expect(log.entity_type).to eq(expected.entity_type)
+			expect(log.source_type).to eq(expected.source_type)
+			expect(log.source_share_user).to eq(expected.source_share_user)
+			expect(log.date).to eq(expected.date)
+			expect(log.share_id).to eq(expected.share_id)
+			#Not comparing on time, not worth stubbing.
+			#expect(log.time).to eq(expected.time)
 		end
 
 	end
