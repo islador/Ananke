@@ -69,23 +69,41 @@ describe Api do
 		end
 
 		describe "Corp API >" do
-			let!(:corp_api) {
-				FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
-			}
-			let!(:whitelist) {FactoryGirl.create(:whitelist)}
-			let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist.id)}
+			describe "whitelist_api_connections > " do
+				let!(:corp_api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
+				let!(:whitelist) {FactoryGirl.create(:whitelist)}
+				let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api.id, whitelist_id: whitelist.id)}
 
-			subject{corp_api}
+				subject{corp_api}
 
-			it {should respond_to(:whitelists)}
+				it {should respond_to(:whitelists)}
 
-			it "corp_api.whitelists should yield whitelist" do
-				corp_api.whitelists[0].id.should be whitelist.id
+				it "corp_api.whitelists should yield whitelist" do
+					corp_api.whitelists[0].id.should be whitelist.id
+				end
+
+				it "should destroy its whitelist_api_connections when destroyed" do
+					corp_api.destroy
+					WhitelistApiConnection.count.should be 0
+				end
 			end
 
-			it "should destroy its whitelist_api_connections when destroyed" do
-				corp_api.destroy
-				WhitelistApiConnection.count.should be 0
+			describe "black_list_entity_api_connections > " do
+				let!(:corp_api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
+				let!(:black_list_entity) {FactoryGirl.create(:black_list_entity)}
+				let!(:black_list_entity_api_connection) {FactoryGirl.create(:black_list_entity_api_connection, api_id: corp_api.id, black_list_entity_id: black_list_entity.id)}
+
+				subject {corp_api}
+
+				it {should respond_to(:black_list_entities)}
+
+				it "corp_api.black_list_entities should yield black_list_entities" do
+					expect(corp_api.black_list_entities).to eq([black_list_entity])
+				end
+
+				it "should destroy its black_list_entity_api_connections when destroyed" do
+					expect(corp_api.destroy).to change(BlackListEntityApiConnection, :count).by(-1)
+				end
 			end
 		end
 	end
