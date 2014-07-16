@@ -1,0 +1,2 @@
+module BlackListEntitiesHelper
+end

@@ -1,7 +1,4 @@
 Ananke::Application.routes.draw do
-
-  
-
   #resources :whitelist,  only: [:create, :destroy]
 
   require 'sidekiq/web'
@@ -25,6 +22,10 @@ Ananke::Application.routes.draw do
     get "whitelist/white_list"
     get "whitelist/white_list_log"
     get "whitelist/retrieve_pullable_apis", to: "whitelist#retrieve_pullable_apis"
+
+    resources :black_list_entities, only: [:create, :destroy, :index, :show]
+    get "black_list_entities/logs"
+    get "black_list_entities/retrieve_pullable_apis"
   end
   
   #Set root to the sign_in page.
