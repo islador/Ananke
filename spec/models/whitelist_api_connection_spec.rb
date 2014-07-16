@@ -18,19 +18,11 @@ describe WhitelistApiConnection do
 	let!(:user) {FactoryGirl.create(:user)}
 	let(:share) {FactoryGirl.create(:share)}
 	let!(:share_user) {FactoryGirl.create(:share_user, share_id: share.id, user_id: user.id)}
-	let!(:api) {
-		VCR.use_cassette('workers/api_key_info/corpAPI') do
-			FactoryGirl.create(:corp_api, share_user: share_user)
-		end
-	}
+	let!(:api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
 	let!(:whitelist_entity) {FactoryGirl.create(:whitelist, source_type: 1, source_share_user: share_user.id, share_id: share.id)}
 	let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: api.id, whitelist_id: whitelist_entity.id, share_id: share.id)}
 
-	let!(:api2) {
-		VCR.use_cassette('workers/api_key_info/corpAPI') do
-			FactoryGirl.create(:corp_api, share_user: share_user)
-		end
-	}
+	let!(:api2) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
 	let!(:whitelist_entity2) {FactoryGirl.create(:whitelist, source_type: 1, source_share_user: share_user.id, share_id: share.id)}
 	let!(:whitelist_api_connection_api2_whitelist_entity2) {FactoryGirl.create(:whitelist_api_connection, api_id: api2.id, whitelist_id: whitelist_entity2.id, share_id: share.id)}
 	let!(:whitelist_api_connection_api_whitelist_entity2) {FactoryGirl.create(:whitelist_api_connection, api_id: api.id, whitelist_id: whitelist_entity2.id, share_id: share.id)}
