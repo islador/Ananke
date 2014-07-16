@@ -154,4 +154,14 @@ FactoryGirl.define do
 		whitelist_id {set_whitelist_id}
 		share_id {set_share_id}
 	end
+
+	factory :black_list_entity do
+		sequence(:name) {|n| "Name#{n}"}
+		standing 0
+		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
+		source_type 1 #1 for api, 2 for manual
+		source_share_user_id 1 #this is poorly stubbed
+		share_id {FactoryGirl.create(:basic_share).id}
+		after(:create) { |instance| instance.source_share_user_id = FactoryGirl.create(:share_user, share_id: instance.share_id).user_id; instance.save! }
+	end
 end

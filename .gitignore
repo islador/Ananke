@@ -15,6 +15,6 @@
 /log/*.log
 /tmp
 
-speed_test.rb
+misc_speed_test.rb
 demo.rb
 -f
