@@ -27,8 +27,12 @@ class Api < ActiveRecord::Base
 	#A CCP Corp Key is always an Ananke Corp Key, A CCP Account Key is never an Ananke Corp Key, An Ananke Corp Key may be either a main or a general API, a CCP Account or Character Key may be either a main or a general Ananke Key.
 	belongs_to :share_user
 	has_many :characters, dependent: :destroy
+
 	has_many :whitelist_api_connections, dependent: :destroy
 	has_many :whitelists, through: :whitelist_api_connections
+
+	has_many :black_list_entity_api_connections, dependent: :destroy
+	has_many :black_list_entities, through: :black_list_entity_api_connections
 
 	after_create :determine_type
 	after_save :inform_share_user

@@ -15,6 +15,9 @@
 
 class BlackListEntity < ActiveRecord::Base
 
+	has_many :black_list_entity_api_connections, dependent: :destroy
+	has_many :apis, through: :black_list_entity_api_connections
+
 	validates :name, presence: true
 	#entity_type: 1 Alliance, 2 Corporation, 3 Faction, 4 Character, 5 API Pull
 	validates :entity_type, presence: true
@@ -27,6 +30,13 @@ class BlackListEntity < ActiveRecord::Base
 
 	after_destroy :generate_removal_log
 	after_save :generate_addition_log
+
+	#Destroy itself if it no longer has any black_list_entity_api_connections and it is an API sourced black_list_entity
+	def check_for_active_api_connections
+		if self.source_type == 1 && self.black_list_entity_api_connections.count == 0
+			self.destroy
+		end
+	end
 
 	private
 	#Creates a new whitelist log record representing itself being created.

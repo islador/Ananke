@@ -79,12 +79,11 @@ describe Api do
 				it {should respond_to(:whitelists)}
 
 				it "corp_api.whitelists should yield whitelist" do
-					corp_api.whitelists[0].id.should be whitelist.id
+					expect(corp_api.whitelists).to eq([whitelist])
 				end
 
 				it "should destroy its whitelist_api_connections when destroyed" do
-					corp_api.destroy
-					WhitelistApiConnection.count.should be 0
+					expect{corp_api.destroy}.to change(WhitelistApiConnection, :count).by(-1)
 				end
 			end
 
@@ -102,7 +101,7 @@ describe Api do
 				end
 
 				it "should destroy its black_list_entity_api_connections when destroyed" do
-					expect(corp_api.destroy).to change(BlackListEntityApiConnection, :count).by(-1)
+					expect{corp_api.destroy}.to change(BlackListEntityApiConnection, :count).by(-1)
 				end
 			end
 		end

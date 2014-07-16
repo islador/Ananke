@@ -46,7 +46,7 @@ describe BlackListEntity do
 		end
 
 		it "should destroy its black_list_entity_api_connections when destroyed" do
-			expect(black_list_entity.destroy).to change(BlackListEntityApiConnection, :count).by(-1)
+			expect{black_list_entity.destroy}.to change(BlackListEntityApiConnection, :count).by(-1)
 		end	
 	end
 
@@ -100,6 +100,19 @@ describe BlackListEntity do
 			expect(log.share_id).to eq(expected.share_id)
 			#Not comparing on time, not worth stubbing.
 			#expect(log.time).to eq(expected.time)
+		end
+	end
+
+	describe "check_for_active_api_connections > " do
+		let(:user) {FactoryGirl.create(:user)}
+		let(:share) {FactoryGirl.create(:share)}
+		let(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
+		let!(:black_list_entity) {FactoryGirl.create(:black_list_entity, source_share_user_id: share_user.id, source_type: 1, share_id: share.id)}
+		
+		it "should delete itself when check_for_active_api_connections is called and it is source_type 1 and lacks any api_connections" do
+			expect{black_list_entity.check_for_active_api_connections}.to change(BlackListEntity, :count).by(-1)
+			#api_whitelist.check_for_active_api_connections
+			#Whitelist.where("id = ?", api_whitelist.id)[0].should be_nil
 		end
 	end
 end

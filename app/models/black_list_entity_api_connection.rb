@@ -11,7 +11,17 @@
 #
 
 class BlackListEntityApiConnection < ActiveRecord::Base
+	
+	belongs_to :api
+	belongs_to :black_list_entity
+
+	after_destroy :check_black_list_entity
+
 	validates :api_id, presence: true
 	validates :black_list_entity_id, presence: true
 	validates :share_id, presence: true
+
+	def check_black_list_entity
+		self.black_list_entity.check_for_active_api_connections
+	end
 end
