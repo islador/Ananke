@@ -32,7 +32,7 @@ describe BlackListEntity do
 		let(:user) {FactoryGirl.create(:user)}
 		let(:share) {FactoryGirl.create(:share)}
 		let!(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
-		let!(:black_list_entity) {FactoryGirl.create(:black_list_entity, source_share_user_id: share_user.id, source_type: 1, share_id: share.id)}
+		let!(:black_list_entity) {FactoryGirl.create(:black_list_entity, source_share_user_id: share_user.id, source_type: 1, share_id: share.id, provides_source_share_user: true)}
 		let!(:api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
 		let!(:black_list_entity_api_connection) {FactoryGirl.create(:black_list_entity_api_connection, api_id: api.id, black_list_entity_id: black_list_entity.id, share_id: share.id)}
 		
@@ -107,7 +107,7 @@ describe BlackListEntity do
 		let(:user) {FactoryGirl.create(:user)}
 		let(:share) {FactoryGirl.create(:share)}
 		let(:share_user){FactoryGirl.create(:share_user, user_id: user.id, share_id: share.id)}
-		let!(:black_list_entity) {FactoryGirl.create(:black_list_entity, source_share_user_id: share_user.id, source_type: 1, share_id: share.id)}
+		let!(:black_list_entity) {FactoryGirl.create(:black_list_entity, source_share_user_id: share_user.id, source_type: 1, share_id: share.id, provides_source_share_user: true)}
 		
 		it "should delete itself when check_for_active_api_connections is called and it is source_type 1 and lacks any api_connections" do
 			expect{black_list_entity.check_for_active_api_connections}.to change(BlackListEntity, :count).by(-1)
