@@ -66,18 +66,22 @@ describe BlackListEntitiesController do
       response.should be_success
     end
 
-    let!(:black_list_entity_log) {FactoryGirl.create(:black_list_entity_log, share_id: share.id)}
-    let!(:black_list_entity_log2) {FactoryGirl.create(:black_list_entity_log, share_id: share2.id)}
+    let!(:black_list_entity_log) {FactoryGirl.create(:black_list_entity_log, share_id: share.id, source_share_user_id: share_user.id, provides_source_share_user: true)}
+    let!(:black_list_entity_log2) {FactoryGirl.create(:black_list_entity_log, share_id: share2.id, source_share_user_id: share_user2.id, provides_source_share_user: true)}
     it "should build an @bll object containing all whitelists in the current share" do
       get 'logs', share_user_id: share_user.id
       expect(assigns(:bll)).to include(black_list_entity_log)
       expect(assigns(:bll)).to_not include(black_list_entity_log2)
     end
 
-    it "should build an @user_char_names object containing all of the source_share_user_id's main_char_names" do
+    it "should build an @source_share_user_names object containing all of the source_share_user_id's main_char_names" do
       get 'logs', share_user_id: share_user.id
-      expect(assigns(:user_char_names)[0]).to match "#{share_user.main_char_name}"
-      expect(assigns(:user_char_names)).to_not include("#{share_user2.main_char_name}")
+
+      expect(assigns(:source_share_user_names).key(black_list_entity_log.source_share_user_id).to_s).to match share_user.main_char_name
+      expect(assigns(:source_share_user_names).key(black_list_entity_log2.source_share_user_id).to_s).not_to match share_user2.main_char_name
+
+      #expect(assigns(:source_share_user_names).has_value("#{share_user.main_char_name}")).to be true
+      #expect(assigns(:source_share_user_names)).to_not include("#{share_user2.main_char_name}")
     end
   end
 
