@@ -146,47 +146,57 @@ FactoryGirl.define do
 	end
 
 	factory :whitelist_api_connection do
-		ignore do
-			set_api_id {FactoryGirl.create(:api).id}
-			set_whitelist_id {FactoryGirl.create(:whitelist).id}
-			set_share_id {FactoryGirl.create(:basic_share).id}
-		end
-		
-		api_id {set_api_id}
-		whitelist_id {set_whitelist_id}
-		share_id {set_share_id}
+		#These are not contextually aware of each other and should be fixed.		
+		api_id {FactoryGirl.create(:api).id}
+		whitelist_id {FactoryGirl.create(:whitelist).id}
+		share_id {FactoryGirl.create(:basic_share).id}
 	end
 
 	factory :black_list_entity do
 		ignore do
-			set_source_share_user_id 1
-			after(:create) { |instance| instance.source_share_user_id = FactoryGirl.create(:share_user, share_id: instance.share_id).user_id; instance.save! }
+			provides_source_share_user false
+			#set_source_share_user_id 1
+			#after(:create) { |instance| instance.source_share_user_id = FactoryGirl.create(:share_user, share_id: instance.share_id).user_id; instance.save! }
 		end
 		sequence(:name) {|n| "Name#{n}"}
 		standing 0
 		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
 		source_type 1 #1 for api, 2 for manual
-		source_share_user_id {set_source_share_user_id}
+		source_share_user_id 1
 		share_id {FactoryGirl.create(:basic_share).id}
+
+		after(:create) do |instance, evaluator|
+			if evaluator.provides_source_share_user == false
+				instance.source_share_user_id = FactoryGirl.create(:share_user, share_id: instance.share_id).user_id
+				instance.save
+			end
+		end
 	end
 
 	factory :black_list_entity_log do
 		ignore do
-			set_source_share_user_id 1
-			after(:create) { |instance| instance.source_share_user_id = FactoryGirl.create(:share_user, share_id: instance.share_id).user_id; instance.save! }
+			provides_source_share_user false
 		end
 
 		sequence(:entity_name) {|n| "Name#{n}"}
-		source_share_user_id {set_source_share_user_id}
+		source_share_user_id 1
 		source_type 1 #1 for api, 2 for manual
 		addition true
 		entity_type 1 #1 alliance, 2 corp, 3 faction, 4 character
 		date Date.today
 		time Time.new(2014)
 		share_id {FactoryGirl.create(:basic_share).id}
+
+		after(:create) do |instance, evaluator|
+			if evaluator.provides_source_share_user == false
+				instance.source_share_user_id = FactoryGirl.create(:share_user, share_id: instance.share_id).user_id
+				instance.save
+			end
+		end
 	end
 
-	factory :black_list_entity_api_connection do		
+	factory :black_list_entity_api_connection do
+		#These are not contextually aware of each other and should be fixed.
 		api_id {FactoryGirl.create(:character_api_skip_determine_type).id}
 		black_list_entity_id {FactoryGirl.create(:black_list_entity).id}
 		share_id {FactoryGirl.create(:basic_share).id}
