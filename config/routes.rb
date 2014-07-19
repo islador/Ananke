@@ -16,6 +16,8 @@ Ananke::Application.routes.draw do
       put "/cancel_whitelist_api_pull", to: "api#cancel_whitelist_api_pull"
       put "/begin_whitelist_api_pull", to: "api#begin_whitelist_api_pull"
       put "/update_api_whitelist_standing", to: "api#update_api_whitelist_standing"
+      put "/update_api_black_list_standings", to: "api#update_api_black_list_standings"
+      put "/begin_black_list_api_pull", to: "api#begin_black_list_api_pull"
     end
 
     resources :whitelist,  only: [:create, :destroy]
@@ -26,6 +28,7 @@ Ananke::Application.routes.draw do
     resources :black_list_entities, only: [:create, :destroy, :index, :show]
     get "black_list_entities/logs"
     get "black_list_entities/retrieve_pullable_apis"
+    get "black_list_entities/enroll_new_api"
   end
   
   #Set root to the sign_in page.

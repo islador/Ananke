@@ -415,4 +415,93 @@ describe ApiController do
       end
     end
   end
+
+  describe "PUT 'update_api_black_list_standings'" do
+    let!(:corp_api_4) {
+      FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)
+    }
+    it "should return http success" do
+      xhr :put, :update_api_black_list_standings, share_user_id: share_user.id, api_id: corp_api_4.id, standing: 2
+      response.should be_success
+    end
+
+    it "should return http 200 if the API was updated" do
+      xhr :put, :update_api_black_list_standings, share_user_id: share_user.id, api_id: corp_api_4.id, standing: 2
+      response.status.should be 200
+      expect(response.body).to eq ["Api Black List Standing set to: #{2}"].to_s
+    end
+
+    it "should set the API's black_list_standings to the value sent it" do
+      xhr :put, :update_api_black_list_standings, share_user_id: share_user.id, api_id: corp_api_4.id, standing: 2
+      expect(Api.where("id = ?", corp_api_4.id)[0].black_list_standings).to be 2
+    end
+
+    describe "Error Handling > " do
+      let!(:inactive_api) {
+        FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)
+      }
+      let!(:general_api) {
+        FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)
+      }
+
+      it "should throw an argument error if the API is not active." do
+        expect{
+          xhr :put, :update_api_black_list_standings, share_user_id: share_user.id, api_id: general_api.id, standing: 2
+        }.to raise_error ArgumentError
+        response.status.should be 400
+      end
+
+      it "should throw an argument error if the API is not a corp API" do
+        expect{
+          xhr :put, :update_api_black_list_standings, share_user_id: share_user.id, api_id: inactive_api.id, standing: 2
+        }.to raise_error ArgumentError
+        response.status.should be 400
+      end
+    end
+  end
+
+  describe "PUT 'begin_black_list_api_pull' > " do
+    let!(:corp_api_2) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)}
+
+    it "should return http success" do
+      VCR.use_cassette('workers/black_list_corp_contact/alliance_standingsSpread') do
+        xhr :put, :begin_black_list_api_pull, share_user_id: share_user.id, api_id: corp_api_2.id
+      end
+      response.should be_success
+    end
+
+    xit "should call BlackListCorpContactPullWorker with corp_api.id" do
+      VCR.use_cassette('workers/black_list_corp_contact/alliance_standingsSpread') do
+        xhr :put, :begin_black_list_api_pull, share_user_id: share_user.id, api_id: corp_api_2.id
+      end
+      response.should be_success
+      expect(response.body).to eq ["Populating Black List using API #{corp_api_2.name}. All contacts with standing #{corp_api_2.black_list_standings} and down will be black listed."].to_s
+    end
+
+    it "should create a whitelist log indicating a new API Pull has been started" do
+      VCR.use_cassette('workers/api_corp_contact/alliance_standingsSpread') do
+        xhr :put, :begin_black_list_api_pull, share_user_id: share_user.id, api_id: corp_api_2.id
+      end
+      expect(BlackListEntityLog.where("entity_type = 5 AND addition = true")[0]).to_not be_nil
+    end
+
+    describe "Invalid APIs > " do
+      let!(:inactive_corp_api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
+      let!(:character_api) {FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user, active: true)}
+
+      it "should respond with a 400 if the API is inactive" do
+        expect{
+          xhr :put, :begin_black_list_api_pull, share_user_id: share_user.id, api_id: inactive_corp_api.id
+          }.to raise_error ArgumentError
+        response.status.should be 400
+      end
+
+      it "should respond with a 400 if the API is the incorrect type" do
+        expect{
+          xhr :put, :begin_black_list_api_pull, share_user_id: share_user.id, api_id: character_api.id
+          }.to raise_error ArgumentError
+        response.status.should be 400
+      end
+    end
+  end
 end
