@@ -336,24 +336,18 @@ describe ApiController do
     let!(:whitelist_api_connection) {FactoryGirl.create(:whitelist_api_connection, api_id: corp_api_3.id, whitelist_id: whitelist.id)}
 
     it "should return http success" do
-      VCR.use_cassette('workers/corpContactList_standingsSpread') do
-        xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
-      end
+      xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
       response.should be_success
     end
 
     it "should return http 200 for a successful request" do
-      VCR.use_cassette('workers/corpContactList_standingsSpread') do
-        xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
-      end
+      xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: corp_api_3.id
       response.should be_success
       #response.body.should match "API removed from contact processing"
     end
 
     it "should return http 400 for an invalid api" do
-      VCR.use_cassette('workers/corpContactList_standingsSpread') do
-        xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: 3000
-      end
+      xhr :put, :cancel_whitelist_api_pull, share_user_id: share_user.id, api_id: 3000
       response.status.should be 400
     end
 
@@ -502,6 +496,32 @@ describe ApiController do
           }.to raise_error ArgumentError
         response.status.should be 400
       end
+    end
+  end
+
+  describe "PUT 'cancel_black_list_api_pull' > " do
+    let(:corp_api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
+    let(:black_list_entity) {FactoryGirl.create(:black_list_entity)}
+    let!(:black_list_entity_api_connection) {FactoryGirl.create(:black_list_entity_api_connection, api_id: corp_api.id, black_list_entity_id: black_list_entity.id, share_id: share.id)}
+
+    it "should return http success" do
+      xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+      expect(response).to be_success
+    end
+
+    it "should return http 400 for an invalid api" do
+      xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: 99999
+      expect(response.status).to be 400
+    end
+
+    it "should remove the api from the pull schedule" do
+      xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+      expect(BlackListEntityApiConnection.where("id = ?", black_list_entity_api_connection.id).count).to be 0
+    end
+
+    it "should create a black list log indicating the API Pull has been cancelled" do
+      xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: corp_api.id
+      expect(BlackListEntityLog.where("entity_type = 5 AND addition = false")[0]).should_not be_nil
     end
   end
 end
