@@ -500,18 +500,41 @@ describe ApiController do
   end
 
   describe "PUT 'cancel_black_list_api_pull' > " do
-    let(:corp_api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user)}
+    let!(:non_corp_api) {FactoryGirl.create(:character_api_skip_determine_type, share_user: share_user)}
+    let!(:inactive_corp_api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: false)}
+    let!(:no_connections_api){FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)}
+    let(:corp_api) {FactoryGirl.create(:corp_api_skip_determine_type, share_user: share_user, active: true)}
     let(:black_list_entity) {FactoryGirl.create(:black_list_entity)}
     let!(:black_list_entity_api_connection) {FactoryGirl.create(:black_list_entity_api_connection, api_id: corp_api.id, black_list_entity_id: black_list_entity.id, share_id: share.id)}
 
-    it "should return http success" do
+    it "should return http success & a JSON success message" do
       xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: corp_api.id
       expect(response).to be_success
+      expect(response.body).to eq(["API Pull successfully cancelled."].to_json)
     end
 
-    it "should return http 400 for an invalid api" do
+    it "should return http 400 & a JSON error message for a non-existent api" do
       xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: 99999
       expect(response.status).to be 400
+      expect(response.body).to eq(["Api could not be found"].to_json)
+    end
+
+    it "should return http 400 & a JSON error message for a non-corp API" do
+      xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: non_corp_api.id
+      expect(response.status).to be 400
+      expect(response.body).to match ["Api must be a corp API"].to_json
+    end
+
+    it "should return http 400 & a JSON error message for an inactive API" do
+      xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: inactive_corp_api.id
+      expect(response.status).to be 400
+      expect(response.body).to eq(["Api must be active."].to_json)
+    end
+
+    it "should return http 400 & a JSON error message for an API without any black_list_entity_api_connections" do
+      xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: no_connections_api.id
+      expect(response.status).to be 400
+      expect(response.body).to eq(["Api does not have an active black list pull"].to_json)
     end
 
     it "should remove the api from the pull schedule" do
@@ -521,7 +544,7 @@ describe ApiController do
 
     it "should create a black list log indicating the API Pull has been cancelled" do
       xhr :put, :cancel_black_list_api_pull, share_user_id: share_user.id, api_id: corp_api.id
-      expect(BlackListEntityLog.where("entity_type = 5 AND addition = false")[0]).should_not be_nil
+      expect(BlackListEntityLog.where("entity_type = 5 AND addition = false")[0]).to_not be_nil
     end
   end
 end
