@@ -156,4 +156,80 @@ class ApiController < ApplicationController
       render :json => api.errors.messages, status: 406
     end
   end
+
+  def begin_black_list_api_pull
+    api = Api.where("id = ?", params[:api_id])[0]
+    if api.nil? == false
+      if api.ananke_type != 1
+        render :json => ["Api must be a corp API"], status: 400
+        raise ArgumentError, "Api must be a corporation API."
+      end
+
+      if api.active != true
+        render :json => ["Api must be active."], status: 400
+        raise ArgumentError, "Api must be active."
+      end
+
+      if api.active == true && api.ananke_type == 1
+        #BlackListCorpContactPullWorker.perform_async(api.id)
+        render :json => ["Populating Black List using API #{api.name}. All contacts with standing #{api.black_list_standings} and down will be black listed."], status: 200
+      end
+    end
+  end
+
+  def update_api_black_list_standings
+    api = Api.where("id = ?", params[:api_id])[0]
+    if api.ananke_type != 1
+      render :json => ["Api must be a corp API"], status: 400
+      raise ArgumentError, "Api must be a corporation API."
+    end
+
+    if api.active != true
+      render :json => ["Api must be active."], status: 400
+      raise ArgumentError, "Api must be active."
+    end
+    api.black_list_standings = params[:standing]
+    if api.valid? == true
+      render :json => ["Api Black List Standing set to: #{params[:standing]}"], status: 200
+      api.save
+    else
+      render :json => [api.errors.messages], status: 406
+    end
+  end
+
+  def cancel_black_list_api_pull
+    api = Api.where("id = ?", params[:api_id])[0]
+    #Ensure an API exists
+    if api.nil? == false
+      #Ensure the API is a corp API
+      if api.ananke_type != 1
+        render :json => ["Api must be a corp API"], status: 400 and return
+      end
+
+      #Ensure the API is active
+      if api.active != true
+        render :json => ["Api must be active."], status: 400 and return
+      end
+
+      #Retrieve any existing connections
+      black_list_entity_api_connections = BlackListEntityApiConnection.where("api_id = ?", params[:api_id])
+      #Determine if the API has an active pull
+      if black_list_entity_api_connections.count > 0
+        share_user = api.share_user
+
+        black_list_entity_api_connections.each do |bleac|
+          bleac.destroy
+        end
+
+        #Generate a black_list_entity_log for the cancellation
+        BlackListEntityLog.create(entity_name: api.main_entity_name, source_share_user_id: share_user.id, source_type: 2, addition: false, entity_type: 5, date: Date.today, time: Time.now, share_id: share_user.share_id)
+
+        render :json => ["API Pull successfully cancelled."]
+      else
+        render :json => ["Api does not have an active black list pull"], status: 400
+      end
+    else
+      render :json => ["Api could not be found"], status: 400
+    end
+  end
 end

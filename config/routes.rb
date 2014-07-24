@@ -16,8 +16,10 @@ Ananke::Application.routes.draw do
       put "/cancel_whitelist_api_pull", to: "api#cancel_whitelist_api_pull"
       put "/begin_whitelist_api_pull", to: "api#begin_whitelist_api_pull"
       put "/update_api_whitelist_standing", to: "api#update_api_whitelist_standing"
-      put "/update_api_black_list_standings", to: "api#update_api_black_list_standings"
+
+      put "/cancel_black_list_api_pull", to: "api#cancel_black_list_api_pull"
       put "/begin_black_list_api_pull", to: "api#begin_black_list_api_pull"
+      put "/update_api_black_list_standings", to: "api#update_api_black_list_standings"
     end
 
     resources :whitelist,  only: [:create, :destroy]
